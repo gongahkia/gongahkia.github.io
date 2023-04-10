@@ -64,11 +64,6 @@ async function githubAPI(targetUrl:string) {
         }
     }
     
-    // to remove an item from final Array to only display 3 values max
-    if (top3DateArray.length > 3) {
-        top3DateArray.pop();
-    }
-
     console.log(top3DateArray);
     const dynamicGitRepo = document.getElementById("dynamicGithubRepoContainer")!;
     for (let repoInfo of top3DateArray) {
