@@ -1,7 +1,6 @@
 /* custom imported font with ligatures automatically enabled*/
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100&display=swap');
 
-
 /* proper CSS styling */
 body {
     font-family: 'JetBrains Mono', monospace;
