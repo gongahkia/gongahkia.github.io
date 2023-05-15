@@ -8,6 +8,7 @@ function pressTheButton() {
     const linkedinPic = document.getElementById("linkedinImg");
     const wordpressPic = document.getElementById("wordpressImg");
     const gmailPic = document.getElementById("gmailImg");
+    const rmarkdownPic = document.getElementById("RmarkdownImg");
     const theImageThisTime = document.getElementById("toggleButton");
     if (currentMode.nodeValue == "lightMode") {
         mainFella === null || mainFella === void 0 ? void 0 : mainFella.removeAttribute("class");
@@ -16,6 +17,7 @@ function pressTheButton() {
         linkedinPic === null || linkedinPic === void 0 ? void 0 : linkedinPic.setAttribute("style", "filter:invert(1);");
         wordpressPic === null || wordpressPic === void 0 ? void 0 : wordpressPic.setAttribute("style", "filter:invert(1);");
         gmailPic === null || gmailPic === void 0 ? void 0 : gmailPic.setAttribute("style", "filter:invert(1);");
+        rmarkdownPic === null || rmarkdownPic === void 0 ? void 0 : rmarkdownPic.setAttribute("style", "filter:invert(1);");
         theImageThisTime.setAttribute("src", "assets/moon.svg");
     }
     else if (currentMode.nodeValue == "darkMode") {
@@ -25,6 +27,7 @@ function pressTheButton() {
         linkedinPic.removeAttribute("style");
         wordpressPic.removeAttribute("style");
         gmailPic.removeAttribute("style");
+        rmarkdownPic.removeAttribute("style");
         theImageThisTime.setAttribute("src", "assets/sun.svg");
     }
     console.log(currentMode);
