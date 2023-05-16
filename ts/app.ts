@@ -1,7 +1,6 @@
 const theButton = document.getElementById("toggleButton");
 theButton?.addEventListener("click", pressTheButton);
 
-
 function pressTheButton() {
     const mainFella = document.getElementById("mainBody");
     const currentMode = mainFella?.getAttributeNode("class")!;
