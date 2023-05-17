@@ -115,7 +115,14 @@ body {
 
 /* posts formatting */
 
-.post-1, .post-2 {
+.post-1 {
+    transition-property:transform;
+    transition-duration:0.3s;
+    transition-timing-function:ease-in-out;
+    transition-delay:0s;
+}
+
+.post-2 {
     transition-property:transform;
     transition-duration:0.3s;
     transition-timing-function:ease-in-out;
