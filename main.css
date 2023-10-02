@@ -129,6 +129,13 @@ body {
     transition-delay:0s;
 }
 
+.dy-gitrepo {
+    transition-property:transform;
+    transition-duration:0.3s;
+    transition-timing-function:ease-in-out;
+    transition-delay:0s;
+}
+
 /* color palette swap */
 
 .lightMode {
@@ -147,7 +154,7 @@ body {
     transform:translateY(-8px);
 }
 
-.post-1:hover, .post-2:hover {
+.post-1:hover, .post-2:hover, .dy-gitrepo:hover {
     transform:translateX(8px);
 }
 

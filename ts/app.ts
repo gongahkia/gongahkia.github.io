@@ -32,4 +32,3 @@ function pressTheButton() {
     console.log(currentMode);
 }
 
-
