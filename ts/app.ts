@@ -1,8 +1,7 @@
 // FUA: 
 // - Can I add transition frames to allow smoothing of icon svg color inversion?
-// - Can I add a small clippy like pop up text box from the pikmin to encourage users to change color?
 
-const theButton = document.getElementById("pikminButton");
+const theButton = document.getElementById("infinityButton");
 theButton?.addEventListener("click", pressTheButton);
 
 function pressTheButton() {
@@ -13,7 +12,7 @@ function pressTheButton() {
     const linkedinPic = document.getElementById("linkedinImg")!;
     const wordpressPic = document.getElementById("wordpressImg")!;
     const gmailPic = document.getElementById("gmailImg")!;
-    const pikminPic = document.getElementById("pikminButton")!;
+    const infinityPic = document.getElementById("infinityButton")!;
 
     const randomColor: string = rngHexColor();
     console.log(randomColor, checkHexDarkness(randomColor), currentMode);
@@ -25,7 +24,7 @@ function pressTheButton() {
         linkedinPic!.setAttribute("style", "filter:invert(1);");
         wordpressPic!.setAttribute("style", "filter:invert(1);");
         gmailPic!.setAttribute("style", "filter:invert(1);");
-        pikminPic!.setAttribute("style", "filter:invert(1);");
+        infinityPic!.setAttribute("style", "filter:invert(1);");
     } else { // if relatively light
         mainFella!.removeAttribute("class");
         mainFella!.setAttribute("class", "lightMode");
@@ -33,7 +32,7 @@ function pressTheButton() {
         linkedinPic!.removeAttribute("style");
         wordpressPic!.removeAttribute("style");
         gmailPic!.removeAttribute("style");
-        pikminPic!.removeAttribute("style");
+        infinityPic!.removeAttribute("style");
     }
 }
 

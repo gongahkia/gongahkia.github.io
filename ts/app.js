@@ -1,18 +1,18 @@
+"use strict";
 // FUA: 
 // - Can I add transition frames to allow smoothing of icon svg color inversion?
-// - Can I add a small clippy like pop up text box from the pikmin to encourage users to change color?
-var theButton = document.getElementById("pikminButton");
+const theButton = document.getElementById("infinityButton");
 theButton === null || theButton === void 0 ? void 0 : theButton.addEventListener("click", pressTheButton);
 function pressTheButton() {
     // these HTML elements will change when the button is pressed if the color is detected
-    var mainFella = document.getElementById("mainBody");
-    var currentMode = mainFella === null || mainFella === void 0 ? void 0 : mainFella.getAttributeNode("class");
-    var githubPic = document.getElementById("githubImg");
-    var linkedinPic = document.getElementById("linkedinImg");
-    var wordpressPic = document.getElementById("wordpressImg");
-    var gmailPic = document.getElementById("gmailImg");
-    var pikminPic = document.getElementById("pikminButton");
-    var randomColor = rngHexColor();
+    const mainFella = document.getElementById("mainBody");
+    const currentMode = mainFella === null || mainFella === void 0 ? void 0 : mainFella.getAttributeNode("class");
+    const githubPic = document.getElementById("githubImg");
+    const linkedinPic = document.getElementById("linkedinImg");
+    const wordpressPic = document.getElementById("wordpressImg");
+    const gmailPic = document.getElementById("gmailImg");
+    const infinityPic = document.getElementById("infinityButton");
+    const randomColor = rngHexColor();
     console.log(randomColor, checkHexDarkness(randomColor), currentMode);
     mainFella.style.backgroundColor = randomColor; // ! asserts that a variable is non-nullable and is defined
     if (checkHexDarkness(randomColor)) { // if relatively darker
@@ -22,7 +22,7 @@ function pressTheButton() {
         linkedinPic.setAttribute("style", "filter:invert(1);");
         wordpressPic.setAttribute("style", "filter:invert(1);");
         gmailPic.setAttribute("style", "filter:invert(1);");
-        pikminPic.setAttribute("style", "filter:invert(1);");
+        infinityPic.setAttribute("style", "filter:invert(1);");
     }
     else { // if relatively light
         mainFella.removeAttribute("class");
@@ -31,24 +31,23 @@ function pressTheButton() {
         linkedinPic.removeAttribute("style");
         wordpressPic.removeAttribute("style");
         gmailPic.removeAttribute("style");
-        pikminPic.removeAttribute("style");
+        infinityPic.removeAttribute("style");
     }
 }
 function rngHexColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
 }
-function checkHexDarkness(hexColor, threshold) {
-    if (threshold === void 0) { threshold = 0.5; }
-    var sanitizedHexColor = hexColor.replace(/^#/, '');
-    var red = parseInt(sanitizedHexColor.substring(0, 2), 16);
-    var green = parseInt(sanitizedHexColor.substring(2, 4), 16);
-    var blue = parseInt(sanitizedHexColor.substring(4, 6), 16);
+function checkHexDarkness(hexColor, threshold = 0.5) {
+    const sanitizedHexColor = hexColor.replace(/^#/, '');
+    const red = parseInt(sanitizedHexColor.substring(0, 2), 16);
+    const green = parseInt(sanitizedHexColor.substring(2, 4), 16);
+    const blue = parseInt(sanitizedHexColor.substring(4, 6), 16);
     // calculate luminance
-    var luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
+    const luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
     return luminance < threshold;
 }
