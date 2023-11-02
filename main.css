@@ -2,7 +2,7 @@ body {
     font-family: 'Helvetica Neue', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     color:var(--text);
     background-color: white;
-    transition:background 500ms ease-in-out, color 1000ms ease-in-out;
+    transition:background 750ms ease-in-out, color 1000ms ease-in-out;
 }
 
 .container-footer {
@@ -114,6 +114,10 @@ body {
     --text:white;
 }
 
+#githubImg, #linkedinImg, #wordpressImg, #gmailImg, #infinityButton {
+    transition: filter 1000ms ease-in-out; 
+}
+
 /* animations */
 
 .item-github:hover, .item-linkedin:hover, .item-wordpress:hover, .item-email:hover {
@@ -138,3 +142,24 @@ a.visited {
 a.active {
     text-decoration:none;
 }
+
+/* rotate a button */
+
+@keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  #infinityButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .rotated {
+    animation: rotate 0.75s linear;
+  }

@@ -1,6 +1,3 @@
-// FUA: 
-// - Can I add transition frames to allow smoothing of icon svg color inversion?
-
 const theButton = document.getElementById("infinityButton");
 theButton?.addEventListener("click", pressTheButton);
 
@@ -17,6 +14,10 @@ function pressTheButton() {
     const randomColor: string = rngHexColor();
     console.log(randomColor, checkHexDarkness(randomColor), currentMode);
     mainFella!.style.backgroundColor = randomColor; // ! asserts that a variable is non-nullable and is defined
+
+    // the class "rotated" must be added to the element everytime it is to be played
+    infinityPic.classList.add('rotated');
+        
     if (checkHexDarkness(randomColor)) { // if relatively darker
         mainFella!.removeAttribute("class");
         mainFella!.setAttribute("class", "darkMode");
@@ -34,6 +35,12 @@ function pressTheButton() {
         gmailPic!.removeAttribute("style");
         infinityPic!.removeAttribute("style");
     }
+
+    // setTimeout() ensures the animation has cleared its entire cycle first before removing it
+    setTimeout(() => {
+        infinityPic.classList.remove('rotated');
+    }, 750); 
+
 }
 
 function rngHexColor(): string {
