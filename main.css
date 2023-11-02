@@ -1,7 +1,7 @@
 body {
     font-family: 'Helvetica Neue', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
     color:var(--text);
-    background:var(--bg);
+    background-color: white;
     transition:background 500ms ease-in-out, color 1000ms ease-in-out;
 }
 
@@ -29,7 +29,7 @@ body {
     /*margin-left:auto;*/
 }
 
-#toggleButton {
+#pikminButton {
     margin-top:10px;
     margin-right:10px;
 }
@@ -95,16 +95,6 @@ body {
     transition-delay:0s;
 }
 
-.item-Rmarkdown {
-    margin-left:25px;
-    margin-right:0px;
-
-    transition-property:transform;
-    transition-duration:0.3s;
-    transition-timing-function:ease-in-out;
-    transition-delay:0s;
-}
-
 .header {
     font-size:4rem;
 }
@@ -113,49 +103,20 @@ body {
     font-size:2.5rem;
 }
 
-/* posts formatting */
-
-.post-1 {
-    transition-property:transform;
-    transition-duration:0.3s;
-    transition-timing-function:ease-in-out;
-    transition-delay:0s;
-}
-
-.post-2 {
-    transition-property:transform;
-    transition-duration:0.3s;
-    transition-timing-function:ease-in-out;
-    transition-delay:0s;
-}
-
-.dy-gitrepo {
-    transition-property:transform;
-    transition-duration:0.3s;
-    transition-timing-function:ease-in-out;
-    transition-delay:0s;
-}
-
 /* color palette swap */
 
 .lightMode {
-    --bg:white;
     --text:black;
 }
 
 .darkMode {
-    --bg:black;
     --text:white;
 }
 
 /* animations */
 
-.item-github:hover, .item-linkedin:hover, .item-wordpress:hover, .item-email:hover, .item-Rmarkdown:hover {
+.item-github:hover, .item-linkedin:hover, .item-wordpress:hover, .item-email:hover {
     transform:translateY(-8px);
-}
-
-.post-1:hover, .post-2:hover, .dy-gitrepo:hover {
-    transform:translateX(8px);
 }
 
 /* general link styling */
