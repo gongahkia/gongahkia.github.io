@@ -1,3 +1,39 @@
+const wobblyShape = document.querySelector('.wobblyShape') as HTMLElement;
+
+document.addEventListener('mousemove', (event: MouseEvent) => {
+  const { clientX, clientY } = event;
+  wobblyShape.style.left = `${clientX}px`;
+  wobblyShape.style.top = `${clientY}px`;
+});
+
+let isMouseDown: boolean = false;
+
+document.addEventListener('mousedown', () => {
+  isMouseDown = true;
+  if (wobblyShape) {
+    wobblyShape.style.width = '50px';
+    wobblyShape.style.height = '50px';
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isMouseDown = false;
+  if (wobblyShape) {
+    wobblyShape.style.width = '22px';
+    wobblyShape.style.height = '22px';
+  }
+});
+
+document.addEventListener('mouseleave', () => {
+  if (isMouseDown) {
+    isMouseDown = false;
+    if (wobblyShape) {
+      wobblyShape.style.width = '22px';
+      wobblyShape.style.height = '22px';
+    }
+  }
+});
+
 const theButton = document.getElementById("infinityButton");
 theButton?.addEventListener("click", pressTheButton);
 
@@ -20,7 +56,7 @@ function pressTheButton() {
         
     if (checkHexDarkness(randomColor)) { // if relatively darker
         mainFella!.removeAttribute("class");
-        mainFella!.setAttribute("class", "darkMode");
+        mainFella!.setAttribute("class", "darkMode wobbly-shape");
         githubPic!.setAttribute("style", "filter:invert(1);");
         linkedinPic!.setAttribute("style", "filter:invert(1);");
         wordpressPic!.setAttribute("style", "filter:invert(1);");
@@ -28,7 +64,7 @@ function pressTheButton() {
         infinityPic!.setAttribute("style", "filter:invert(1);");
     } else { // if relatively light
         mainFella!.removeAttribute("class");
-        mainFella!.setAttribute("class", "lightMode");
+        mainFella!.setAttribute("class", "lightMode wobbly-shape");
         githubPic!.removeAttribute("style");
         linkedinPic!.removeAttribute("style");
         wordpressPic!.removeAttribute("style");

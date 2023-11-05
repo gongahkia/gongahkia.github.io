@@ -1,4 +1,34 @@
 "use strict";
+const wobblyShape = document.querySelector('.wobblyShape');
+document.addEventListener('mousemove', (event) => {
+    const { clientX, clientY } = event;
+    wobblyShape.style.left = `${clientX}px`;
+    wobblyShape.style.top = `${clientY}px`;
+});
+let isMouseDown = false;
+document.addEventListener('mousedown', () => {
+    isMouseDown = true;
+    if (wobblyShape) {
+        wobblyShape.style.width = '50px';
+        wobblyShape.style.height = '50px';
+    }
+});
+document.addEventListener('mouseup', () => {
+    isMouseDown = false;
+    if (wobblyShape) {
+        wobblyShape.style.width = '22px';
+        wobblyShape.style.height = '22px';
+    }
+});
+document.addEventListener('mouseleave', () => {
+    if (isMouseDown) {
+        isMouseDown = false;
+        if (wobblyShape) {
+            wobblyShape.style.width = '22px';
+            wobblyShape.style.height = '22px';
+        }
+    }
+});
 const theButton = document.getElementById("infinityButton");
 theButton === null || theButton === void 0 ? void 0 : theButton.addEventListener("click", pressTheButton);
 function pressTheButton() {
@@ -17,7 +47,7 @@ function pressTheButton() {
     infinityPic.classList.add('rotated');
     if (checkHexDarkness(randomColor)) { // if relatively darker
         mainFella.removeAttribute("class");
-        mainFella.setAttribute("class", "darkMode");
+        mainFella.setAttribute("class", "darkMode wobbly-shape");
         githubPic.setAttribute("style", "filter:invert(1);");
         linkedinPic.setAttribute("style", "filter:invert(1);");
         wordpressPic.setAttribute("style", "filter:invert(1);");
@@ -26,7 +56,7 @@ function pressTheButton() {
     }
     else { // if relatively light
         mainFella.removeAttribute("class");
-        mainFella.setAttribute("class", "lightMode");
+        mainFella.setAttribute("class", "lightMode wobbly-shape");
         githubPic.removeAttribute("style");
         linkedinPic.removeAttribute("style");
         wordpressPic.removeAttribute("style");
