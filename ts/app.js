@@ -32,6 +32,39 @@ document.addEventListener('mouseleave', () => {
 const theButton = document.getElementById("infinityButton");
 theButton === null || theButton === void 0 ? void 0 : theButton.addEventListener("click", pressTheButton);
 function pressTheButton() {
+    const myNamePara = document.getElementById("my-name");
+    const myDescPara = document.getElementById("my-description");
+    const myCredNamePara = document.getElementById("my-credits-name");
+    const myCredGithubPara = document.getElementById("my-credits-github");
+    const myCredJapOnePara = document.getElementById("my-japanese-is-bad");
+    const myCredJapTwoPara = document.getElementById("my-japanese-is-good");
+    if (myNamePara && myDescPara && myCredNamePara && myCredGithubPara) {
+        // console.log("yummy");
+        const currentNameText = myNamePara.innerText;
+        const altNameText = myNamePara.getAttribute("data-alt-text") || "";
+        myNamePara.innerText = altNameText;
+        myNamePara.setAttribute("data-alt-text", currentNameText);
+        const currentDescText = myDescPara.innerText;
+        const altDescText = myDescPara.getAttribute("data-alt-text") || "";
+        myDescPara.innerText = altDescText;
+        myDescPara.setAttribute("data-alt-text", currentDescText);
+        const currentCreditsNameText = myCredNamePara.innerText;
+        const altCreditsNameText = myCredNamePara.getAttribute("data-alt-text") || "";
+        myCredNamePara.innerText = altCreditsNameText;
+        myCredNamePara.setAttribute("data-alt-text", currentCreditsNameText);
+        const currentCreditsGithubText = myCredGithubPara.innerText;
+        const altCreditsGithubText = myCredGithubPara.getAttribute("data-alt-text") || "";
+        myCredGithubPara.innerText = altCreditsGithubText;
+        myCredGithubPara.setAttribute("data-alt-text", currentCreditsGithubText);
+        const currentJapOneText = myCredJapOnePara.innerText;
+        const altJapOneText = myCredJapOnePara.getAttribute("data-alt-text") || "";
+        myCredJapOnePara.innerText = altJapOneText;
+        myCredJapOnePara.setAttribute("data-alt-text", currentJapOneText);
+        const currentJapTwoText = myCredJapTwoPara.innerText;
+        const altJapTwoText = myCredJapTwoPara.getAttribute("data-alt-text") || "";
+        myCredJapTwoPara.innerText = altJapTwoText;
+        myCredJapTwoPara.setAttribute("data-alt-text", currentJapTwoText);
+    }
     // these HTML elements will change when the button is pressed if the color is detected
     const mainFella = document.getElementById("mainBody");
     const currentMode = mainFella === null || mainFella === void 0 ? void 0 : mainFella.getAttributeNode("class");
