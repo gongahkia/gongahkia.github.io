@@ -142,3 +142,29 @@ function checkHexDarkness(hexColor: string, threshold: number = 0.5): boolean {
     const luminance: number = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
     return luminance < threshold;
 }
+
+function changeDescription() {
+  var description = document.getElementById("my-description");
+  const englishDescription1 = "Self-taught programmer";
+  const englishDescription2 = "Imagining law as code";
+  const japaneseDescription1 = "独学情報科学";
+  const japaneseDescription2 = "コードとしての法律を想像する";
+  if (description!.innerText === japaneseDescription1) {
+    description!.innerText = japaneseDescription2;
+  } else if (description!.innerText === englishDescription1){
+    description!.innerText = englishDescription2;
+  }
+}
+
+function resetDescription() {
+  var description = document.getElementById("my-description");
+  const englishDescription1 = "Self-taught programmer";
+  const englishDescription2 = "Imagining law as code";
+  const japaneseDescription1 = "独学情報科学";
+  const japaneseDescription2 = "コードとしての法律を想像する";
+  if (description!.innerText === japaneseDescription2) {
+    description!.innerText = japaneseDescription1; 
+  } else if (description!.innerText === englishDescription2){
+    description!.innerText = englishDescription1;
+  }
+}
