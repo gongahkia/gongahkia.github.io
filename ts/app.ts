@@ -1,38 +1,40 @@
-const wobblyShape = document.querySelector('.wobblyShape') as HTMLElement;
+// 2024/03/25 decomissioning the wobbly cursor in place of a normal cursor
 
-document.addEventListener('mousemove', (event: MouseEvent) => {
-  const { clientX, clientY } = event;
-  wobblyShape.style.left = `${clientX}px`;
-  wobblyShape.style.top = `${clientY}px`;
-});
+// const wobblyShape = document.querySelector('.wobblyShape') as HTMLElement;
 
-let isMouseDown: boolean = false;
+// document.addEventListener('mousemove', (event: MouseEvent) => {
+//   const { clientX, clientY } = event;
+//   wobblyShape.style.left = `${clientX}px`;
+//   wobblyShape.style.top = `${clientY}px`;
+// });
 
-document.addEventListener('mousedown', () => {
-  isMouseDown = true;
-  if (wobblyShape) {
-    wobblyShape.style.width = '50px';
-    wobblyShape.style.height = '50px';
-  }
-});
+// let isMouseDown: boolean = false;
 
-document.addEventListener('mouseup', () => {
-  isMouseDown = false;
-  if (wobblyShape) {
-    wobblyShape.style.width = '22px';
-    wobblyShape.style.height = '22px';
-  }
-});
+// document.addEventListener('mousedown', () => {
+//   isMouseDown = true;
+//   if (wobblyShape) {
+//     wobblyShape.style.width = '50px';
+//     wobblyShape.style.height = '50px';
+//   }
+// });
 
-document.addEventListener('mouseleave', () => {
-  if (isMouseDown) {
-    isMouseDown = false;
-    if (wobblyShape) {
-      wobblyShape.style.width = '22px';
-      wobblyShape.style.height = '22px';
-    }
-  }
-});
+// document.addEventListener('mouseup', () => {
+//   isMouseDown = false;
+//   if (wobblyShape) {
+//     wobblyShape.style.width = '22px';
+//     wobblyShape.style.height = '22px';
+//   }
+// });
+
+// document.addEventListener('mouseleave', () => {
+//   if (isMouseDown) {
+//     isMouseDown = false;
+//     if (wobblyShape) {
+//       wobblyShape.style.width = '22px';
+//       wobblyShape.style.height = '22px';
+//     }
+//   }
+// });
 
 const theButton = document.getElementById("infinityButton") as HTMLElement;
 theButton?.addEventListener("click", pressTheButton);
