@@ -37,9 +37,10 @@ function pressTheButton() {
     const myDescPara = document.getElementById("my-description");
     const myCredNamePara = document.getElementById("my-credits-name");
     const myCredGithubPara = document.getElementById("my-credits-github");
+    const myCredResumePara = document.getElementById("my-credits-resume");
     const myCredJapOnePara = document.getElementById("my-japanese-is-bad");
     const myCredJapTwoPara = document.getElementById("my-japanese-is-good");
-    if (myNamePara && myDescPara && myCredNamePara && myCredGithubPara) {
+    if (myNamePara && myDescPara && myCredNamePara && myCredGithubPara && myCredResumePara) {
         // console.log("yummy");
         const currentNameText = myNamePara.innerText;
         const altNameText = myNamePara.getAttribute("data-alt-text") || "";
@@ -57,6 +58,10 @@ function pressTheButton() {
         const altCreditsGithubText = myCredGithubPara.getAttribute("data-alt-text") || "";
         myCredGithubPara.innerText = altCreditsGithubText;
         myCredGithubPara.setAttribute("data-alt-text", currentCreditsGithubText);
+        const currentCreditsResumeText = myCredResumePara.innerText;
+        const altCreditsResumeText = myCredResumePara.getAttribute("data-alt-text") || "";
+        myCredResumePara.innerText = altCreditsResumeText;
+        myCredResumePara.setAttribute("data-alt-text", currentCreditsResumeText);
         const currentJapOneText = myCredJapOnePara.innerText;
         const altJapOneText = myCredJapOnePara.getAttribute("data-alt-text") || "";
         myCredJapOnePara.innerText = altJapOneText;
