@@ -1,42 +1,140 @@
-<!doctype HTML>
-<html>
-    <head>
-        <title>Gabriel Ong</title>
-        <link rel="stylesheet" href="main.css"/>
-        <!-- get better HTML webpage favicon! -->
-        <link rel="icon" type="image/x-icon" href="assets/turboGranny.png"/>
-    </head>
-    <body id="mainBody" class="lightMode">
-        <div class="container-navbar">
-            <div class="lightDarkMode">
-                <img id="infinityButton" src="assets/infinity.svg" height="45px"/>
-            </div>
+<!-- 
+fua
+  replace logo for website with shopee comission, make it a circle like hashime's
+
+font reference
+  for the day when the referenced font url breaks
+  https://github.com/kittykatattack/test/tree/master/fonts 
+-->
+
+<!-- document start -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Gabriel Ong is a legal technologist in Singapore">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link preload="stylesheet" href="style.css" as="style">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
+  <style>.thin-space:after{content:"\2006"}</style>
+  <script src="script.js" defer></script>
+  <title>gabrielong.com</title>
+</head>
+<body>
+
+  <input type="button" id="dark-mode">
+  <label for="dark-mode" id="">
+    <img id="infinityButton" src="asset/infinity.svg" height="24" viewbox="0 -960 960 960" width="24"/>
+  </label>
+
+<!-- start of actual website -->
+
+  <main>
+    <article class="overallArticleTags">
+
+    <!-- profile header -->
+
+      <section class="title">
+        <header>
+          <h1>Gabriel Ong</h1>
+          <p>ガブリエル</p>
+          <p>I am a legal technologist in Singapore.</p>
+        </header>
+        <aside>
+          <figure>
+            <img src="asset/gong.jpeg" width="72" height="72" alt="Gabriel Ong" id="gongImage">
+          </figure>
+        </aside>
+        <dl>
+          <dt>Accounts</dt>
+          <dd>
+            <a href="https://github.com/gongahkia">GitHub</a>,
+            <a href="https://www.linkedin.com/in/gabriel-zmong/">LinkedIn</a>,
+            <a href="https://gongzm.wordpress.com/">WordPress</a>,
+            <a href="https://letterboxd.com/gongtalksfilm/">Letterboxd</a>
+          </dd>
+          <dt>Resume</dt>
+          <dd>
+            <a href="resume/gong-resume.pdf">gong-resume.pdf</a>
+          </dd>
+          <dt>Mail</dt>
+          <dd>
+            <a href="mailto:gabrielzmong@gmail.com"><code>gabrielzmong@gmail.com</code></a>
+          </dd>
+        </dl>
+      </section>
+
+    <!-- works (update as needed) -->
+
+      <section class="works">
+        <h2>Works</h2>
+        <div class="grid-container">
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/judgeman">judgeman</a></h3>
+            <p>ELIT legal case facts parser</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/skill-hunter">skill-hunter</a></h3>
+            <p>SSO legislation parser</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/dc4u">dc4u</a></h3>
+            <p>Markup language for legal draft charges</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/gitfetch">gitfetch</a></h3>
+            <p>Snapshots of Github profiles</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/lohigh">lohigh</a></h3>
+            <p>Turns WAV files Lo-fi</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/ooe">ooe</a></h3>
+            <p>Toy markup language that transpiles to HTML</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/thoth">thoth</a></h3>
+            <p>Functional Lua library for the LÖVE game engine</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/monke">monke</a></h3>
+            <p>CLI Monkeytype clone</p>
+          </div>
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/gabrielong.com">gabrielong.com</a></h3>
+            <p>This website</p>
+          </div>
         </div>
-        <div class="container-overall">
-            <div>
-                <p id="my-name" class="header" data-alt-text="ガブリエル・オン">Gabriel Ong</p>
-                <p id="my-description" class="description" data-alt-text="独学情報科学" onmouseover="changeDescription()" onmouseout="resetDescription()">Self-taught programmer</p>
-            </div>
-            <div class="container-main">
-                <div class="item-github">
-                    <a href="https://github.com/gongahkia"><img id="githubImg" src="assets/github.svg" height="55px"/></a>
-                </div>
-                <div class="item-linkedin">
-                    <a href="https://www.linkedin.com/in/gabriel-zmong/"><img id="linkedinImg" src="assets/linkedin.svg" height="55px"/></a>
-                </div>
-                <div class="item-wordpress">
-                    <a href="https://gongzm.wordpress.com"><img id="wordpressImg" src="assets/wordpress.svg" height=55px"/></a>
-                </div>
-                <div class="item-email">
-                    <a href="mailto:gabrielzmong@gmail.com?subject=general%20enquiry"><img id="gmailImg" src="assets/gmail.svg" height="55px"/></a>
-                </div>
-            </div>
-        </div>
-        <div class="container-footer">
-            <div class="credits">
-                <p><a href="" id="my-japanese-is-bad" data-alt-text="">Designed and built by </a><b><a href="https://gongahkia.github.io/" id="my-credits-name" data-alt-text="ゴング">Gabriel Ong</a></b><a href="" id="my-japanese-is-good" data-alt-text="製"></a> | <b><a href="resume/gong-resume.pdf" id="my-credits-resume" data-alt-text="履歴書">Resume</a></b> | <b><a href="https://github.com/gongahkia/v2-personal-site" id="my-credits-github" data-alt-text="コード">Source</a></b></p>
-            </div>
-        </div>
-    </body>
-    <script src="ts/app.js"></script>
+      </section>
+
+    <!-- skills -->
+
+      <section class="skills">
+        <h2>Skills</h2>
+        <dl>
+          <dt>Programming Languages</dt>
+          <dd>
+            Python, Go, JavaScript, PHP, Lua, Rust, C++, Common Lisp, Java, etc.
+          </dd>
+          <dt>Libraries</dt>
+          <dd>
+            Flutter, Vulkan, OpenGL (OpenGL, WebGL), SDL2, LÖVE2d, Curses, Laravel, etc.
+          </dd>
+          <dt>Languages</dt>
+          <dd>
+            English (native), Mandarin (second), Japanese (JLPT N5)
+          </dd>
+          <dt>Open Source Contributions</dt>
+          <dd>
+            <!-- fua add things here when i have contributed something open source -->
+          </dd>
+        </dl>
+      </section>
+
+    </article>
+  </main>
+</body>
 </html>

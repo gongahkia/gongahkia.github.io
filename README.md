@@ -1,7 +1,5 @@
 # third version of personal site
 
-## THIS SITE IS NOW LIVE [HERE](https://gongahkia.github.io)!
-
 ### technologies
 
 ![JavaScript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
@@ -12,4 +10,4 @@
 ### resources
 
 * [icons](https://simpleicons.org/?q=smile)
-* [visual reference](https://www.adamalston.com/)
+* [visual reference](https://hajimehoshi.com/)
