@@ -1,5 +1,7 @@
 # third version of personal site
 
+THIS SITE'S SOURCE CODE CAN BE FOUND [HERE](https://github.com/gongahkia/gabrielong.com)!
+
 ### technologies
 
 ![JavaScript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
