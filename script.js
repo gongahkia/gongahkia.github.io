@@ -30,11 +30,37 @@ function pressTheButton() {
 
 }
 
+// generates any color
 function rngHexColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+// generates pastel colors, which by definition are colors with high value and low saturation
+function rngPastelColor(){
+    const letters = 'FEDCBA9876543210';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 10)];
+        color += Math.floor(Math.random() * 2) ? letters[0] : '';
+    }
+    return color;
+}
+
+// generates balanced colors that excludes shades which are overly bright or dark
+function rngBalancedColor(){
+    const letters = '7EEDCBA9876543210FED'; 
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        if (Math.random() < 0.6) {
+            color += letters[Math.randint(10, 15)];
+        } else {
+            color += letters[Math.randint(0, 9)];
+        }
     }
     return color;
 }
