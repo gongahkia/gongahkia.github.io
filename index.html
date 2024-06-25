@@ -1,140 +1,66 @@
-<!-- 
-font reference
-  for the day when the referenced font url breaks
-  https://github.com/kittykatattack/test/tree/master/fonts 
--->
-
-<!-- document start -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <!-- meta elements  -->
   <meta charset="utf-8">
   <meta name="description" content="Gabriel Ong is a legal technologist in Singapore">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link preload="stylesheet" href="style.css" as="style">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
-  <style>.thin-space:after{content:"\2006"}</style>
+
+  <!-- icon -->
+  <link rel="shortcut icon" href="asset/blob.ico" type="image/x-icon">
+  <link rel="icon" href="asset/blob.ico" type="image/x-icon">
+
+  <!-- load in CSS and JS files as dependancies -->
+  <link preload="stylesheet" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
-  <title>gabrielong.com</title>
+
+  <!-- actual content -->
+  <title>GABRIEL ONG</title>
+
 </head>
+
 <body>
 
-  <input type="button" id="dark-mode">
-  <label for="dark-mode" id="">
-    <img id="infinityButton" src="asset/infinity.svg" height="24" viewbox="0 -960 960 960" width="24"/>
-  </label>
+  <p>
 
-<!-- start of actual website -->
+    <font size="7"><i><b>GABRIEL ONG</b></i></font><br>
 
-  <main>
-    <article class="overallArticleTags">
+    <br>
 
-    <!-- profile header -->
+    <img src="asset/mitake.jpg" style="width:560px;">
 
-      <section class="title">
-        <header>
-          <h1>Gabriel Ong</h1>
-          <p>ガブリエル</p>
-          <p>I am a legal technologist in Singapore.</p>
-        </header>
-        <aside>
-          <figure>
-            <img src="asset/gong1.png" width="115" height="115" alt="Gabriel Ong" id="gongImage">
-          </figure>
-        </aside>
-        <dl>
-          <dt>Accounts</dt>
-          <dd>
-            <a href="https://github.com/gongahkia">GitHub</a>,
-            <a href="https://www.linkedin.com/in/gabriel-zmong/">LinkedIn</a>,
-            <a href="https://gongzm.wordpress.com/">WordPress</a>,
-            <a href="https://letterboxd.com/gongtalksfilm/">Letterboxd</a>
-          </dd>
-          <dt>Resume</dt>
-          <dd>
-            <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf">main.pdf</a>
-          </dd>
-          <dt>Mail</dt>
-          <dd>
-            <a href="mailto:gabrielzmong@gmail.com"><code>gabrielzmong@gmail.com</code></a>
-          </dd>
-        </dl>
-      </section>
+    <br>
+    <br>
 
-    <!-- works (update as needed) -->
+    <span id="timezone">
+      <i>
+        <a href="https://24timezones.com/world_directory/current_singapore_time.php">TIME IN SINGAPORE</a> - 
+        <span id="time">
+          0:00 PM
+        </span>
+        <a href="https://24timezones.com/time-zone/gmt+8">GMT+8</a>
+      </i>
+    </span>
 
-      <section class="works">
-        <h2>Works</h2>
-        <div class="grid-container">
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/judgeman">judgeman</a></h3>
-            <p>ELIT legal case facts parser</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/skill-hunter">skill-hunter</a></h3>
-            <p>SSO legislation parser</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/dc4u">dc4u</a></h3>
-            <p>Markup language for legal draft charges</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/gitfetch">gitfetch</a></h3>
-            <p>Snapshots of Github profiles</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/lohigh">lohigh</a></h3>
-            <p>Turns WAV files Lo-fi</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/ooe">ooe</a></h3>
-            <p>Toy markup language that transpiles to HTML</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/thoth">thoth</a></h3>
-            <p>Functional Lua library for the LÖVE game engine</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/monke">monke</a></h3>
-            <p>CLI Monkeytype clone</p>
-          </div>
-          <div class="grid-item-1">
-            <h3><a href="https://github.com/gongahkia/gabrielong.com">gabrielong.com</a></h3>
-            <p>This website</p>
-          </div>
-        </div>
-      </section>
+    <br>
+    <br>
 
-    <!-- skills -->
+    <a href="about.html">about</a> 
+    // 
+    <a href="https://github.com/gongahkia">github</a> 
+    // 
+    <a href="https://gongzm.wordpress.com/">blog</a> 
+    // 
+    <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf">resume</a> 
+    // 
+    <a href="contact.html">contact</a>
 
-      <section class="skills">
-        <h2>Skills</h2>
-        <dl>
-          <dt>Programming Languages</dt>
-          <dd>
-            Python, Go, JavaScript, PHP, Lua, Rust, C++, Common Lisp, Java, etc.
-          </dd>
-          <dt>Libraries</dt>
-          <dd>
-            Flutter, Vulkan, OpenGL (OpenGL, WebGL), SDL2, LÖVE2d, Curses, Laravel, etc.
-          </dd>
-          <dt>Languages</dt>
-          <dd>
-            English (native), Mandarin (second), Japanese (JLPT N5)
-          </dd>
-          <dt>Open Source Contributions</dt>
-          <dd>
-            <a href="https://github.com/The-Yap-Labs">The Yap Labs</a>, 
-            <a href="https://github.com/shardeum/shardeum-docs">Shardeum</a>, 
-            <a href="https://github.com/OSSPhilippines/personal-well-being-dashboard">OSSPH</a>, 
-            etc.
-          </dd>
-        </dl>
-      </section>
+    <br>
+    <br>
 
-    </article>
-  </main>
+  </p>
+
 </body>
 </html>
