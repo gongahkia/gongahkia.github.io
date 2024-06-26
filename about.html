@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <!-- meta elements  -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- icon -->
-  <link rel="shortcut icon" href="asset/blob.ico" type="image/x-icon">
-  <link rel="icon" href="asset/blob.ico" type="image/x-icon">
-
-  <!-- CSS -->
-  <style>
-    body {
-        top: 0; 
-        left: 0; 
-        width: 99%; 
-        height: 97%;
-        position: absolute; 
-        display: table
-    }
-    p {
-        display: table-cell; 
-        vertical-align: middle; 
-        text-align: center;
-        line-height: 1.5;
-    }
-  </style>
-
-  <!-- actual content -->
-  <title>about</title>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <link rel="shortcut icon" href="asset/blob.ico" type="image/x-icon">
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .content {
+            max-width: 600px; 
+            padding: 0 20px; 
+            text-align: left; 
+        }
+        #profile-photo {
+            width: 100%; 
+            max-width: 240px; 
+            height: auto; 
+            display: block; 
+            margin: 0 auto 20px; 
+        }
+        p {
+            line-height: 1.5;
+            font-size: 1em; 
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .content {
+                padding: 0 10px; 
+            }
+            #profile-photo {
+                max-width: 45%; 
+            }
+            p {
+                font-size: 0.9em; 
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="content">
+        <img src="asset/profile.jpg" alt="photo of Gabriel Ong" id="profile-photo">
+        <p>
+          Gabriel Ong is a second-year undergraduate student reading Computing and 
+          Law at Singapore Management University. 
 
-  <br>
+          Gabriel works as the tech development director and co-founder 
+          of The Yap Labs, a start-up based out of Singapore that builds products 
+          to gamify social interactions. 
 
-  <img src="asset/profile.jpg" alt="photo of Gabriel Ong" style="width:240px;">
+          Here, Gabriel works primarily on coding the cross-platform 
+          application Yap.com, the chief product of the organisation.
 
-  <p>
-    
-    Gabriel Ong is a second-year undergraduate student reading Computing and 
-    Law at Singapore Management University. 
+          In his free time, Gabriel enjoys writing software that benefits 
+          programmers, practising lawyers and law students.
+          His latest efforts are in development of a DSL that provides 
+          a grammatically-valid representation of Singapore Criminal Law.
 
-    Gabriel works as the tech development director and co-founder 
-    of The Yap Labs, a start-up based out of Singapore that builds products 
-    to gamify social interactions. 
-
-    Here, Gabriel works primarily on coding the cross-platform 
-    application Yap.com, the chief product of the organisation.
-
-    In his free time, Gabriel enjoys writing software that benefits 
-    programmers, practising lawyers and law students.
-    His latest efforts are in development of a DSL that provides 
-    a grammatically-valid representation of Singapore Criminal Law.
-
-    Gabriel is interested in pursuing the entrepreneurship of 
-    legal technology in Singapore later in his career.
-  
-  <br>
-  <br>
-  <br>
-
-</p>
-
+          Gabriel is interested in pursuing the entrepreneurship of 
+          legal technology in Singapore later in his career.
+        </p>
+    </div>
 </body>
 </html>
