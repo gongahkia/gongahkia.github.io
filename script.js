@@ -8,6 +8,8 @@ const config = {
 },
 formatter = new Intl.DateTimeFormat([], config);
 
+const currentYear = new Date().getFullYear();
+
 // ----- EXECUTION CODE -----
 
 setInterval(
@@ -15,3 +17,5 @@ setInterval(
         document.querySelector("#time").innerText = formatter.format(new Date());
     }
 , 1000)
+
+document.querySelector("#current-year").innerText = currentYear;
