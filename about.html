@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>about</title>
     <link rel="shortcut icon" href="./asset/icon/blob.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             position: relative;
@@ -16,57 +17,68 @@
             align-items: center;
             text-align: center;
         }
-        .content {
-            max-width: 600px; 
-            padding: 0 20px; 
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            text-align: center; 
+            background-color: #fff;
+        }
+        .content-wrapper {
             text-align: left; 
         }
-        #profile-photo {
-            width: 100%; 
-            max-width: 240px; 
-            height: auto; 
-            display: block; 
-            margin: 0 auto 20px; 
+        #profile-image {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
         }
         p {
             line-height: 1.5;
-            font-size: 1em; 
+            font-size: 1em;
             margin-top: 0;
         }
+        footer {
+          text-align: center;
+        }
         @media (max-width: 768px) {
-            .content {
-                padding: 0 10px; 
+            .container {
+                padding: 0 10px;
             }
-            #profile-photo {
-                max-width: 45%; 
+            #profile-image {
+                max-width: 45%;
             }
             p {
-                font-size: 0.9em; 
+                font-size: 0.9em;
             }
         }
     </style>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="content">
-        <img src="./asset/profile/nov_2024.jpg" alt="photo of Gabriel Ong" id="profile-photo">
-        <p>
-          Gabriel Ong is a second-year undergraduate student reading Computing and 
-          Law at Singapore Management University. 
+  <div class="container">
+    <h1>ABOUT</h1>
+    <img src="./asset/profile/nov_2024.jpg" alt="photo of Gabriel Ong" id="profile-image">
+    <div class="content-wrapper">
+    <p>
+      Gabriel Ong is a second-year undergraduate student reading Computing and
+      Law at Singapore Management University.
 
-          Gabriel works at the Centre for Digital Law 
-          based out of Singapore Management University, which researches
-          legal technology through computer science. Here, Gabriel works primarily 
-          on developing experimental AI agents for use in legal theory. He has also 
-          copywritten and produced its documentation.
+      Gabriel works at the Centre for Digital Law
+      based out of Singapore Management University, which researches
+      legal technology. Here, Gabriel develops experimental AI agents 
+      for use in legal theory. 
 
-          In his free time, Gabriel enjoys writing software that benefits 
-          programmers, practising lawyers and law students.
+      In his free time, Gabriel enjoys writing software that benefits
+      programmers, practising lawyers and law students.
 
-          Gabriel is interested in pursuing the entrepreneurship of 
-          legal technology in Singapore later in his career.
-        </p>
-        <p align="center">© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
+      Gabriel is interested in pursuing the entrepreneurship of
+      legal technology in Singapore later in his career.
+    </p>
     </div>
+    <footer>
+      <p>© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
+    </footer>
+  </div>
 </body>
 </html>

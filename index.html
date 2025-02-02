@@ -10,30 +10,31 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="content">
+  <div class="container vertical-center">
     <h1>GABRIEL ONG</h1>
-    <p>
-      <img src="./asset/place/mitake.jpg" alt="Gabriel Ong" id="profile-image">
-    </p>
+    <div class="content-wrapper">
+      <div class="image-links-container">
+        <img src="./asset/place/mitake.jpg" alt="Gabriel Ong" id="profile-image">
+        <div id="links">
+          <a href="about.html">about</a>
+          <a href="https://github.com/gongahkia/personal-wiki" target="_blank">notes</a>
+          <a href="https://github.com/gongahkia" target="_blank">github</a>
+          <a href="https://gongzm.wordpress.com/" target="_blank">blog</a>
+          <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf" target="_blank">resume</a>
+          <a href="secret.html">secret</a>
+          <a href="contact.html">contact</a>
+        </div>
+      </div>
+    </div>
     <p id="timezone">
-      <i>
-        <a href="https://24timezones.com/world_directory/current_singapore_time.php">TIME IN SINGAPORE</a> - 
-        <span id="time">0:00 PM</span>
-        <a href="https://24timezones.com/time-zone/gmt+8">GMT+8</a>
-      </i>
+      <a href="https://24timezones.com/world_directory/current_singapore_time.php" target="_blank">TIME IN SINGAPORE</a> - 
+      <span id="time">0:00 PM</span>
+      <a href="https://24timezones.com/time-zone/gmt+8" target="_blank">GMT+8</a>
     </p>
-    <p id="links">
-      <a href="about.html">about</a> //
-      <a href="https://github.com/gongahkia/personal-wiki">notes</a> //
-      <a href="https://github.com/gongahkia">github</a> // 
-      <a href="https://gongzm.wordpress.com/">blog</a> // 
-      <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf">resume</a> // 
-      <a href="secret.html">secret</a> // 
-      <a href="contact.html">contact</a>
-    </p>
-  <footer>
-    <p>© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
-  </footer>
+    <footer>
+      <p>© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
+    </footer>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
