@@ -430,23 +430,31 @@ function loadPage(page) {
     case "secret":
       pageContent.innerHTML = `
                 <h2>SECRET</h2>
-                <p id="secret">Hash.</p>
+                <div class="secret-text">
+                  <p id="secret">Hash.</p>
+                </div>
             `
       generateSecret()
       break
     case "contact":
       pageContent.innerHTML = `
                 <h2>CONTACT</h2>
-                <p>If I miss your e-mail, please contact me on LinkedIn.</p>
+                <div class="contact-text">
+                  <p>If I miss your e-mail, please contact me on LinkedIn.</p>
+                </div>
                 <h3>E-mail</h3>
-                <p>
-                    Business: <a href="mailto:gabrielzmong@gmail.com"><i>gabrielzmong@gmail.com</i></a><br>
-                    School: <a href="mailto:gabriel.ong.2023@scis.smu.edu.sg"><i>gabriel.ong.2023@scis.smu.edu.sg</i></a>
-                </p>
+                <div class="contact-text">
+                  <p>
+                      Business: <a href="mailto:gabrielzmong@gmail.com"><i>gabrielzmong@gmail.com</i></a><br>
+                      School: <a href="mailto:gabriel.ong.2023@scis.smu.edu.sg"><i>gabriel.ong.2023@scis.smu.edu.sg</i></a>
+                  </p>
+                </div>
                 <h3>LinkedIn</h3>
-                <p>
-                    <a href="https://www.linkedin.com/in/gabriel-zmong" target="_blank"><i>https://www.linkedin.com/in/gabriel-zmong</i></a>
-                </p>
+                <div class="contact-text">
+                  <p>
+                      <a href="https://www.linkedin.com/in/gabriel-zmong" target="_blank"><i>https://www.linkedin.com/in/gabriel-zmong</i></a>
+                  </p>
+                </div>
             `
       break
   }

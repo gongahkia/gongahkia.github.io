@@ -1,5 +1,5 @@
 body {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Monaco, "Lucida Console", "Courier New", Courier, monospace;
   background-color: white;
   color: black;
   margin: 0;
@@ -55,7 +55,7 @@ a {
   font-size: inherit;
   padding: 0;
   text-decoration: none;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Monaco, "Lucida Console", "Courier New", Courier, monospace;
 }
 
 button:hover,
@@ -73,7 +73,7 @@ a:hover {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 1rem;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Monaco, "Lucida Console", "Courier New", Courier, monospace;
 }
 
 .ascii-element {
@@ -103,8 +103,17 @@ footer {
 }
 
 .about-text {
+  font-size: 0.9rem;
   margin-left: 1rem;
   flex: 1;
+}
+
+.secret-text {
+  font-size: 0.9rem;
+}
+
+.contact-text {
+  font-size: 0.9rem;
 }
 
 @media (max-width: 600px) {
