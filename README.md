@@ -1,4 +1,4 @@
-# sixth version of personal site
+# seventh version of personal site
 
 THIS SITE'S SOURCE CODE CAN BE FOUND [HERE](https://github.com/gongahkia/gabrielong.com)!
 
