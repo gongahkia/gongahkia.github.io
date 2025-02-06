@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>about</title>
+    <link rel="shortcut icon" href="./asset/icon/blob.ico" type="image/x-icon">
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .content {
+            max-width: 600px; 
+            padding: 0 20px; 
+            text-align: left; 
+        }
+        #profile-photo {
+            width: 100%; 
+            max-width: 240px; 
+            height: auto; 
+            display: block; 
+            margin: 0 auto 20px; 
+        }
+        p {
+            line-height: 1.5;
+            font-size: 1em; 
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .content {
+                padding: 0 10px; 
+            }
+            #profile-photo {
+                max-width: 45%; 
+            }
+            p {
+                font-size: 0.9em; 
+            }
+        }
+    </style>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="content">
+        <img src="./asset/profile/nov_2024.jpg" alt="photo of Gabriel Ong" id="profile-photo">
+        <p>
+          Gabriel Ong is a second-year undergraduate student reading Computing and 
+          Law at Singapore Management University. 
+
+          Gabriel works at the Centre for Digital Law 
+          based out of Singapore Management University, which researches
+          legal technology through computer science. Here, Gabriel works primarily 
+          on developing experimental AI agents for use in legal theory. He has also 
+          copywritten and produced its documentation.
+
+          In his free time, Gabriel enjoys writing software that benefits 
+          programmers, practising lawyers and law students.
+
+          Gabriel is interested in pursuing the entrepreneurship of 
+          legal technology in Singapore later in his career.
+        </p>
+        <p align="center">© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
+    </div>
+</body>
+</html>
