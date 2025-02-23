@@ -1,39 +1,374 @@
+<!-- 
+font reference
+  for the day when the referenced font url breaks
+  https://github.com/kittykatattack/test/tree/master/fonts 
+-->
+
+<!-- document start -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="description" content="Gabriel Ong is a legal technologist in Singapore">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GABRIEL ONG</title>
-  <link rel="shortcut icon" href="./asset/icon/blob.ico" type="image/x-icon">
-  <link rel="stylesheet" href="styles.css">
+  <link preload="stylesheet" href="style.css" as="style">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
+  <style>.thin-space:after{content:"\2006"}</style>
   <script src="script.js" defer></script>
+  <title>GABRIEL ONG</title>
+  <link rel="shortcut icon" href="./asset/blob.ico" type="image/x-icon">
 </head>
 <body>
-  <div class="content">
-    <h1>GABRIEL ONG</h1>
-    <p>
-      <img src="./asset/place/mitake.jpg" alt="Gabriel Ong" id="profile-image">
-    </p>
-    <p id="timezone">
-      <i>
-        <a href="https://24timezones.com/world_directory/current_singapore_time.php">TIME IN SINGAPORE</a> - 
-        <span id="time">0:00 PM</span>
-        <a href="https://24timezones.com/time-zone/gmt+8">GMT+8</a>
-      </i>
-    </p>
-    <p id="links">
-      <a href="about.html">about</a> //
-      <a href="https://github.com/gongahkia/personal-wiki">notes</a> //
-      <a href="https://github.com/gongahkia">github</a> // 
-      <a href="https://gongzm.wordpress.com/">blog</a> // 
-      <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf">resume</a> // 
-      <a href="secret.html">secret</a> // 
-      <a href="contact.html">contact</a>
-    </p>
+
+  <input type="button" id="dark-mode">
+  <label for="dark-mode" id="">
+    <img id="infinityButton" src="asset/infinity.svg" height="24" viewbox="0 -960 960 960" width="24"/>
+  </label>
+
+<!-- start of actual website -->
+
+  <main>
+    <article class="overallArticleTags">
+
+    <!-- profile header -->
+
+      <section class="title">
+        <header>
+          <h1>Gabriel Ong</h1>
+          <p>谷口仁太</p>
+          <p>王哲勉</p>
+          <p>Singapore</p>
+          <span id="time">0:00 PM</span>
+          <a href="https://24timezones.com/world_directory/current_singapore_time.php">GMT+8</a>
+          <p>Software engineer specialising in legal technology.</p>
+        </header>
+        <aside>
+          <figure>
+            <img src="asset/gong1.png" width="115" height="115" alt="Gabriel Ong" id="gongImage">
+          </figure>
+        </aside>
+      </section>
+
+      <section class="skills">
+        <dl>
+          <dt>Accounts</dt>
+          <dd>
+            <a href="https://www.linkedin.com/in/gabriel-zmong/">LinkedIn</a>,
+            <a href="https://github.com/gongahkia">GitHub</a>,
+            <a href="https://gongzm.wordpress.com/">WordPress</a>,
+            <a href="https://letterboxd.com/gongtalksfilm/">Letterboxd</a>
+          </dd>
+          <dt>Resume</dt>
+          <dd>
+            <a href="https://github.com/gongahkia/resume/blob/main/output/main.pdf"><code>main.pdf</code></a>
+          </dd>
+          <dt>Mail</dt>
+          <dd>
+            <a href="mailto:gabrielzmong@gmail.com">gabrielzmong@gmail.com</a>,
+            <a href="mailto:gabriel.ong.2023@scis.smu.edu.sg">gabriel.ong.2023@scis.smu.edu.sg</a>
+          </dd>
+        </dl>
+      </section>
+
+    <!-- works (update as needed) -->
+
+      <section class="works">
+        <h2>Works</h2>
+          <div class="grid-container">
+
+            <div class="grid-item-1">
+              <h3><a href="https://github.com/gongahkia/yuho">yuho</a></h3>
+              <p>Domain-specific language for SG Criminal Law</p>
+            </div>
+            
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/skill-hunter">skill-hunter</a></h3>
+            <p>SSO legislation browser extension</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/judgeman">judgeman</a></h3>
+            <p>ELIT case facts browser extension</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/dc4u">dc4u</a></h3>
+            <p>Markup language for legal draft charges</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/jikai">jikai</a></h3>
+            <p>Tort law hypothetical generation model</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/owl">owl</a></h3>
+            <p>Tag management extension for Google docs, sheets and slides</p>
+          </div>  
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/chiyoda">chiyoda</a></h3>
+            <p>Flock simulation for humans in man-made structures</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/piranesi">piranesi</a></h3>
+            <p>Web app to catalogue your online book collections</p>
+          </div>
+
+          <div class="grid-item-1">
+            <h3><a href="https://github.com/gongahkia/imaya">imaya</a></h3>
+            <p>Cross-platform task prioritisation application</p>
+          </div>
+
+        </div>
+      </section>
+
+    <!-- skills (update as needed) -->
+
+      <section class="skills">
+        <h2>Skills</h2>
+        <dl>
+          <dt>Programming Languages</dt>
+          <dd>
+            Python, Go, JavaScript, TypeScript, Lua, PHP, SQL, Rust, Haskell, Dart
+          </dd>
+          <dt>Technologies</dt>
+          <dd>
+            React, Next.js, Svelte, Vue.js, Flutter, Pytorch, Keras, Vulkan, WebGL
+          </dd>
+          <dt>Languages</dt>
+          <dd>
+            English (native), Mandarin (bilingual), Japanese (JLPT N4)
+          </dd>
+          <dt>Organizations</dt>
+          <dd>
+            <a href="https://github.com/modo-collective">The Modo Collective</a>,
+            <a href="https://github.com/4-0gpa">>4.0gpa</a>,
+            <a href="https://github.com/chesslablab">ChessLaBlab</a>,
+            <a href="https://github.com/The-Yap-Labs">The Yap Labs</a>
+          </dd>
+          <dt>Open Source Contributions</dt>
+          <dd>
+            <a href="https://github.com/4-0gpa/five-seconds">>4.0gpa</a>,
+            <a href="https://github.com/chesslablab/chess-server">ChessLaBlab</a>,
+            <a href="https://github.com/shardeum/shardeum-docs">Shardeum</a>, 
+            <a href="https://github.com/OSSPhilippines/personal-well-being-dashboard">OSSPH</a>, 
+            <a href="https://github.com/The-Yap-Labs">The Yap Labs</a>
+            etc.
+          </dd>
+        </dl>
+      </section>
+
+    <!-- awards (update as needed) -->
+
+      <section class="skills">
+
+        <h2>Awards</h2>
+
+        <dl>
+          <dt>Feb 2025</dt>
+          <dd>
+            <a href="https://hackomania.geekshacking.com/">People's Choice Award for HackOMania 2025</a>
+            <br>
+            GeeksHacking
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Sep 2024</dt>
+          <dd>
+            <a href="https://www.cyberyouth.sg/events/youthxhack-2024-total-defence-edition">Champion of YouthxHack 2024 - Digital Defence</a>
+            <br>
+            Cyber Youth Singapore
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Aug 2023 - Apr 2027</dt>
+          <dd>
+            <a href="https://admissions.smu.edu.sg/financial-matters/financial-aid/smu-global-impact-scholarship-award">Global Impact Scholarship</a>
+            <br>
+            Singapore Management University
+          </dd>
+        </dl>
+
+      </section>
+
+    <!-- education (update as needed) -->
+
+      <section class="skills">
+
+        <h2>Education</h2>
+
+        <dl>
+          <dt>Aug 2023 - Apr 2027</dt>
+          <dd>
+            <a href="https://computing.smu.edu.sg/bsc-computing-law">Bachelor of Science (Computing and Law)</a>
+            <br>
+            Singapore Management University
+            <br>
+            GPA: 3.68/4.00
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Jan 2019 - Dec 2020</dt>
+          <dd>
+            <a href="https://www.acsindep.moe.edu.sg/the-acs-independent-experience/ibdp/">International Baccalaureate Diploma Programme (IBDP)</a>
+            <br>
+            Anglo Chinese School (Independent)
+            <br>
+            Score: 44/45 
+          </dd>
+        </dl>
+
+      </section>  
+
+    <!-- experience (update as needed) -->
+
+      <section class="skills">
+
+        <h2>Experience</h2>
+
+        <dl>
+          <dt>Jan 2025 - Present</dt>
+          <dd>
+            <a href="https://law.smu.edu.sg/">SMU Yong Pung How School of Law</a>
+            <br>
+            Research Assistant
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Jan 2025 - Present</dt>
+          <dd>
+            <a href="https://modo-com.vercel.app/">The Modo Collective</a>
+            <br>
+            Founder, Lead Developer
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Sep 2024 - Dec 2024</dt>
+          <dd>
+            <a href="https://elefant.net.ai/">Elefant</a>
+            <br>
+            Backend Development Intern
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Aug 2023 - Oct 2024</dt>
+          <dd>
+            <a href="https://law.smu.edu.sg/student-activities/student-clubs/smu-legal-innovation-and-technology-lit">SMU Legal Innovation and Technology (LIT)</a>
+            <br>
+            Tech Development Director
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Apr 2024 - Aug 2024</dt>
+          <dd>
+            <a href="https://the-yap-labs.github.io/">The Yap Labs</a>
+            <br>
+            Co-Founder, Tech Lead
+          </dd>
+        </dl>
+
+      </section>
+
+    <!-- certifications (update as needed) -->
+
+      <section class="skills">
+
+        <h2>Licenses & Certifications</h2>
+
+        <dl>
+          <dt>Feb 2025</dt>
+          <dd>
+            <a href="https://www.datacamp.com/courses/data-manipulation-with-pandas">Data Manipulation with pandas</a>
+            <br>
+            Credential ID: 494b8f47107335b7a6c8c960a281dcfdd3025db3 
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Jul 2024</dt>
+          <dd>
+            <a href="https://www.coursera.org/professional-certificates/google-cybersecurity">Google Cybersecurity Specialization</a>
+            <br>
+            Credential ID: ZRUJ9SDLQE4V
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Jun 2024</dt>
+          <dd>
+            <a href="https://www.coursera.org/professional-certificates/google-advanced-data-analytics">Google Advanced Data Analytics Specialization</a>
+            <br>
+            Credential ID: ULP7G5LBRNM7 
+            <br>
+            <br>
+            <a href="https://www.coursera.org/professional-certificates/google-data-analytics">Google Data Analytics Specialization</a>
+            <br>
+            Credential ID: W5ZUSVKCJYKB
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>May 2024</dt>
+          <dd>
+            <a href="https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce">Google Digital Marketing & E-commerce Specialization</a>
+            <br>
+            Credential ID: 33NVBXNXMJBX
+            <br>
+            <br>
+            <a href="https://www.coursera.org/professional-certificates/google-project-management">Google Project Management Specialization</a>
+            <br>
+            Credential ID: NFAAP9Y8GUJH
+            <br>
+            <br>
+            <a href="https://www.coursera.org/professional-certificates/google-ux-design">Google UX Design Specialization</a>
+            <br>
+            Credential ID: UV7R9TD85GAB
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Dec 2023</dt>
+          <dd>
+            <a href="https://www.coursera.org/learn/web-applications-php">Building Web Applications in PHP</a>
+            <br>
+            Credential ID: E5K7JMPKCVEA
+            <br>
+            <br>
+            <a href="https://www.coursera.org/specializations/cortex-m-architecture-and-software-development">Arm Cortex-M Architecture and Software Development Specialization</a>
+            <br>
+            Credential ID: RN5ZPETRCCQR
+          </dd>
+        </dl>
+
+        <dl>
+          <dt>Jun 2021</dt>
+          <dd>
+            <a href="https://asktraining.com.sg/it-courses/advanced-certificate-in-infocomm-technology-infrastructure-and-operations/">Advanced Certificate in Infocomm Technology</a>
+            <br>
+            Credential ID: 100017282
+          </dd>
+        </dl>
+
+      </section>  
+
+    </article>
+
   <footer>
-    <p>© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
+    <p>© 2023-<span id="current-year"></span> Gabriel Ong. All rights reserved.</p>
   </footer>
-  </div>
+
+  </main>
+
 </body>
 </html>
