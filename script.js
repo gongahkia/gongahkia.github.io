@@ -13,14 +13,17 @@ function pressTheButton() {
     console.log(newColor, isDarkMode); 
     document.body.style.backgroundColor = newColor;
     const articleTag = document.getElementsByClassName("overallArticleTags")[0];
+    const footerTag = document.getElementsByTagName("footer")[0];
     const imageTag = document.getElementById("gongImage");
     if (isDarkMode) {
         theButton.setAttribute("style", "filter:invert(1);");
         articleTag.setAttribute("style", "filter:invert(1);");
+        footerTag.setAttribute("style", "filter:invert(1);");
         imageTag.style.filter = "invert(1)";
     } else {
         theButton.style.filter = "none";
         articleTag.style.filter = "none";
+        footerTag.style.filter = "none";
         imageTag.style.filter = "none";
     }
 }
