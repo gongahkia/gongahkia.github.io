@@ -1,6 +1,6 @@
 # ninth version of personal site
 
-THIS SITE'S SOURCE CODE CAN BE FOUND [HERE](https://github.com/gongahkia/gabrielong.com)!
+THIS SITE'S SOURCE CODE CAN BE FOUND [HERE](https://github.com/gongahkia/gabrielongzm.com)!
 
 ### technologies
 
