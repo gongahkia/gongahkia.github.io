@@ -26,6 +26,8 @@ function pressTheButton() {
         footerTag.style.filter = "none";
         imageTag.style.filter = "none";
     }
+    const clickTextColor = isDarkMode ? '#CCCCCC' : '#363636';
+    document.documentElement.style.setProperty('--click-text-color', clickTextColor);
 }
 
 function generateDarkColor() {
@@ -63,3 +65,19 @@ setInterval(
 , 1000)
 
 document.querySelector("#current-year").innerText = currentYear;
+
+// ----- click animation -----
+
+document.addEventListener('click', function(event) {
+    const clickContainer = document.getElementById('click-container');
+    const clickElement = document.createElement('div');
+    clickElement.textContent = 'click';
+    clickElement.classList.add('click-animation');
+    clickElement.style.left = (event.clientX - 20) + 'px';
+    clickElement.style.top = (event.clientY - 10) + 'px';
+    clickElement.style.color = getComputedStyle(document.documentElement).getPropertyValue('--click-text-color');
+    clickContainer.appendChild(clickElement);
+    setTimeout(() => {
+        clickContainer.removeChild(clickElement);
+    }, 1000);
+});
