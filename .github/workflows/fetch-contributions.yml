@@ -1,0 +1,32 @@
+name: Update GitHub contributions JSON
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 00:00 UTC daily = 08:00 SGT
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate contributions JSON
+        run: |
+          node -e "const https=require('https');
+          const query=JSON.stringify({query: `query($login:String!){ user(login:$login){ contributionsCollection{ contributionCalendar{ totalContributions weeks{ contributionDays{ date contributionCount } } } } } }`, variables:{login:'gongahkia'}});
+          const req=https.request({hostname:'api.github.com',path:'/graphql',method:'POST',headers:{'User-Agent':'actions','Content-Type':'application/json','Authorization':`Bearer ${process.env.GITHUB_TOKEN}`}},res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{const js=JSON.parse(d); const weeks=js.data.user.contributionsCollection.contributionCalendar.weeks.map(w=>({days:w.contributionDays.map(cd=>({date:cd.date,count:cd.contributionCount}))})); const max=Math.max(0,...weeks.flatMap(w=>w.days.map(x=>x.count))); const out={weeks,max}; require('fs').mkdirSync('asset',{recursive:true}); require('fs').writeFileSync('asset/contributions.json', JSON.stringify(out));});}); req.on('error',e=>{console.error(e); process.exit(1);}); req.write(query); req.end();"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add asset/contributions.json
+            git commit -m "chore: update contributions.json"
+            git push
+          fi
+
