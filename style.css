@@ -248,14 +248,16 @@
     /* contributions calendar */
     #github-contrib-calendar {
         width: 100%;
-        max-width: 720px;
         padding-top: calc(var(--unit-size) / 2);
+        overflow-x: auto;
+        overflow-y: hidden;
     }
     .contrib-grid {
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: min-content;
         gap: 2px;
+        width: max-content;
     }
     .contrib-week {
         display: grid;
