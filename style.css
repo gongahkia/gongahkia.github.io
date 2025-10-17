@@ -249,6 +249,7 @@
     #github-contrib-calendar {
         width: 100%;
         padding-top: calc(var(--unit-size) / 2);
+        padding-bottom: calc(var(--unit-size) / 2);
         overflow-x: auto;
         overflow-y: hidden;
     }
