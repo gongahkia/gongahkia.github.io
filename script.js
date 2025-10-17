@@ -103,6 +103,20 @@ function renderContribCalendar(data) {
     const weeks = data.weeks; // [{days:[{date,count}]}, ...]
     const max = data.max || 20;
 
+    // Calculate total contributions
+    let totalContributions = 0;
+    weeks.forEach(week => {
+        week.days.forEach(day => {
+            if (day) totalContributions += day.count;
+        });
+    });
+
+    // Update the title with total contributions
+    const titleElement = document.getElementById('contrib-title');
+    if (titleElement) {
+        titleElement.textContent = `${totalContributions} contributions in the last year`;
+    }
+
     const grid = document.createElement('div');
     grid.className = 'contrib-grid';
 
@@ -123,10 +137,14 @@ function renderContribCalendar(data) {
 
     container.appendChild(grid);
 
-    const legend = document.createElement('div');
-    legend.className = 'contrib-legend';
-    legend.innerHTML = 'Less ' + [0,1,2,3,4].map(i => `<span class="legend-swatch intensity-${i}"></span>`).join(' ') + ' More';
-    container.appendChild(legend);
+    // Render legend in separate container
+    const legendContainer = document.getElementById('contrib-legend-container');
+    if (legendContainer) {
+        const legend = document.createElement('div');
+        legend.className = 'contrib-legend';
+        legend.innerHTML = 'Less ' + [0,1,2,3,4].map(i => `<span class="legend-swatch intensity-${i}"></span>`).join(' ') + ' More';
+        legendContainer.appendChild(legend);
+    }
 }
 
 function intensityLevel(count, max) {
