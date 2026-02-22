@@ -1,6 +1,6 @@
 ---
 title: "Doctor Strange"
-date: 2021-07-27
+date: 27 Jul 2021
 type: film
 director: "Scott Derrickson"
 year: 2016

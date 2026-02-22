@@ -1,6 +1,6 @@
 ---
 title: "Joker"
-date: 2022-07-05
+date: 5 Jul 2022
 type: film
 director: "Todd Phillips"
 year: 2019

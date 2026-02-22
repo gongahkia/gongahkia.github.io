@@ -1,6 +1,6 @@
 ---
 title: "Whiplash"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Damien Chazelle"
 year: 2014

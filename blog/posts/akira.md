@@ -1,6 +1,6 @@
 ---
 title: "Akira"
-date: 2023-11-01
+date: 1 Nov 2023
 type: film
 director: "Katsuhiro Otomo"
 year: 1988

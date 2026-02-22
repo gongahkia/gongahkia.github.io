@@ -1,6 +1,6 @@
 ---
 title: "Parasite"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Bong Joon Ho"
 year: 2019

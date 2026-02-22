@@ -1,6 +1,6 @@
 ---
 title: "Nightcrawler"
-date: 2022-08-06
+date: 6 Aug 2022
 type: film
 director: "Dan Gilroy"
 year: 2014

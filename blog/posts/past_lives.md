@@ -1,6 +1,6 @@
 ---
 title: "Past Lives"
-date: 2023-09-17
+date: 17 Sep 2023
 type: film
 director: "Celine Song"
 year: 2023

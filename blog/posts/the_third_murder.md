@@ -1,6 +1,6 @@
 ---
 title: "The Third Murder"
-date: 2023-09-25
+date: 25 Sep 2023
 type: film
 director: "Hirokazu Kore-eda"
 year: 2017

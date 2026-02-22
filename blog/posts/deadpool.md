@@ -1,6 +1,6 @@
 ---
 title: "Deadpool"
-date: 2021-04-29
+date: 29 Apr 2021
 type: film
 director: "Tim Miller"
 year: 2016

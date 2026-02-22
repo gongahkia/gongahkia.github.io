@@ -1,6 +1,6 @@
 ---
 title: "I Know What You Did Last Summer"
-date: 2025-12-09
+date: 9 Dec 2025
 type: film
 director: "Jennifer Kaytin Robinson"
 year: 2025

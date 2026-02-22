@@ -1,6 +1,6 @@
 ---
 title: "The Summit of the Gods"
-date: 2022-01-03
+date: 3 Jan 2022
 type: film
 director: "Patrick Imbert"
 year: 2021

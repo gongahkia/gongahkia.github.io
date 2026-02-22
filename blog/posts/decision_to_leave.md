@@ -1,6 +1,6 @@
 ---
 title: "Decision to Leave"
-date: 2022-09-18
+date: 18 Sep 2022
 type: film
 director: "Park Chan-wook"
 year: 2022

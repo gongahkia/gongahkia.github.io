@@ -1,6 +1,6 @@
 ---
 title: "Monsters University"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Dan Scanlon"
 year: 2013

@@ -1,6 +1,6 @@
 ---
 title: "The Secret Life of Walter Mitty"
-date: 2020-02-05
+date: 5 Feb 2020
 type: film
 director: "Ben Stiller"
 year: 2013

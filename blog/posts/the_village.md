@@ -1,6 +1,6 @@
 ---
 title: "The Village"
-date: 2025-07-16
+date: 16 Jul 2025
 type: film
 director: "Haruo Sotozaki"
 year: 2023

@@ -1,6 +1,6 @@
 ---
 title: "Confession"
-date: 2022-12-12
+date: 12 Dec 2022
 type: film
 director: "Dayna Hanson"
 year: 2022

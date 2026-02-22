@@ -1,6 +1,6 @@
 ---
 title: "The Conjuring 2"
-date: 2025-06-09
+date: 9 Jun 2025
 type: film
 director: "James Wan"
 year: 2016

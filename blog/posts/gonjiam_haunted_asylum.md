@@ -1,6 +1,6 @@
 ---
 title: "Gonjiam: Haunted Asylum"
-date: 2025-07-24
+date: 24 Jul 2025
 type: film
 director: "Jung Bum-shik"
 year: 2018

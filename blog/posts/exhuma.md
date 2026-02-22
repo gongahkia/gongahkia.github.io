@@ -1,6 +1,6 @@
 ---
 title: "Exhuma"
-date: 2024-04-02
+date: 2 Apr 2024
 type: film
 director: "Jang Jae-hyun"
 year: 2024

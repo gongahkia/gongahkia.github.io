@@ -1,6 +1,6 @@
 ---
 title: "27 Dresses"
-date: 2025-06-20
+date: 20 Jun 2025
 type: film
 director: "Anne Fletcher"
 year: 2008

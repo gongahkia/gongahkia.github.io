@@ -1,6 +1,6 @@
 ---
 title: "Nomadland"
-date: 2021-08-11
+date: 11 Aug 2021
 type: film
 director: "Chloé Zhao"
 year: 2020

@@ -1,6 +1,6 @@
 ---
 title: "White Chicks"
-date: 2025-06-22
+date: 22 Jun 2025
 type: film
 director: "Keenen Ivory Wayans"
 year: 2004

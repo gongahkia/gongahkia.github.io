@@ -1,6 +1,6 @@
 ---
 title: "Inception"
-date: 2021-05-16
+date: 16 May 2021
 type: film
 director: "Christopher Nolan"
 year: 2010

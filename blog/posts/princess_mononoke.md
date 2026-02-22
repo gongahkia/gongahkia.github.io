@@ -1,6 +1,6 @@
 ---
 title: "Princess Mononoke"
-date: 2024-06-08
+date: 8 Jun 2024
 type: film
 director: "Hayao Miyazaki"
 year: 1997

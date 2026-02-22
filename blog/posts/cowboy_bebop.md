@@ -1,6 +1,6 @@
 ---
 title: "Cowboy Bebop"
-date: 2024-06-26
+date: 26 Jun 2024
 type: film
 director: "Shinichiro Watanabe"
 year: 1998

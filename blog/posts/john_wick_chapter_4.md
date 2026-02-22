@@ -1,6 +1,6 @@
 ---
 title: "John Wick: Chapter 4"
-date: 2023-09-15
+date: 15 Sep 2023
 type: film
 director: "Chad Stahelski"
 year: 2023

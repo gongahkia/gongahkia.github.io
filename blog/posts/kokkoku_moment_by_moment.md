@@ -1,6 +1,6 @@
 ---
 title: "Kokkoku, Moment by Moment"
-date: 2025-08-18
+date: 18 Aug 2025
 type: film
 director: "Unknown"
 year: 2018

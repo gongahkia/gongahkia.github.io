@@ -1,6 +1,6 @@
 ---
 title: "The Farewell"
-date: 2021-12-26
+date: 26 Dec 2021
 type: film
 director: "Lulu Wang"
 year: 2019

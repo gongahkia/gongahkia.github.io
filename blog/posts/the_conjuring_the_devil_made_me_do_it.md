@@ -1,6 +1,6 @@
 ---
 title: "The Conjuring: The Devil Made Me Do It"
-date: 2025-06-20
+date: 20 Jun 2025
 type: film
 director: "Michael Chaves"
 year: 2021

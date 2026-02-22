@@ -1,6 +1,6 @@
 ---
 title: "Burning"
-date: 2021-10-10
+date: 10 Oct 2021
 type: film
 director: "VS Sanoj"
 year: 2018

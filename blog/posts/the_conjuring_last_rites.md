@@ -1,6 +1,6 @@
 ---
 title: "The Conjuring: Last Rites"
-date: 2025-09-05
+date: 5 Sep 2025
 type: film
 director: "Michael Chaves"
 year: 2025

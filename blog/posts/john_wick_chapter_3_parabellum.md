@@ -1,6 +1,6 @@
 ---
 title: "John Wick: Chapter 3 – Parabellum"
-date: 2022-01-06
+date: 6 Jan 2022
 type: film
 director: "Chad Stahelski"
 year: 2019

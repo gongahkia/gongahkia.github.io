@@ -1,6 +1,6 @@
 ---
 title: "The Imitation Game"
-date: 2021-07-27
+date: 27 Jul 2021
 type: film
 director: "Morten Tyldum"
 year: 2014

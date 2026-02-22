@@ -1,6 +1,6 @@
 ---
 title: "Zootopia 2"
-date: 2025-11-28
+date: 28 Nov 2025
 type: film
 director: "Jared Bush, Byron Howard"
 year: 2025

@@ -1,6 +1,6 @@
 ---
 title: "Terror in Resonance"
-date: 2024-12-27
+date: 27 Dec 2024
 type: film
 director: "Unknown"
 year: 2014

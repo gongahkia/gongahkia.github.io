@@ -1,6 +1,6 @@
 ---
 title: "In the Tall Grass"
-date: 2024-06-08
+date: 8 Jun 2024
 type: film
 director: "Vincenzo Natali"
 year: 2019

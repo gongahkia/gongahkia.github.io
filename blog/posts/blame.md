@@ -1,6 +1,6 @@
 ---
 title: "BLAME!"
-date: 2023-10-30
+date: 30 Oct 2023
 type: film
 director: "Hiroyuki Seshita"
 year: 2017

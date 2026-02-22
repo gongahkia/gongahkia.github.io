@@ -1,6 +1,6 @@
 ---
 title: "The Shadow's Edge"
-date: 2025-09-27
+date: 27 Sep 2025
 type: film
 director: "Larry Yang"
 year: 2025

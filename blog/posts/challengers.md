@@ -1,6 +1,6 @@
 ---
 title: "Challengers"
-date: 2025-07-31
+date: 31 Jul 2025
 type: film
 director: "Luca Guadagnino"
 year: 2024

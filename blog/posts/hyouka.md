@@ -1,6 +1,6 @@
 ---
 title: "Hyouka"
-date: 2025-07-26
+date: 26 Jul 2025
 type: film
 director: "Mari Asato"
 year: 2012

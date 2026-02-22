@@ -1,6 +1,6 @@
 ---
 title: "Suzume"
-date: 2023-09-09
+date: 9 Sep 2023
 type: film
 director: "Makoto Shinkai"
 year: 2022

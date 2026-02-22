@@ -1,6 +1,6 @@
 ---
 title: "Monsters, Inc."
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Pete Docter"
 year: 2001

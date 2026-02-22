@@ -1,6 +1,6 @@
 ---
 title: "Gurren Lagann"
-date: 2025-09-20
+date: 20 Sep 2025
 type: film
 director: "Hiroyuki Imaishi"
 year: 2007

@@ -1,6 +1,6 @@
 ---
 title: "The Good Dinosaur"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Peter Sohn"
 year: 2015

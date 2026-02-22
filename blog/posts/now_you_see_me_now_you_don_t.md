@@ -1,6 +1,6 @@
 ---
 title: "Now You See Me: Now You Don't"
-date: 2025-11-20
+date: 20 Nov 2025
 type: film
 director: "Ruben Fleischer"
 year: 2025

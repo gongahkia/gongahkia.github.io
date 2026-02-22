@@ -1,6 +1,6 @@
 ---
 title: "Wall to Wall"
-date: 2025-07-31
+date: 31 Jul 2025
 type: film
 director: "Kim Tae-joon"
 year: 2025

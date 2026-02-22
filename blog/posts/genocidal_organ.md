@@ -1,6 +1,6 @@
 ---
 title: "Genocidal Organ"
-date: 2023-09-07
+date: 7 Sep 2023
 type: film
 director: "Shukou Murase"
 year: 2017

@@ -1,6 +1,6 @@
 ---
 title: "Over the Garden Wall"
-date: 2025-06-24
+date: 24 Jun 2025
 type: film
 director: "John Daumery"
 year: 2014

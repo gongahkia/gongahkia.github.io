@@ -1,6 +1,6 @@
 ---
 title: "Weapons"
-date: 2025-08-16
+date: 16 Aug 2025
 type: film
 director: "Zach Cregger"
 year: 2025

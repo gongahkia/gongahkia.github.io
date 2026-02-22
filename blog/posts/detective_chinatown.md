@@ -1,6 +1,6 @@
 ---
 title: "Detective Chinatown"
-date: 2025-07-23
+date: 23 Jul 2025
 type: film
 director: "Chen Sicheng"
 year: 2015

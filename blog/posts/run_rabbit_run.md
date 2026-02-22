@@ -1,6 +1,6 @@
 ---
 title: "Run Rabbit Run"
-date: 2025-12-14
+date: 14 Dec 2025
 type: film
 director: "Daina Reid"
 year: 2023

@@ -1,6 +1,6 @@
 ---
 title: "Mob Psycho 100: Reigen - The Miraculous Unknown Psychic"
-date: 2018-07-11
+date: 11 Jul 2018
 type: film
 director: "Unknown"
 year: 2018

@@ -1,6 +1,6 @@
 ---
 title: "Banana Fish"
-date: 2025-09-06
+date: 6 Sep 2025
 type: film
 director: "Fumiya Matsuzaki"
 year: 2018

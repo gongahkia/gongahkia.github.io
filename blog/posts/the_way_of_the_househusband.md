@@ -1,6 +1,6 @@
 ---
 title: "The Way of the Househusband"
-date: 2021-08-06
+date: 6 Aug 2021
 type: film
 director: "Toichiro Ruto"
 year: 2020

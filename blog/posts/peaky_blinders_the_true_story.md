@@ -1,6 +1,6 @@
 ---
 title: "Peaky Blinders: The True Story"
-date: 2023-02-12
+date: 12 Feb 2023
 type: film
 director: "David Glover"
 year: 2016

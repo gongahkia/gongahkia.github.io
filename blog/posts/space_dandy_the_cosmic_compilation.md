@@ -1,6 +1,6 @@
 ---
 title: "Space Dandy : The Cosmic Compilation"
-date: 2025-09-20
+date: 20 Sep 2025
 type: film
 director: "Shinichiro Watanabe"
 year: 2014

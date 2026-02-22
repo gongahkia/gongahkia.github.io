@@ -1,6 +1,6 @@
 ---
 title: "His House"
-date: 2024-06-02
+date: 2 Jun 2024
 type: film
 director: "Remi Weekes"
 year: 2020

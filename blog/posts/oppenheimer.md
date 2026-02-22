@@ -1,6 +1,6 @@
 ---
 title: "Oppenheimer"
-date: 2024-06-02
+date: 2 Jun 2024
 type: film
 director: "Christopher Nolan"
 year: 2023

@@ -1,6 +1,6 @@
 ---
 title: "Civil War"
-date: 2025-12-14
+date: 14 Dec 2025
 type: film
 director: "Alex Garland"
 year: 2024

@@ -1,6 +1,6 @@
 ---
 title: "TRIGUN"
-date: 2025-09-15
+date: 15 Sep 2025
 type: film
 director: "Satoshi Nishimura"
 year: 1998

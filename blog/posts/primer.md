@@ -1,6 +1,6 @@
 ---
 title: "Primer"
-date: 2025-07-27
+date: 27 Jul 2025
 type: film
 director: "Shane Carruth"
 year: 2004

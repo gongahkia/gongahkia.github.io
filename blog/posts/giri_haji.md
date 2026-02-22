@@ -1,6 +1,6 @@
 ---
 title: "Giri/Haji"
-date: 2023-05-23
+date: 23 May 2023
 type: film
 director: "Unknown"
 year: 2019

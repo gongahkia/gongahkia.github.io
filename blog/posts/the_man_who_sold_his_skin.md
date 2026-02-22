@@ -1,6 +1,6 @@
 ---
 title: "The Man Who Sold His Skin"
-date: 2024-03-05
+date: 5 Mar 2024
 type: film
 director: "Kaouther Ben Hania"
 year: 2020

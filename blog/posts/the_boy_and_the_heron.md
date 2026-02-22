@@ -1,6 +1,6 @@
 ---
 title: "The Boy and the Heron"
-date: 2025-06-21
+date: 21 Jun 2025
 type: film
 director: "Hayao Miyazaki"
 year: 2023

@@ -1,6 +1,6 @@
 ---
 title: "Kill List"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Ben Wheatley"
 year: 2011

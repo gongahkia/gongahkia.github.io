@@ -1,6 +1,6 @@
 ---
 title: "Wicked"
-date: 2025-10-13
+date: 13 Oct 2025
 type: film
 director: "Jon M. Chu"
 year: 2024

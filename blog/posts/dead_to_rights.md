@@ -1,6 +1,6 @@
 ---
 title: "Dead to Rights"
-date: 2025-09-22
+date: 22 Sep 2025
 type: film
 director: "Shen Ao"
 year: 2025

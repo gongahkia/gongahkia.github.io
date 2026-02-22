@@ -20,6 +20,13 @@
             <span class="isbn">ISBN: {{ post.isbn }}</span>
             <br>
             <span class="rating">{{ post.rating }}/5</span>, {{ post.category }}
+            {% elif post.director %}
+            <br>
+            <i>{{ post.director }}</i>
+            <br>
+            <i>Release Year: {{ post.year }}</i>
+            <br>
+            <strong>{{ post.rating }}/5</strong>
             {% endif %}
           </dd>
         </dl>

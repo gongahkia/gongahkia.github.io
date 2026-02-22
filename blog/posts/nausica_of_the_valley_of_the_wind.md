@@ -1,6 +1,6 @@
 ---
 title: "Nausicaä of the Valley of the Wind"
-date: 2023-10-09
+date: 9 Oct 2023
 type: film
 director: "Hayao Miyazaki"
 year: 1984

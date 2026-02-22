@@ -1,6 +1,6 @@
 ---
 title: "Broker"
-date: 2022-06-25
+date: 25 Jun 2022
 type: film
 director: "Hirokazu Kore-eda"
 year: 2022

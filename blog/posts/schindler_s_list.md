@@ -1,6 +1,6 @@
 ---
 title: "Schindler's List"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Steven Spielberg"
 year: 1993

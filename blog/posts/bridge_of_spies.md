@@ -1,6 +1,6 @@
 ---
 title: "Bridge of Spies"
-date: 2021-05-17
+date: 17 May 2021
 type: film
 director: "Steven Spielberg"
 year: 2015

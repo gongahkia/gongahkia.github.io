@@ -1,6 +1,6 @@
 ---
 title: "The House"
-date: 2022-06-29
+date: 29 Jun 2022
 type: film
 director: "Marc James Roels, Niki Lindroth von Bahr, Paloma Baeza, Emma De Swaef"
 year: 2022

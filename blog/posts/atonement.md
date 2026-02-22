@@ -1,6 +1,6 @@
 ---
 title: "Atonement"
-date: 2025-07-25
+date: 25 Jul 2025
 type: film
 director: "Joe Wright"
 year: 2007

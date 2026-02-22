@@ -1,6 +1,6 @@
 ---
 title: "Fantastic Beasts and Where to Find Them"
-date: 2021-04-29
+date: 29 Apr 2021
 type: film
 director: "David Yates"
 year: 2016

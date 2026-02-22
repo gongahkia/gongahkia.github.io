@@ -1,6 +1,6 @@
 ---
 title: "JUJUTSU KAISEN"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Shota Goshozono"
 year: 2020

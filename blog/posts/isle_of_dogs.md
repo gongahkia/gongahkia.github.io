@@ -1,6 +1,6 @@
 ---
 title: "Isle of Dogs"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Wes Anderson"
 year: 2018

@@ -1,6 +1,6 @@
 ---
 title: "Confessions of a Shopaholic"
-date: 2025-06-27
+date: 27 Jun 2025
 type: film
 director: "P.J. Hogan"
 year: 2009

@@ -1,6 +1,6 @@
 ---
 title: "Velvet Buzzsaw"
-date: 2022-08-09
+date: 9 Aug 2022
 type: film
 director: "Dan Gilroy"
 year: 2019

@@ -1,6 +1,6 @@
 ---
 title: "Toy Story"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "John Lasseter"
 year: 1995

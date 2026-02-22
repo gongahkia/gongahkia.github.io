@@ -1,6 +1,6 @@
 ---
 title: "Cyberpunk: Edgerunners"
-date: 2023-03-20
+date: 20 Mar 2023
 type: film
 director: "Unknown"
 year: 2022

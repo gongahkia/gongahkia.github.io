@@ -1,6 +1,6 @@
 ---
 title: "Longlegs"
-date: 2025-06-20
+date: 20 Jun 2025
 type: film
 director: "Osgood Perkins"
 year: 2024

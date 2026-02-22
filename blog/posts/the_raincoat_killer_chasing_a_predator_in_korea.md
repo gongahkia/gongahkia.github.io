@@ -1,6 +1,6 @@
 ---
 title: "The Raincoat Killer: Chasing a Predator in Korea"
-date: 2022-01-04
+date: 4 Jan 2022
 type: film
 director: "Unknown"
 year: 2021

@@ -1,6 +1,6 @@
 ---
 title: "Monster"
-date: 2024-06-08
+date: 8 Jun 2024
 type: film
 director: "Rako Prijanto"
 year: 2023

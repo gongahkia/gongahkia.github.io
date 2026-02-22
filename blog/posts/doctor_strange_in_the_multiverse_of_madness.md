@@ -1,6 +1,6 @@
 ---
 title: "Doctor Strange in the Multiverse of Madness"
-date: 2022-07-02
+date: 2 Jul 2022
 type: film
 director: "Sam Raimi"
 year: 2022

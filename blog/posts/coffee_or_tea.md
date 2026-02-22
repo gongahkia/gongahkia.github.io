@@ -1,6 +1,6 @@
 ---
 title: "Coffee or Tea?"
-date: 2022-09-25
+date: 25 Sep 2022
 type: film
 director: "Derek Hui Wang-Yu"
 year: 2020

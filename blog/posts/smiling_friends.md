@@ -1,6 +1,6 @@
 ---
 title: "Smiling Friends"
-date: 2025-10-24
+date: 24 Oct 2025
 type: film
 director: "Dace Rīdūze"
 year: 2020

@@ -1,6 +1,6 @@
 ---
 title: "Everything Everywhere All at Once"
-date: 2022-07-03
+date: 3 Jul 2022
 type: film
 director: "Daniel Scheinert, Daniel Kwan"
 year: 2022

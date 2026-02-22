@@ -1,6 +1,6 @@
 ---
 title: "Bring Her Back"
-date: 2025-07-28
+date: 28 Jul 2025
 type: film
 director: "Michael Philippou, Danny Philippou"
 year: 2025

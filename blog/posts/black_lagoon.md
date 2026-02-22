@@ -1,6 +1,6 @@
 ---
 title: "Black Lagoon"
-date: 2025-01-23
+date: 23 Jan 2025
 type: film
 director: "Jack Arnold"
 year: 2006

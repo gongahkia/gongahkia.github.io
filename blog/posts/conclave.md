@@ -1,6 +1,6 @@
 ---
 title: "Conclave"
-date: 2025-01-02
+date: 2 Jan 2025
 type: film
 director: "Edward Berger"
 year: 2024

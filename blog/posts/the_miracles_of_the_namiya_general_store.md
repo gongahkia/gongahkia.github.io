@@ -1,6 +1,6 @@
 ---
 title: "The Miracles of the Namiya General Store"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Ryuichi Hiroki"
 year: 2017

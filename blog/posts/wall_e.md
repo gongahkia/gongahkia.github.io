@@ -1,6 +1,6 @@
 ---
 title: "WALL·E"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Andrew Stanton"
 year: 2008

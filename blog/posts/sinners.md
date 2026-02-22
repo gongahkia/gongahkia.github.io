@@ -1,6 +1,6 @@
 ---
 title: "Sinners"
-date: 2025-10-28
+date: 28 Oct 2025
 type: film
 director: "Ryan Coogler"
 year: 2025

@@ -1,6 +1,6 @@
 ---
 title: "BLUE EYE SAMURAI"
-date: 2025-01-10
+date: 10 Jan 2025
 type: film
 director: "Unknown"
 year: 2023

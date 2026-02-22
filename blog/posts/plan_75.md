@@ -1,6 +1,6 @@
 ---
 title: "Plan 75"
-date: 2022-10-01
+date: 1 Oct 2022
 type: film
 director: "Chie Hayakawa"
 year: 2022

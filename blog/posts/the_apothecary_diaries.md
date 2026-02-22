@@ -1,6 +1,6 @@
 ---
 title: "The Apothecary Diaries"
-date: 2025-06-07
+date: 7 Jun 2025
 type: film
 director: "Norihiro Naganuma"
 year: 2023

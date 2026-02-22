@@ -1,6 +1,6 @@
 ---
 title: "Kubo and the Two Strings"
-date: 2021-07-26
+date: 26 Jul 2021
 type: film
 director: "Travis Knight"
 year: 2016

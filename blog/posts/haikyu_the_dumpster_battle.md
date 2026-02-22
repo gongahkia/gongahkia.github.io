@@ -1,6 +1,6 @@
 ---
 title: "HAIKYU!! The Dumpster Battle"
-date: 2025-11-03
+date: 3 Nov 2025
 type: film
 director: "Susumu Mitsunaka"
 year: 2024

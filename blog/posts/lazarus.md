@@ -1,6 +1,6 @@
 ---
 title: "Lazarus"
-date: 2025-07-05
+date: 5 Jul 2025
 type: film
 director: "Jacob Hynson"
 year: 2025

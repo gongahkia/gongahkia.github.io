@@ -1,6 +1,6 @@
 ---
 title: "Baby Driver"
-date: 2021-04-29
+date: 29 Apr 2021
 type: film
 director: "Edgar Wright"
 year: 2017

@@ -1,6 +1,6 @@
 ---
 title: "John Wick: Chapter 2"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Chad Stahelski"
 year: 2017

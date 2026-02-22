@@ -1,6 +1,6 @@
 ---
 title: "The Conjuring"
-date: 2025-06-08
+date: 8 Jun 2025
 type: film
 director: "James Wan"
 year: 2013

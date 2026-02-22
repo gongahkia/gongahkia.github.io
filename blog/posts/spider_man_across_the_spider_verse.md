@@ -1,6 +1,6 @@
 ---
 title: "Spider-Man: Across the Spider-Verse"
-date: 2023-10-05
+date: 5 Oct 2023
 type: film
 director: "Justin K. Thompson, Kemp Powers, Joaquim Dos Santos"
 year: 2023

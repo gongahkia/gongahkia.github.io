@@ -1,6 +1,6 @@
 ---
 title: "Sully"
-date: 2021-05-17
+date: 17 May 2021
 type: film
 director: "Clint Eastwood"
 year: 2016

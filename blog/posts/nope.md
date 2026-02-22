@@ -1,6 +1,6 @@
 ---
 title: "Nope"
-date: 2025-11-17
+date: 17 Nov 2025
 type: film
 director: "Jordan Peele"
 year: 2022

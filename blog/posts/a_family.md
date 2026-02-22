@@ -1,6 +1,6 @@
 ---
 title: "A Family"
-date: 2021-07-26
+date: 26 Jul 2021
 type: film
 director: "Florence Keith-Roach"
 year: 2020

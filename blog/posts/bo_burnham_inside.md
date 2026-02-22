@@ -1,6 +1,6 @@
 ---
 title: "Bo Burnham: Inside"
-date: 2021-06-15
+date: 15 Jun 2021
 type: film
 director: "Bo Burnham"
 year: 2021

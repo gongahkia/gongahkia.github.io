@@ -1,6 +1,6 @@
 ---
 title: "My Daughter is a Zombie"
-date: 2025-09-12
+date: 12 Sep 2025
 type: film
 director: "Pil Gam-seong"
 year: 2025

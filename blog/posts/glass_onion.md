@@ -1,6 +1,6 @@
 ---
 title: "Glass Onion"
-date: 2023-01-26
+date: 26 Jan 2023
 type: film
 director: "Rian Johnson"
 year: 2022

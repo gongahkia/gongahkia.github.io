@@ -1,6 +1,6 @@
 ---
 title: "House"
-date: 2022-11-05
+date: 5 Nov 2022
 type: film
 director: "Nobuhiko Obayashi"
 year: 1977

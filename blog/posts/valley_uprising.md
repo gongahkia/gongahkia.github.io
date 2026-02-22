@@ -1,6 +1,6 @@
 ---
 title: "Valley Uprising"
-date: 2022-04-17
+date: 17 Apr 2022
 type: film
 director: "Nick Rosen, Josh Lowell, Peter Mortimer"
 year: 2014

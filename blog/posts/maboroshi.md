@@ -1,6 +1,6 @@
 ---
 title: "maboroshi"
-date: 2024-05-20
+date: 20 May 2024
 type: film
 director: "Mari Okada, Seimei Kidokoro"
 year: 2023

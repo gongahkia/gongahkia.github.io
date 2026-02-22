@@ -1,6 +1,6 @@
 ---
 title: "Drive My Car"
-date: 2022-09-26
+date: 26 Sep 2022
 type: film
 director: "Ryusuke Hamaguchi"
 year: 2021

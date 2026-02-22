@@ -1,6 +1,6 @@
 ---
 title: "KPop Demon Hunters"
-date: 2025-06-22
+date: 22 Jun 2025
 type: film
 director: "Maggie Kang, Chris Appelhans"
 year: 2025

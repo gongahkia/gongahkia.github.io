@@ -1,6 +1,6 @@
 ---
 title: "March Comes In Like a Lion"
-date: 2025-10-27
+date: 27 Oct 2025
 type: film
 director: "Keishi Otomo"
 year: 2017

@@ -1,6 +1,6 @@
 ---
 title: "Samurai Jack: The Premiere Movie"
-date: 2025-09-20
+date: 20 Sep 2025
 type: film
 director: "Genndy Tartakovsky"
 year: 2001

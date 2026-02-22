@@ -1,6 +1,6 @@
 ---
 title: "The Garden of Words"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Makoto Shinkai"
 year: 2013

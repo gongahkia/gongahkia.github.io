@@ -1,6 +1,6 @@
 ---
 title: "Ballerina"
-date: 2025-06-19
+date: 19 Jun 2025
 type: film
 director: "Len Wiseman"
 year: 2025

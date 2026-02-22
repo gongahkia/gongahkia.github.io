@@ -1,6 +1,6 @@
 ---
 title: "The Perfect Insider"
-date: 2025-07-13
+date: 13 Jul 2025
 type: film
 director: "Unknown"
 year: 2015

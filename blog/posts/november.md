@@ -1,6 +1,6 @@
 ---
 title: "November"
-date: 2023-01-05
+date: 5 Jan 2023
 type: film
 director: "Rainer Sarnet"
 year: 2022

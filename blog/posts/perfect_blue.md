@@ -1,6 +1,6 @@
 ---
 title: "Perfect Blue"
-date: 2021-07-26
+date: 26 Jul 2021
 type: film
 director: "Satoshi Kon"
 year: 1997

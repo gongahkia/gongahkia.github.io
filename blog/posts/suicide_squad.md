@@ -1,6 +1,6 @@
 ---
 title: "Suicide Squad"
-date: 2021-08-12
+date: 12 Aug 2021
 type: film
 director: "David Ayer"
 year: 2016

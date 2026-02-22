@@ -1,6 +1,6 @@
 ---
 title: "Uncut Gems"
-date: 2021-12-30
+date: 30 Dec 2021
 type: film
 director: "Josh Safdie, Benny Safdie"
 year: 2019

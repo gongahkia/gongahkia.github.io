@@ -1,6 +1,6 @@
 ---
 title: "The Guilty"
-date: 2022-08-12
+date: 12 Aug 2022
 type: film
 director: "Gustav Möller"
 year: 2018

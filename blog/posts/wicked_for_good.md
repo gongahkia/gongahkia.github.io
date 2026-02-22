@@ -1,6 +1,6 @@
 ---
 title: "Wicked: For Good"
-date: 2025-11-21
+date: 21 Nov 2025
 type: film
 director: "Jon M. Chu"
 year: 2025

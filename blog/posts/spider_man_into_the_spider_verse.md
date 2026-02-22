@@ -1,6 +1,6 @@
 ---
 title: "Spider-Man: Into the Spider-Verse"
-date: 2021-04-27
+date: 27 Apr 2021
 type: film
 director: "Bob Persichetti, Peter Ramsey, Rodney Rothman"
 year: 2018

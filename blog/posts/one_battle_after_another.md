@@ -1,6 +1,6 @@
 ---
 title: "One Battle After Another"
-date: 2025-10-06
+date: 6 Oct 2025
 type: film
 director: "Paul Thomas Anderson"
 year: 2025

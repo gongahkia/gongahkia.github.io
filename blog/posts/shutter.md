@@ -1,6 +1,6 @@
 ---
 title: "Shutter"
-date: 2025-07-29
+date: 29 Jul 2025
 type: film
 director: "Parkpoom Wongpoom, Banjong Pisanthanakun"
 year: 2004

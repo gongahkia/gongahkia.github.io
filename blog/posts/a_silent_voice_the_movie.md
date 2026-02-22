@@ -1,6 +1,6 @@
 ---
 title: "A Silent Voice: The Movie"
-date: 2021-05-05
+date: 5 May 2021
 type: film
 director: "Naoko Yamada"
 year: 2016

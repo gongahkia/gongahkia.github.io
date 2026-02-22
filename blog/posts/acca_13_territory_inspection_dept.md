@@ -1,6 +1,6 @@
 ---
 title: "ACCA: 13-Territory Inspection Dept."
-date: 2025-08-22
+date: 22 Aug 2025
 type: film
 director: "Shingo Natsume, Keiichiro Saito"
 year: 2017

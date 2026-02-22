@@ -1,6 +1,6 @@
 ---
 title: "The Stranger"
-date: 2025-12-14
+date: 14 Dec 2025
 type: film
 director: "Thomas M. Wright"
 year: 2022

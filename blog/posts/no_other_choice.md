@@ -1,6 +1,6 @@
 ---
 title: "No Other Choice"
-date: 2025-10-20
+date: 20 Oct 2025
 type: film
 director: "Park Chan-wook"
 year: 2025

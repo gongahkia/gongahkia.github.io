@@ -1,6 +1,6 @@
 ---
 title: "Tenet"
-date: 2021-05-15
+date: 15 May 2021
 type: film
 director: "Christopher Nolan"
 year: 2020

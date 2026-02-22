@@ -1,6 +1,6 @@
 ---
 title: "Flavors of Youth"
-date: 2022-08-12
+date: 12 Aug 2022
 type: film
 director: "Yi Xiaoxing, Li Haoling, Yoshitaka Takeuchi"
 year: 2018

@@ -1,6 +1,6 @@
 ---
 title: "Zoolander 2"
-date: 2025-07-05
+date: 5 Jul 2025
 type: film
 director: "Ben Stiller"
 year: 2016

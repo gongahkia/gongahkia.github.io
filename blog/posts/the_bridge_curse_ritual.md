@@ -1,6 +1,6 @@
 ---
 title: "The Bridge Curse: Ritual"
-date: 2025-06-27
+date: 27 Jun 2025
 type: film
 director: "Lester Hsi"
 year: 2023

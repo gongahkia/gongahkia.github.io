@@ -1,6 +1,6 @@
 ---
 title: "5 Centimeters per Second"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Makoto Shinkai"
 year: 2007

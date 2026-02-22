@@ -1,6 +1,6 @@
 ---
 title: "Squid Game"
-date: 2021-10-10
+date: 10 Oct 2021
 type: film
 director: "Unknown"
 year: 2021

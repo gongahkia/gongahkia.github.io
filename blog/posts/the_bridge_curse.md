@@ -1,6 +1,6 @@
 ---
 title: "The Bridge Curse"
-date: 2025-06-22
+date: 22 Jun 2025
 type: film
 director: "Lester Hsi"
 year: 2020

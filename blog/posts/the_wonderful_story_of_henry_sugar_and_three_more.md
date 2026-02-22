@@ -1,6 +1,6 @@
 ---
 title: "The Wonderful Story of Henry Sugar and Three More"
-date: 2024-06-08
+date: 8 Jun 2024
 type: film
 director: "Wes Anderson"
 year: 2024

@@ -1,6 +1,6 @@
 ---
 title: "The Blue Drum"
-date: 2025-12-14
+date: 14 Dec 2025
 type: film
 director: "Angelita Mendoza"
 year: 2022

@@ -1,6 +1,6 @@
 ---
 title: "Meru"
-date: 2022-01-28
+date: 28 Jan 2022
 type: film
 director: "Jimmy Chin, Elizabeth Chai Vasarhelyi"
 year: 2015

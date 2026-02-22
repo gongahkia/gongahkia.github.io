@@ -1,6 +1,6 @@
 ---
 title: "Arrival"
-date: 2022-08-09
+date: 9 Aug 2022
 type: film
 director: "Denis Villeneuve"
 year: 2016

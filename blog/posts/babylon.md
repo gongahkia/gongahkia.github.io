@@ -1,6 +1,6 @@
 ---
 title: "Babylon"
-date: 2025-07-08
+date: 8 Jul 2025
 type: film
 director: "Franco Rosso"
 year: 2019

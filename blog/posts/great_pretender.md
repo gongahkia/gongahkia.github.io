@@ -1,6 +1,6 @@
 ---
 title: "Great Pretender"
-date: 2021-05-26
+date: 26 May 2021
 type: film
 director: "Ronny Yu"
 year: 2020

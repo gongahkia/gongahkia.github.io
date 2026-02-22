@@ -1,6 +1,6 @@
 ---
 title: "Bo Burnham: Make Happy"
-date: 2021-07-20
+date: 20 Jul 2021
 type: film
 director: "Christopher Storer, Bo Burnham"
 year: 2016

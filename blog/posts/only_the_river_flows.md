@@ -1,6 +1,6 @@
 ---
 title: "Only the River Flows"
-date: 2024-03-15
+date: 15 Mar 2024
 type: film
 director: "Wei Shujun"
 year: 2023

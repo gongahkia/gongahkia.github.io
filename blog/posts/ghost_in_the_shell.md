@@ -1,6 +1,6 @@
 ---
 title: "Ghost in the Shell"
-date: 2024-07-06
+date: 6 Jul 2024
 type: film
 director: "Mamoru Oshii"
 year: 1995
