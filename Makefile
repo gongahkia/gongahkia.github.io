@@ -1,4 +1,4 @@
-.PHONY: blog book tech-writeup postmortem wiki build build-wiki clean-wiki help up history sitemap search
+.PHONY: blog book tech-writeup wiki build build-wiki clean-wiki help up history sitemap search
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -15,7 +15,6 @@ help:
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make tech-writeup   - Create a new tech writeup (interactive)"
-	@echo "  make postmortem     - Create a new project postmortem (interactive)"
 	@echo "  make wiki           - Create a new wiki note (interactive)"
 	@echo "  make build-wiki     - Build all wiki HTML from markdown"
 	@echo "  make clean-wiki     - Remove generated wiki HTML files"
@@ -133,36 +132,6 @@ tech-writeup:
 	echo "Created blog/posts/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 
-# Create a new project postmortem (markdown with frontmatter)
-postmortem:
-	@echo "Creating new project postmortem..."
-	@current_date=$$(date +%Y-%m-%d); \
-	printf "Enter date (default: $$current_date): "; \
-	read date; \
-	date=$${date:-$$current_date}; \
-	printf "Enter title (required): "; \
-	read title; \
-	while [ -z "$$title" ]; do \
-		echo "Title is required."; \
-		printf "Enter title (required): "; \
-		read title; \
-	done; \
-	printf "Enter project name: "; \
-	read project; \
-	printf "Enter date range (e.g. Jan-Mar 2025): "; \
-	read date_range; \
-	printf "Enter your role: "; \
-	read role; \
-	printf "Enter team size: "; \
-	read team_size; \
-	printf "Enter outcome (Success/Failure/Learning): "; \
-	read outcome; \
-	printf "Enter tech stack (comma-separated): "; \
-	read tech_stack; \
-	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: postmortem\nproject: \"$$project\"\ndate_range: \"$$date_range\"\nrole: \"$$role\"\nteam_size: \"$$team_size\"\noutcome: \"$$outcome\"\ntech_stack: \"$$tech_stack\"\n---\n\nAdd postmortem content here.\n" > blog/posts/$$filename; \
-	echo "Created blog/posts/$$filename"; \
-	echo "Run 'make build' after editing to rebuild index"
 
 # Create a new wiki note
 wiki:

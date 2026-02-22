@@ -57,7 +57,6 @@ REQUIRED_FIELDS = { # per post type
     "book": ["title", "date", "author", "isbn", "category", "rating"],
     "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "duration", "status"],
-    "postmortem": ["title", "date", "project", "date_range", "role", "team_size", "outcome", "tech_stack"],
 }
 def validate_frontmatter(meta, filepath):
     """validate required frontmatter fields, returns list of errors"""
@@ -85,7 +84,7 @@ class BlogPostParser(HTMLParser):
         attrs_dict = dict(attrs)
         if tag == "section":
             cls = attrs_dict.get("class", "") or ""
-            if "book-details" in cls or "blog-details" in cls or "writeup-details" in cls or "postmortem-details" in cls or "film-details" in cls:
+            if "book-details" in cls or "blog-details" in cls or "writeup-details" in cls or "film-details" in cls:
                 self._in_section = cls
         elif tag == "h2" and self._in_section:
             self._in_h2 = True
@@ -183,7 +182,6 @@ def build_blog():
         "blog": "blog-post.html",
         "book": "book-review.html",
         "tech-writeup": "tech-writeup.html",
-        "postmortem": "project-postmortem.html",
         "film": "film-review.html",
     }
     md_files = sorted(posts_dir.glob("*.md"))
@@ -231,6 +229,11 @@ def build_blog():
                 "year": meta.get("year", ""),
                 "rating": meta.get("rating", ""),
             })
+        elif post_type == "tech-writeup":
+            post_info.update({
+                "duration": meta.get("duration", ""),
+                "status": meta.get("status", ""),
+            })
         all_posts.append(post_info)
     html_files = sorted(posts_dir.glob("*.html"))
     for html_file in html_files:
@@ -252,6 +255,11 @@ def build_blog():
                 "director": meta.get("director", ""),
                 "year": meta.get("year", ""),
                 "rating": meta.get("rating", "").replace("/5", ""),
+            })
+        elif meta.get("tech stack") or meta.get("duration"):
+            post_info.update({
+                "duration": meta.get("duration", ""),
+                "status": meta.get("status", ""),
             })
         all_posts.append(post_info)
     def parse_date(d):
