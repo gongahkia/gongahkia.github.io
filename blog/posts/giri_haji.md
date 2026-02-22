@@ -1,0 +1,10 @@
+---
+title: "Giri/Haji"
+date: 2023-05-23
+type: film
+director: "Unknown"
+year: 2019
+rating: 5
+---
+
+This show has no right being as good as it is. I will be rewatching this.

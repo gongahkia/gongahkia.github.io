@@ -1,0 +1,10 @@
+---
+title: "Squid Game"
+date: 2021-10-10
+type: film
+director: "Unknown"
+year: 2021
+rating: 3.5
+---
+
+So that's all this was to you? Just some kind of Squid Game?
