@@ -2,7 +2,7 @@
 title: "The Perfect Insider"
 date: 13 Jul 2025
 type: film
-director: "Unknown"
+director: "Sōhei Saikawa"
 year: 2015
 rating: 4
 ---

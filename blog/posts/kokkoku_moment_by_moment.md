@@ -2,7 +2,7 @@
 title: "Kokkoku, Moment by Moment"
 date: 18 Aug 2025
 type: film
-director: "Unknown"
+director: "Yoshimitsu Ohashi"
 year: 2018
 rating: 4
 ---

@@ -2,7 +2,7 @@
 title: "The Queen's Gambit"
 date: 27 Apr 2021
 type: film
-director: "Unknown"
+director: "Scott Frank"
 year: 2020
 rating: 4
 ---

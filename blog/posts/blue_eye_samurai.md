@@ -2,7 +2,7 @@
 title: "BLUE EYE SAMURAI"
 date: 10 Jan 2025
 type: film
-director: "Unknown"
+director: "Jane Wu, Michael Green, Amber Noizumi"
 year: 2023
 rating: 3.5
 ---

@@ -2,7 +2,7 @@
 title: "Squid Game"
 date: 10 Oct 2021
 type: film
-director: "Unknown"
+director: "Hwang Dong-hyuk"
 year: 2021
 rating: 3.5
 ---

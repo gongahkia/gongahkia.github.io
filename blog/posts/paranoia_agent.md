@@ -2,7 +2,7 @@
 title: "Paranoia Agent"
 date: 26 Jul 2021
 type: film
-director: "Unknown"
+director: "Satoshi Kon"
 year: 2004
 rating: 4.5
 ---

@@ -2,7 +2,7 @@
 title: "The Raincoat Killer: Chasing a Predator in Korea"
 date: 4 Jan 2022
 type: film
-director: "Unknown"
+director: "John Choi, Rob Sixsmith"
 year: 2021
 rating: 1.5
 ---

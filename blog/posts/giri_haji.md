@@ -2,7 +2,7 @@
 title: "Giri/Haji"
 date: 23 May 2023
 type: film
-director: "Unknown"
+director: "Julian Farino, Ben Chessell"
 year: 2019
 rating: 5
 ---

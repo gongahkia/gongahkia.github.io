@@ -2,7 +2,7 @@
 title: "Cyberpunk: Edgerunners"
 date: 20 Mar 2023
 type: film
-director: "Unknown"
+director: "Hiroyuki Imaishi"
 year: 2022
 rating: 4.5
 ---

@@ -1,8 +1,8 @@
 ---
-title: "Mob Psycho 100: Reigen - The Miraculous Unknown Psychic"
+title: "Mob Psycho 100"
 date: 11 Jul 2018
 type: film
-director: "Unknown"
+director: "Yuzuru Tachikawa"
 year: 2018
 rating: 3.5
 ---

@@ -2,7 +2,7 @@
 title: "91 Days"
 date: 6 Jul 2025
 type: film
-director: "Unknown"
+director: "Hiro Kaburagi"
 year: 2016
 rating: 4
 ---
