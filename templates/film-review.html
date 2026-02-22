@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "headline": "{{ title }} ({{ year }})",
+    "author": {
+      "@type": "Person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+      <section class="film-details">
+        <h2>{{ title }}</h2>
+        <dl>
+          <dt>Director</dt>
+          <dd>{{ director }}</dd>
+          <dt>Year</dt>
+          <dd>{{ year }}</dd>
+          <dt>Rating</dt>
+          <dd>{{ rating }}/5</dd>
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
+        </dl>
+      </section>
+      <section class="review-content">
+        {{ content }}
+      </section>
+{% endblock %}

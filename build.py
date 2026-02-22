@@ -55,6 +55,7 @@ def parse_frontmatter(text):
 REQUIRED_FIELDS = { # per post type
     "blog": ["title", "date"],
     "book": ["title", "date", "author", "isbn", "category", "rating"],
+    "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "duration", "status"],
     "postmortem": ["title", "date", "project", "date_range", "role", "team_size", "outcome", "tech_stack"],
 }
@@ -84,7 +85,7 @@ class BlogPostParser(HTMLParser):
         attrs_dict = dict(attrs)
         if tag == "section":
             cls = attrs_dict.get("class", "") or ""
-            if "book-details" in cls or "blog-details" in cls or "writeup-details" in cls or "postmortem-details" in cls:
+            if "book-details" in cls or "blog-details" in cls or "writeup-details" in cls or "postmortem-details" in cls or "film-details" in cls:
                 self._in_section = cls
         elif tag == "h2" and self._in_section:
             self._in_h2 = True
@@ -183,6 +184,7 @@ def build_blog():
         "book": "book-review.html",
         "tech-writeup": "tech-writeup.html",
         "postmortem": "project-postmortem.html",
+        "film": "film-review.html",
     }
     md_files = sorted(posts_dir.glob("*.md"))
     for md_file in md_files:
@@ -204,6 +206,9 @@ def build_blog():
         if post_type == "book":
             og_title = f"{title} by {meta.get('author', '')} | Gabriel Ong"
             meta_desc = f"Book Review: {title} by {meta.get('author', '')} - Gabriel Ong"
+        elif post_type == "film":
+            og_title = f"{title} ({meta.get('year', '')}) | Gabriel Ong"
+            meta_desc = f"Film Review: {title} ({meta.get('year', '')}) dir. {meta.get('director', '')} - Gabriel Ong"
         rendered = template.render(
             content=html_content, base_path="../..", section_path="..",
             meta_description=meta_desc, og_title=og_title, og_type="article",
@@ -220,6 +225,12 @@ def build_blog():
                 "rating": meta.get("rating", ""),
                 "category": meta.get("category", ""),
             })
+        elif post_type == "film":
+            post_info.update({
+                "director": meta.get("director", ""),
+                "year": meta.get("year", ""),
+                "rating": meta.get("rating", ""),
+            })
         all_posts.append(post_info)
     html_files = sorted(posts_dir.glob("*.html"))
     for html_file in html_files:
@@ -235,6 +246,12 @@ def build_blog():
                 "isbn": meta.get("isbn", ""),
                 "rating": meta.get("rating", "").replace("/5", ""),
                 "category": meta.get("category", ""),
+            })
+        elif meta.get("director"):
+            post_info.update({
+                "director": meta.get("director", ""),
+                "year": meta.get("year", ""),
+                "rating": meta.get("rating", "").replace("/5", ""),
             })
         all_posts.append(post_info)
     def parse_date(d):
