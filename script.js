@@ -93,7 +93,7 @@ document.querySelector("#current-year").innerText = currentYear;
 document.addEventListener('click', function(event) {
     const clickContainer = document.getElementById('click-container');
     const clickElement = document.createElement('div');
-    const sounds = ['click', 'clack', 'thock', 'thonk', 'thup', 'pop', 'whump', 'thud', 'plip', 'clonk', 'snap', 'tck', 'tak', 'bonk', 'klak', 'tik'];
+    const sounds = ['click', 'clack', 'thock', 'thonk', 'thup', 'pop', 'whump', 'thud', 'plip', 'clonk', 'snap', 'tck', 'tak', 'bonk', 'klak', 'tik', 'tock', 'plink', 'clunk', 'thwack', 'bop', 'klik', 'plonk', 'tunk', 'pok', 'ping', 'thwick', 'blip', 'clop', 'klock', 'thwump', 'tnk'];
     clickElement.textContent = sounds[Math.floor(Math.random() * sounds.length)];
     clickElement.classList.add('click-animation');
     clickElement.style.left = (event.clientX - 20) + 'px';
