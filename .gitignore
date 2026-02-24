@@ -1,3 +1,4 @@
 node_modules/
 package-lock.json
 blog/posts/*.md
+personal-wiki/notes/*.md

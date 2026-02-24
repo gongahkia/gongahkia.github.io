@@ -124,6 +124,36 @@ def parse_html_post(filepath):
     parser = BlogPostParser()
     parser.feed(filepath.read_text(encoding="utf-8"))
     return {"title": parser.title.strip(), **parser.meta}
+# --- html wiki note parser ---
+class WikiNoteParser(HTMLParser):
+    """parse existing html wiki notes to extract title for index generation"""
+    def __init__(self):
+        super().__init__()
+        self._in_header = False
+        self._in_h2 = False
+        self.title = ""
+    def handle_starttag(self, tag, attrs):
+        attrs_dict = dict(attrs)
+        if tag == "section" and "note-header" in (attrs_dict.get("class") or ""):
+            self._in_header = True
+        elif tag == "h2" and self._in_header:
+            self._in_h2 = True
+    def handle_endtag(self, tag):
+        if tag == "h2":
+            self._in_h2 = False
+        elif tag == "section":
+            self._in_header = False
+    def handle_data(self, data):
+        if self._in_h2:
+            self.title += data
+def parse_html_wiki_note(filepath):
+    """extract title from existing html wiki note, compute stats from file"""
+    parser = WikiNoteParser()
+    parser.feed(filepath.read_text(encoding="utf-8"))
+    size_bytes = filepath.stat().st_size
+    size_kb = size_bytes / 1024
+    file_size = f"{size_bytes}B" if size_kb < 1 else f"{size_kb:.1f}KB"
+    return {"title": parser.title.strip(), "file_size": file_size}
 # --- build wiki ---
 def build_wiki():
     """convert all wiki markdown notes to html pages, generate index"""
@@ -162,6 +192,15 @@ def build_wiki():
         output_path.write_text(rendered, encoding="utf-8")
         notes_info.append({"title": title, "filename": output_filename, "size": file_size})
         print(f"  wiki: {md_file.name} -> {output_filename}")
+    generated = {n["filename"] for n in notes_info}
+    for html_file in sorted(pages_dir.glob("*.html")):
+        if html_file.name in generated:
+            continue
+        meta = parse_html_wiki_note(html_file)
+        if not meta.get("title"):
+            continue
+        notes_info.append({"title": meta["title"], "filename": html_file.name, "size": meta["file_size"]})
+        print(f"  wiki: {html_file.name} (html-only)")
     notes_info.sort(key=lambda x: x["title"].lower())
     idx_template = env.get_template("wiki-index.html")
     idx_html = idx_template.render(
