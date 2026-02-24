@@ -38,7 +38,7 @@ search:
 # Create a new blog post (markdown with frontmatter)
 blog:
 	@echo "Creating new blog post..."
-	@current_date=$$(date +%Y-%m-%d); \
+	@current_date=$$(date +"%e %b %Y" | xargs); \
 	printf "Enter date (default: $$current_date): "; \
 	read date; \
 	date=$${date:-$$current_date}; \
@@ -57,7 +57,7 @@ blog:
 # Create a new book review (markdown with frontmatter)
 book:
 	@echo "Creating new book review..."
-	@current_date=$$(date +%Y-%m-%d); \
+	@current_date=$$(date +"%e %b %Y" | xargs); \
 	printf "Enter date (default: $$current_date): "; \
 	read date; \
 	date=$${date:-$$current_date}; \
@@ -109,7 +109,7 @@ book:
 # Create a new film review (markdown with frontmatter)
 film:
 	@echo "Creating new film review..."
-	@current_date=$$(date +%Y-%m-%d); \
+	@current_date=$$(date +"%e %b %Y" | xargs); \
 	printf "Enter date (default: $$current_date): "; \
 	read date; \
 	date=$${date:-$$current_date}; \
@@ -149,7 +149,7 @@ film:
 # Create a new tech writeup (markdown with frontmatter)
 tech-writeup:
 	@echo "Creating new tech writeup..."
-	@current_date=$$(date +%Y-%m-%d); \
+	@current_date=$$(date +"%e %b %Y" | xargs); \
 	printf "Enter date (default: $$current_date): "; \
 	read date; \
 	date=$${date:-$$current_date}; \
