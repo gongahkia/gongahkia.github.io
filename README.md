@@ -1,3 +1,6 @@
+![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/fetch-contributions.yml/badge.svg)
+![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/wiki-release.yml/badge.svg)
+
 # `Site, Notes, Blog`
 
 Monorepo for my [personal site](./), [personal-wiki](./personal-wiki/) and [blog](./blog/).
