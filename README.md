@@ -3,7 +3,7 @@
 
 # `Site, Notes, Blog`
 
-Monorepo for my [personal site](./), [personal-wiki](./personal-wiki/) and [blog](./blog/).
+Monorepo for my personal [site](./), [blog](./blog/) and [wiki](./personal-wiki/).
 
 ## Wiki Notes
 
@@ -13,17 +13,12 @@ Monorepo for my [personal site](./), [personal-wiki](./personal-wiki/) and [blog
 
 ```console
 $ make help
-$ make blog # create blog post
-$ make book # create book review
-$ make wiki # create wiki note
-$ make build-wiki # build html from wiki note
-$ make sitemap # generates sitemap of entire site
 ```
 
 ## Automated workflows
 
 * [`fetch-contributions.yml`](./.github/workflows/fetch-contributions.yml): Update GitHub contributions calendar on personal site daily
-* [`wiki-release.yml`](./.github/workflows/wiki-release.yml): ZIPs all markdown wiki notes on changes
+* [`wiki-release.yml`](./.github/workflows/wiki-release.yml): ZIPs all html wiki notes on changes
 
 ## Stack
 
