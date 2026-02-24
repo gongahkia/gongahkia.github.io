@@ -7,4 +7,4 @@ year: 2025
 rating: 4
 ---
 
-Might be his funniest.
+Park never misses.
