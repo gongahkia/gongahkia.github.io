@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'personal-wiki/notes/**.md'
+      - 'personal-wiki/pages/**.html'
   workflow_dispatch:
 
 jobs:
@@ -19,12 +19,10 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: Find and zip markdown files
+      - name: Zip wiki HTML pages
         run: |
-          cd personal-wiki
-          find ./notes -name "*.md" -type f > notes.txt
-          zip notes.zip $(cat notes.txt)
-          mv notes.zip ../notes.zip
+          cd personal-wiki/pages
+          zip ../../notes.zip *.html
 
       - name: Create/Update Release
         id: create_release
