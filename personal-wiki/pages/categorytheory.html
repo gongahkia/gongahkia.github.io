@@ -43,9 +43,9 @@
         <h2>Category theory</h2>
         <dl>
           <dt>File size</dt>
-          <dd>10.8KB</dd>
+          <dd>13.9KB</dd>
           <dt>Lines of code</dt>
-          <dd>204</dd>
+          <dd>207</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -68,12 +68,12 @@
 <li>
 <p><strong>Category</strong></p>
 <ul>
-<li>A category $\mathcal{C}$ consists of:<ul>
-<li><strong>Objects</strong>: Denoted by symbols such as $A, B, C, \ldots$</li>
-<li><strong>Morphisms</strong> (or <strong>Arrows</strong>): Denoted by $f: A \to B$, representing a relationship from object $A$ to object $B$</li>
-<li><strong>Composition</strong>: For morphisms $f: A \to B$ and $g: B \to C$, the composition $g \circ f: A \to C$</li>
-<li><strong>Identity Morphisms</strong>: For each object $A$, there is an identity morphism $id_A: A \to A$ such that $id_A \circ f = f$ and $g \circ id_A = g$ for all $f$ and $g$ involving $A$</li>
-<li><strong>Associativity</strong>: Composition of morphisms is associative: $(h \circ g) \circ f = h \circ (g \circ f)$</li>
+<li>A category <span class="arithmatex">\(\mathcal{C}\)</span> consists of:<ul>
+<li><strong>Objects</strong>: Denoted by symbols such as <span class="arithmatex">\(A, B, C, \ldots\)</span></li>
+<li><strong>Morphisms</strong> (or <strong>Arrows</strong>): Denoted by <span class="arithmatex">\(f: A \to B\)</span>, representing a relationship from object <span class="arithmatex">\(A\)</span> to object <span class="arithmatex">\(B\)</span></li>
+<li><strong>Composition</strong>: For morphisms <span class="arithmatex">\(f: A \to B\)</span> and <span class="arithmatex">\(g: B \to C\)</span>, the composition <span class="arithmatex">\(g \circ f: A \to C\)</span></li>
+<li><strong>Identity Morphisms</strong>: For each object <span class="arithmatex">\(A\)</span>, there is an identity morphism <span class="arithmatex">\(id_A: A \to A\)</span> such that <span class="arithmatex">\(id_A \circ f = f\)</span> and <span class="arithmatex">\(g \circ id_A = g\)</span> for all <span class="arithmatex">\(f\)</span> and <span class="arithmatex">\(g\)</span> involving <span class="arithmatex">\(A\)</span></li>
+<li><strong>Associativity</strong>: Composition of morphisms is associative: <span class="arithmatex">\((h \circ g) \circ f = h \circ (g \circ f)\)</span></li>
 </ul>
 </li>
 </ul>
@@ -81,10 +81,10 @@
 <li>
 <p><strong>Functor</strong></p>
 <ul>
-<li>A functor $F: \mathcal{C} \to \mathcal{D}$ between categories $\mathcal{C}$ and $\mathcal{D}$ consists of:<ul>
-<li>A mapping of objects: For each object $A \in \mathcal{C}$, there is an object $F(A) \in \mathcal{D}$</li>
-<li>A mapping of morphisms: For each morphism $f: A \to B$ in $\mathcal{C}$, there is a morphism $F(f): F(A) \to F(B)$ in $\mathcal{D}$</li>
-<li>Preservation of composition and identity: $F(g \circ f) = F(g) \circ F(f)$ and $F(id_A) = id_{F(A)}$</li>
+<li>A functor <span class="arithmatex">\(F: \mathcal{C} \to \mathcal{D}\)</span> between categories <span class="arithmatex">\(\mathcal{C}\)</span> and <span class="arithmatex">\(\mathcal{D}\)</span> consists of:<ul>
+<li>A mapping of objects: For each object <span class="arithmatex">\(A \in \mathcal{C}\)</span>, there is an object <span class="arithmatex">\(F(A) \in \mathcal{D}\)</span></li>
+<li>A mapping of morphisms: For each morphism <span class="arithmatex">\(f: A \to B\)</span> in <span class="arithmatex">\(\mathcal{C}\)</span>, there is a morphism <span class="arithmatex">\(F(f): F(A) \to F(B)\)</span> in <span class="arithmatex">\(\mathcal{D}\)</span></li>
+<li>Preservation of composition and identity: <span class="arithmatex">\(F(g \circ f) = F(g) \circ F(f)\)</span> and <span class="arithmatex">\(F(id_A) = id_{F(A)}\)</span></li>
 </ul>
 </li>
 </ul>
@@ -92,9 +92,9 @@
 <li>
 <p><strong>Natural Transformation</strong></p>
 <ul>
-<li>A natural transformation $\eta$ between functors $F, G: \mathcal{C} \to \mathcal{D}$ consists of:<ul>
-<li>A collection of morphisms $\eta_A: F(A) \to G(A)$ for each object $A \in \mathcal{C}$</li>
-<li>Such that for any morphism $f: A \to B$ in $\mathcal{C}$, the diagram <img alt="Diagram" src="https://latex.codecogs.com/png.latex?%5Cbegin%7Barray%7D%7Bccc%7D%0AF%28A%29%20%26%20%5Cxrightarrow%7B%5Ceta_A%7D%20%26%20G%28A%29%20%5C%5C%0A%5Cdownarrow%7BF%28f%29%7D%20%26%20%26%20%5Cdownarrow%7BG%28f%29%7D%20%5C%5C%0AF%28B%29%20%26%20%5Cxrightarrow%7B%5Ceta_B%7D%20%26%20G%28B%29%0A%5Cend%7Barray%7D" /> commutes</li>
+<li>A natural transformation <span class="arithmatex">\(\eta\)</span> between functors <span class="arithmatex">\(F, G: \mathcal{C} \to \mathcal{D}\)</span> consists of:<ul>
+<li>A collection of morphisms <span class="arithmatex">\(\eta_A: F(A) \to G(A)\)</span> for each object <span class="arithmatex">\(A \in \mathcal{C}\)</span></li>
+<li>Such that for any morphism <span class="arithmatex">\(f: A \to B\)</span> in <span class="arithmatex">\(\mathcal{C}\)</span>, the diagram <img alt="Diagram" src="https://latex.codecogs.com/png.latex?%5Cbegin%7Barray%7D%7Bccc%7D%0AF%28A%29%20%26%20%5Cxrightarrow%7B%5Ceta_A%7D%20%26%20G%28A%29%20%5C%5C%0A%5Cdownarrow%7BF%28f%29%7D%20%26%20%26%20%5Cdownarrow%7BG%28f%29%7D%20%5C%5C%0AF%28B%29%20%26%20%5Cxrightarrow%7B%5Ceta_B%7D%20%26%20G%28B%29%0A%5Cend%7Barray%7D" /> commutes</li>
 </ul>
 </li>
 </ul>
@@ -102,9 +102,9 @@
 <li>
 <p><strong>Monoid</strong></p>
 <ul>
-<li>A monoid $(M, \cdot, e)$ is a set $M$ equipped with a binary operation $\cdot: M \times M \to M$ and an identity element $e \in M$ such that:<ul>
-<li><strong>Associativity</strong>: $(a \cdot b) \cdot c = a \cdot (b \cdot c)$ for all $a, b, c \in M$</li>
-<li><strong>Identity</strong>: $a \cdot e = a$ and $e \cdot a = a$ for all $a \in M$</li>
+<li>A monoid <span class="arithmatex">\((M, \cdot, e)\)</span> is a set <span class="arithmatex">\(M\)</span> equipped with a binary operation <span class="arithmatex">\(\cdot: M \times M \to M\)</span> and an identity element <span class="arithmatex">\(e \in M\)</span> such that:<ul>
+<li><strong>Associativity</strong>: <span class="arithmatex">\((a \cdot b) \cdot c = a \cdot (b \cdot c)\)</span> for all <span class="arithmatex">\(a, b, c \in M\)</span></li>
+<li><strong>Identity</strong>: <span class="arithmatex">\(a \cdot e = a\)</span> and <span class="arithmatex">\(e \cdot a = a\)</span> for all <span class="arithmatex">\(a \in M\)</span></li>
 </ul>
 </li>
 </ul>
@@ -112,28 +112,28 @@
 <li>
 <p><strong>Product and Sum Types</strong></p>
 <ul>
-<li><strong>Product Types</strong>: Denoted by $A \times B$, represent pairs of elements from sets $A$ and $B$.</li>
-<li><strong>Sum Types</strong>: Denoted by $A + B$, represent elements that belong to either set $A$ or set $B$.</li>
+<li><strong>Product Types</strong>: Denoted by <span class="arithmatex">\(A \times B\)</span>, represent pairs of elements from sets <span class="arithmatex">\(A\)</span> and <span class="arithmatex">\(B\)</span>.</li>
+<li><strong>Sum Types</strong>: Denoted by <span class="arithmatex">\(A + B\)</span>, represent elements that belong to either set <span class="arithmatex">\(A\)</span> or set <span class="arithmatex">\(B\)</span>.</li>
 </ul>
 </li>
 <li>
 <p><strong>Limits and Colimits</strong></p>
 <ul>
-<li><strong>Limit</strong>: The limit of a diagram (a functor from an index category to $\mathcal{C}$) is an object that captures the idea of the “best approximation” to the diagram.</li>
+<li><strong>Limit</strong>: The limit of a diagram (a functor from an index category to <span class="arithmatex">\(\mathcal{C}\)</span>) is an object that captures the idea of the “best approximation” to the diagram.</li>
 <li><strong>Colimit</strong>: Dual to limits, capturing the “coarsest” structure that can be mapped to from the diagram.</li>
 </ul>
 </li>
 <li>
 <p><strong>Functor Categories</strong></p>
 <ul>
-<li>The category <strong>Fun</strong>$(\mathcal{C}, \mathcal{D})$ consists of all functors from $\mathcal{C}$ to $\mathcal{D}$ and natural transformations between them.</li>
+<li>The category <strong>Fun</strong><span class="arithmatex">\((\mathcal{C}, \mathcal{D})\)</span> consists of all functors from <span class="arithmatex">\(\mathcal{C}\)</span> to <span class="arithmatex">\(\mathcal{D}\)</span> and natural transformations between them.</li>
 </ul>
 </li>
 <li>
 <p><strong>Adjunctions</strong></p>
 <ul>
-<li>An adjunction between categories $\mathcal{C}$ and $\mathcal{D}$ consists of a pair of functors $F: \mathcal{C} \to \mathcal{D}$ and $G: \mathcal{D} \to \mathcal{C}$ such that:<ul>
-<li>For each pair of objects $A \in \mathcal{C}$ and $B \in \mathcal{D}$, there is a natural isomorphism between <img alt="\text{Hom}_{\mathcal{D}}(F(A), B)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BD%7D%7D%28F%28A%29%2C%20B%29" /> and <img alt="\text{Hom}_{\mathcal{C}}(A, G(B))" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28A%2C%20G%28B%29%29" />.</li>
+<li>An adjunction between categories <span class="arithmatex">\(\mathcal{C}\)</span> and <span class="arithmatex">\(\mathcal{D}\)</span> consists of a pair of functors <span class="arithmatex">\(F: \mathcal{C} \to \mathcal{D}\)</span> and <span class="arithmatex">\(G: \mathcal{D} \to \mathcal{C}\)</span> such that:<ul>
+<li>For each pair of objects <span class="arithmatex">\(A \in \mathcal{C}\)</span> and <span class="arithmatex">\(B \in \mathcal{D}\)</span>, there is a natural isomorphism between <img alt="\text{Hom}_{\mathcal{D}}(F(A), B)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BD%7D%7D%28F%28A%29%2C%20B%29" /> and <img alt="\text{Hom}_{\mathcal{C}}(A, G(B))" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28A%2C%20G%28B%29%29" />.</li>
 </ul>
 </li>
 </ul>
@@ -141,9 +141,9 @@
 <li>
 <p><strong>Monads</strong></p>
 <ul>
-<li>A monad on a category $\mathcal{C}$ consists of:<ul>
-<li>A functor $T: \mathcal{C} \to \mathcal{C}$</li>
-<li>Two natural transformations: $\eta: 1_{\mathcal{C}} \to T$ (unit) and $\mu: T^2 \to T$ (multiplication) satisfying certain coherence conditions.</li>
+<li>A monad on a category <span class="arithmatex">\(\mathcal{C}\)</span> consists of:<ul>
+<li>A functor <span class="arithmatex">\(T: \mathcal{C} \to \mathcal{C}\)</span></li>
+<li>Two natural transformations: <span class="arithmatex">\(\eta: 1_{\mathcal{C}} \to T\)</span> (unit) and <span class="arithmatex">\(\mu: T^2 \to T\)</span> (multiplication) satisfying certain coherence conditions.</li>
 </ul>
 </li>
 </ul>
@@ -151,20 +151,20 @@
 <li>
 <p><strong>Initial and Terminal Objects</strong></p>
 <ul>
-<li><strong>Initial Object</strong>: An object $I$ in a category $\mathcal{C}$ such that for every object $A \in \mathcal{C}$, there exists a unique morphism from $I$ to $A$.</li>
-<li><strong>Terminal Object</strong>: An object $T$ in a category $\mathcal{C}$ such that for every object $A \in \mathcal{C}$, there exists a unique morphism from $A$ to $T$.</li>
+<li><strong>Initial Object</strong>: An object <span class="arithmatex">\(I\)</span> in a category <span class="arithmatex">\(\mathcal{C}\)</span> such that for every object <span class="arithmatex">\(A \in \mathcal{C}\)</span>, there exists a unique morphism from <span class="arithmatex">\(I\)</span> to <span class="arithmatex">\(A\)</span>.</li>
+<li><strong>Terminal Object</strong>: An object <span class="arithmatex">\(T\)</span> in a category <span class="arithmatex">\(\mathcal{C}\)</span> such that for every object <span class="arithmatex">\(A \in \mathcal{C}\)</span>, there exists a unique morphism from <span class="arithmatex">\(A\)</span> to <span class="arithmatex">\(T\)</span>.</li>
 </ul>
 </li>
 <li>
 <p><strong>Equivalence of Categories</strong></p>
 <ul>
-<li>Two categories $\mathcal{C}$ and $\mathcal{D}$ are said to be <strong>equivalent</strong> if there exist functors $F: \mathcal{C} \to \mathcal{D}$ and $G: \mathcal{D} \to \mathcal{C}$ such that $G \circ F$ is naturally isomorphic to the identity functor on $\mathcal{C}$, and $F \circ G$ is naturally isomorphic to the identity functor on $\mathcal{D}$.</li>
+<li>Two categories <span class="arithmatex">\(\mathcal{C}\)</span> and <span class="arithmatex">\(\mathcal{D}\)</span> are said to be <strong>equivalent</strong> if there exist functors <span class="arithmatex">\(F: \mathcal{C} \to \mathcal{D}\)</span> and <span class="arithmatex">\(G: \mathcal{D} \to \mathcal{C}\)</span> such that <span class="arithmatex">\(G \circ F\)</span> is naturally isomorphic to the identity functor on <span class="arithmatex">\(\mathcal{C}\)</span>, and <span class="arithmatex">\(F \circ G\)</span> is naturally isomorphic to the identity functor on <span class="arithmatex">\(\mathcal{D}\)</span>.</li>
 </ul>
 </li>
 <li>
 <p><strong>Yoneda Lemma</strong></p>
 <ul>
-<li>The Yoneda Lemma states that for any category $\mathcal{C}$, object $A \in \mathcal{C}$, and functor $F: \mathcal{C} \to \textbf{Set}$, there is a natural isomorphism <img alt="\text{Nat}(\text{Hom}_{\mathcal{C}}(-, A), F) \cong F(A)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BNat%7D%28%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28-%2C%20A%29%2C%20F%29%20%5Ccong%20F%28A%29" /> where: <ul>
+<li>The Yoneda Lemma states that for any category <span class="arithmatex">\(\mathcal{C}\)</span>, object <span class="arithmatex">\(A \in \mathcal{C}\)</span>, and functor <span class="arithmatex">\(F: \mathcal{C} \to \textbf{Set}\)</span>, there is a natural isomorphism <img alt="\text{Nat}(\text{Hom}_{\mathcal{C}}(-, A), F) \cong F(A)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BNat%7D%28%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28-%2C%20A%29%2C%20F%29%20%5Ccong%20F%28A%29" /> where: <ul>
 <li><img alt="\text{Hom}_{\mathcal{C}}(-, A)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28-%2C%20A%29" /> is the functor that maps an object <img alt="X" src="https://latex.codecogs.com/png.latex?X" /> to the set of morphisms <img alt="\text{Hom}_{\mathcal{C}}(X, A)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28X%2C%20A%29" />.</li>
 <li><img alt="\text{Nat}(\text{Hom}_{\mathcal{C}}(-, A), F)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BNat%7D%28%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28-%2C%20A%29%2C%20F%29" /> denotes the set of natural transformations from <img alt="\text{Hom}_{\mathcal{C}}(-, A)" src="https://latex.codecogs.com/png.latex?%5Ctext%7BHom%7D_%7B%5Cmathcal%7BC%7D%7D%28-%2C%20A%29" /> to <img alt="F" src="https://latex.codecogs.com/png.latex?F" />.</li>
 </ul>
@@ -174,7 +174,7 @@
 <li>
 <p><strong>Representable Functors</strong></p>
 <ul>
-<li>A functor $F: \mathcal{C} \to \textbf{Set}$ is called <strong>representable</strong> if it is naturally isomorphic to the hom-functor $\text{Hom}_{\mathcal{C}}(C, -)$ for some object $C \in \mathcal{C}$.</li>
+<li>A functor <span class="arithmatex">\(F: \mathcal{C} \to \textbf{Set}\)</span> is called <strong>representable</strong> if it is naturally isomorphic to the hom-functor <span class="arithmatex">\(\text{Hom}_{\mathcal{C}}(C, -)\)</span> for some object <span class="arithmatex">\(C \in \mathcal{C}\)</span>.</li>
 </ul>
 </li>
 </ol>
@@ -200,5 +200,8 @@
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

@@ -43,9 +43,9 @@
         <h2>Differential Equations</h2>
         <dl>
           <dt>File size</dt>
-          <dd>6.5KB</dd>
+          <dd>7.2KB</dd>
           <dt>Lines of code</dt>
-          <dd>104</dd>
+          <dd>107</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -59,20 +59,20 @@
 $$<br />
 \frac{dy}{dt} = f(y, t)<br />
 $$<br />
-This equation tells you the rate of change of $y$ at any given time $t$ and for any value of $y$. A <strong>solution</strong> to the differential equation is a function $y(t)$ that satisfies this rule for all $t$.</p>
+This equation tells you the rate of change of <span class="arithmatex">\(y\)</span> at any given time <span class="arithmatex">\(t\)</span> and for any value of <span class="arithmatex">\(y\)</span>. A <strong>solution</strong> to the differential equation is a function <span class="arithmatex">\(y(t)\)</span> that satisfies this rule for all <span class="arithmatex">\(t\)</span>.</p>
 <h2>Geometric View: Slope Fields</h2>
 <p>One of the most intuitive ways to understand a differential equation is to visualize it as a <strong>slope field</strong>.<br />
-*   For an equation $\frac{dy}{dt} = f(y, t)$, you can go to any point $(t, y)$ in the plane and draw a tiny arrow with the slope given by $f(y, t)$.<br />
+*   For an equation <span class="arithmatex">\(\frac{dy}{dt} = f(y, t)\)</span>, you can go to any point <span class="arithmatex">\((t, y)\)</span> in the plane and draw a tiny arrow with the slope given by <span class="arithmatex">\(f(y, t)\)</span>.<br />
 *   This collection of arrows is the slope field. It gives you a sense of the flow or the dynamics of the system.<br />
 *   A solution to the differential equation is a curve that "follows the arrows" – a curve that is tangent to the slope field at every point.</p>
-<p>An <strong>initial condition</strong>, like $y(0) = y_0$, specifies a starting point for the curve.</p>
+<p>An <strong>initial condition</strong>, like <span class="arithmatex">\(y(0) = y_0\)</span>, specifies a starting point for the curve.</p>
 <h2>Numerical Approximation: Euler's Method</h2>
 <p>While it can be difficult to find an exact formula for the solution, we can always approximate it numerically using the slope field. This is the idea behind <strong>Euler's method</strong>:<br />
-1.  Start at an initial point $(t_0, y_0)$.<br />
-2.  Choose a small step size, $\Delta t$.<br />
-3.  Calculate the slope at the starting point: $m = f(y_0, t_0)$.<br />
-4.  Approximate the change in $y$ as $\Delta y \approx m \cdot \Delta t$.<br />
-5.  The new point is $(t_0 + \Delta t, y_0 + \Delta y)$.<br />
+1.  Start at an initial point <span class="arithmatex">\((t_0, y_0)\)</span>.<br />
+2.  Choose a small step size, <span class="arithmatex">\(\Delta t\)</span>.<br />
+3.  Calculate the slope at the starting point: <span class="arithmatex">\(m = f(y_0, t_0)\)</span>.<br />
+4.  Approximate the change in <span class="arithmatex">\(y\)</span> as <span class="arithmatex">\(\Delta y \approx m \cdot \Delta t\)</span>.<br />
+5.  The new point is <span class="arithmatex">\((t_0 + \Delta t, y_0 + \Delta y)\)</span>.<br />
 6.  Repeat this process from the new point.</p>
 <p>This is like walking through the slope field, taking small, straight steps at each point, with the direction of the step given by the slope at that point.</p>
 <h2>Systems of Equations and Phase Space</h2>
@@ -100,5 +100,8 @@ This equation tells you the rate of change of $y$ at any given time $t$ and for 
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

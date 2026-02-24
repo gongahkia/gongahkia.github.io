@@ -43,9 +43,9 @@
         <h2>Lambda calculus</h2>
         <dl>
           <dt>File size</dt>
-          <dd>6.4KB</dd>
+          <dd>7.4KB</dd>
           <dt>Lines of code</dt>
-          <dd>156</dd>
+          <dd>159</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -53,18 +53,18 @@
 <p>Abstract notation to describe functions and application, providing the basis for functional programming.</p>
 <h2>Introduction</h2>
 <ul>
-<li>written as $\lambda$-calculus</li>
+<li>written as <span class="arithmatex">\(\lambda\)</span>-calculus</li>
 <li>created by <a href="https://www.britannica.com/biography/Alonzo-Church">Alonzo Church</a></li>
 <li>can represent any <a href="https://brilliant.org/wiki/turing-machines/">turing machine</a></li>
 <li>by definition <a href="https://users.cs.utah.edu/~mflatt/past-courses/cs7520/public_html/s06/notes.pdf">the world's smallest programming language</a></li>
 </ul>
 <h2>Quickstart</h2>
 <h3>Datatypes</h3>
-<p>$\lambda$-calculus has 3 foundational datatypes.<br />
+<p><span class="arithmatex">\(\lambda\)</span>-calculus has 3 foundational datatypes.<br />
 1. Variable<br />
     * <code>&lt;name&gt;</code><br />
 2. Function<br />
-    * $\lambda$ <code>&lt;parameter&gt;</code>.<code>&lt;body&gt;</code><br />
+    * <span class="arithmatex">\(\lambda\)</span> <code>&lt;parameter&gt;</code>.<code>&lt;body&gt;</code><br />
     * function parameter and body are . period-delimited<br />
     * functions are single parameter<br />
 3. Application<br />
@@ -79,16 +79,16 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">$x$</td>
-<td style="text-align: center;">$x$ is a variable</td>
+<td style="text-align: center;"><span class="arithmatex">\(x\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(x\)</span> is a variable</td>
 </tr>
 <tr>
-<td style="text-align: center;">$\lambda x . x$</td>
-<td style="text-align: center;">function definition for a function with parameter $x$ and body $x$</td>
+<td style="text-align: center;"><span class="arithmatex">\(\lambda x . x\)</span></td>
+<td style="text-align: center;">function definition for a function with parameter <span class="arithmatex">\(x\)</span> and body <span class="arithmatex">\(x\)</span></td>
 </tr>
 <tr>
-<td style="text-align: center;">$(\lambda x . x)a$</td>
-<td style="text-align: center;">function call for the previously declared function $\lambda x . x$ with the argument $a$</td>
+<td style="text-align: center;"><span class="arithmatex">\((\lambda x . x)a\)</span></td>
+<td style="text-align: center;">function call for the previously declared function <span class="arithmatex">\(\lambda x . x\)</span> with the argument <span class="arithmatex">\(a\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -107,29 +107,29 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">$\lambda x . x$</td>
-<td style="text-align: center;">$x$ is a bound variable</td>
+<td style="text-align: center;"><span class="arithmatex">\(\lambda x . x\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(x\)</span> is a bound variable</td>
 </tr>
 <tr>
-<td style="text-align: center;">$\lambda x . y$</td>
-<td style="text-align: center;">$y$ is a free variable</td>
+<td style="text-align: center;"><span class="arithmatex">\(\lambda x . y\)</span></td>
+<td style="text-align: center;"><span class="arithmatex">\(y\)</span> is a free variable</td>
 </tr>
 </tbody>
 </table>
 <h3>Evaluation</h3>
 <ul>
-<li>application evaluation is performed via $\beta$-reduction</li>
-<li>$\beta$-reduction: lexically-scoped substitution, a concept most of us are familiar with from foundational mathematical functions</li>
+<li>application evaluation is performed via <span class="arithmatex">\(\beta\)</span>-reduction</li>
+<li><span class="arithmatex">\(\beta\)</span>-reduction: lexically-scoped substitution, a concept most of us are familiar with from foundational mathematical functions</li>
 <li>allows for higher-order functions, where functions themselves are provided as arguments to another function</li>
 </ul>
 <p>In practice, it looks like this.</p>
 <p><em>example 1</em><br />
-* $(\lambda x . x)a$ evaluates to $a$</p>
+* <span class="arithmatex">\((\lambda x . x)a\)</span> evaluates to <span class="arithmatex">\(a\)</span></p>
 <p><em>example 2</em><br />
-* $(\lambda x . y)a$ evaluates to $y$</p>
+* <span class="arithmatex">\((\lambda x . y)a\)</span> evaluates to <span class="arithmatex">\(y\)</span></p>
 <p><em>example 3</em><br />
-* $(\lambda x . (\lambda y . x ))a$ evaluates to $\lambda y . a$<br />
-* this is an example of a higher-order function evaluated using $\beta$-reduction</p>
+* <span class="arithmatex">\((\lambda x . (\lambda y . x ))a\)</span> evaluates to <span class="arithmatex">\(\lambda y . a\)</span><br />
+* this is an example of a higher-order function evaluated using <span class="arithmatex">\(\beta\)</span>-reduction</p>
 <h2>More on</h2>
 <ul>
 <li><a href="https://math.stackexchange.com/questions/1972022/lambda-calculus-identity-function">identity function</a></li>
@@ -152,5 +152,8 @@
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

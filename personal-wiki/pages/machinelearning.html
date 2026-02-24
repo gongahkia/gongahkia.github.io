@@ -43,9 +43,9 @@
         <h2>Machine learning</h2>
         <dl>
           <dt>File size</dt>
-          <dd>9.0KB</dd>
+          <dd>9.5KB</dd>
           <dt>Lines of code</dt>
-          <dd>153</dd>
+          <dd>156</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -68,27 +68,27 @@
 <li>older model developed in 1950s to 1960s by Frank Rosenblatt</li>
 <li>each perceptron receives a <strong>binary</strong> input and returns a single <strong>binary</strong> output</li>
 <li>binary output is determined by whether the weighted sum surpasses a designated <em>threshold value</em></li>
-<li>perceptron's model too simplistic since even a small $\Delta$ in a perceptron's weight could result in a large $\Delta$ flip of its binary output</li>
+<li>perceptron's model too simplistic since even a small <span class="arithmatex">\(\Delta\)</span> in a perceptron's weight could result in a large <span class="arithmatex">\(\Delta\)</span> flip of its binary output</li>
 </ul>
 </li>
 <li>Sigmoid neuron<ul>
-<li>deep learning models required an artificial neuron that allowed a small $\Delta$ in its weight to result in a corresponding small $\Delta$ in its output</li>
+<li>deep learning models required an artificial neuron that allowed a small <span class="arithmatex">\(\Delta\)</span> in its weight to result in a corresponding small <span class="arithmatex">\(\Delta\)</span> in its output</li>
 <li>each sigmoid neuron receives one or more inputs of <strong>floating-point</strong> value and returns a single <strong>floating-point</strong> output</li>
 <li>output is calculated by mapping the <a href="https://www.learndatasci.com/glossary/sigmoid-function/">sigmoid function</a> onto each input training example</li>
 </ul>
 </li>
 </ol>
 </li>
-<li>Weights: real number ($\mathbb{R}$) that expresses the importance a given <em>input</em> has to its corresponding <em>output</em></li>
+<li>Weights: real number (<span class="arithmatex">\(\mathbb{R}\)</span>) that expresses the importance a given <em>input</em> has to its corresponding <em>output</em></li>
 <li>Bias: negative threshold value</li>
 <li>Input layer: first layer of neurons in a neural network that are fed as <em>input</em> to the model</li>
 <li>Hidden layer(s): any number of intermediary layers of neurons in a neural network whose <em>outputs</em> are fed as <em>inputs</em> to the next layer of neurons</li>
 <li>Output layer: final layer in a neural network, where a single neuron's <em>output</em> is the returned value of the entire model</li>
-<li>Feed forward neural network: <em>output</em> from one layer is <em>input</em> for another layer, modelled mathematically as $f(g(h(x)))$ where information is only <strong>fed forward</strong><ul>
+<li>Feed forward neural network: <em>output</em> from one layer is <em>input</em> for another layer, modelled mathematically as <span class="arithmatex">\(f(g(h(x)))\)</span> where information is only <strong>fed forward</strong><ul>
 <li>more useful for deep learning models</li>
 </ul>
 </li>
-<li>Recurrent neural network: <em>output</em> from one layer is fed as staggered <em>input</em> to the <strong>same layer</strong>, modelled mathematically as $f(f(f(x)))$ where recursive feedback loops are allowed<ul>
+<li>Recurrent neural network: <em>output</em> from one layer is fed as staggered <em>input</em> to the <strong>same layer</strong>, modelled mathematically as <span class="arithmatex">\(f(f(f(x)))\)</span> where recursive feedback loops are allowed<ul>
 <li>less useful for deep learning models</li>
 <li>more accurately simulates how the human brain handles and reinforces information</li>
 </ul>
@@ -110,7 +110,7 @@ Machine learning models are either Parametric OR Non-parametric <em>and</em> Sup
 <li>Gradient descent: attributes error by <strong>allocating blame</strong> for a non-zero MSE value to a specific neuron's <em>weight</em>, then tweaking that <em>weight</em> to decrease the MSE in one of three ways  <ol>
 <li>Full gradient descent: neural network calculates the AVERAGE <em>weights</em> over the entire training example dataset for a minimum MSE, and weights are tweaked after the FULL AVERAGE has been computed</li>
 <li>Stochastic gradient descent: repeatedly iterates through the entire training example dataset, tweaking weights for EACH <em>input</em> value based on the MSE, until a weight configuration that works for ALL training examples is arrived at  </li>
-<li>Batch gradient descent: a BATCH size of $n$ is specified beforehand, and the neural network updates the <em>weights</em> after $n$ training examples have been fed to the model as <em>input</em></li>
+<li>Batch gradient descent: a BATCH size of <span class="arithmatex">\(n\)</span> is specified beforehand, and the neural network updates the <em>weights</em> after <span class="arithmatex">\(n\)</span> training examples have been fed to the model as <em>input</em></li>
 </ol>
 </li>
 </ol>
@@ -149,5 +149,8 @@ Most situations designed to train deep learning models can be modelled with matr
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

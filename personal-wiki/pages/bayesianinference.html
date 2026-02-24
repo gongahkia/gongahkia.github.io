@@ -43,9 +43,9 @@
         <h2>Bayesian Inference</h2>
         <dl>
           <dt>File size</dt>
-          <dd>7.2KB</dd>
+          <dd>8.0KB</dd>
           <dt>Lines of code</dt>
-          <dd>117</dd>
+          <dd>120</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -54,15 +54,15 @@
 <h2>Introduction: The Bayesian View</h2>
 <p>Bayesian inference is a framework for thinking about probability as a measure of belief in a proposition. The core idea is to update our beliefs in the light of new evidence. This is in contrast to the frequentist interpretation of probability, which sees probability as the long-run frequency of an event.</p>
 <h2>Bayes' Theorem</h2>
-<p>The mathematical engine of Bayesian inference is Bayes' Theorem. It tells us how to update our belief in a hypothesis ($H$) after observing some evidence ($E$).</p>
-<p>$$ <br />
-P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}<br />
-$$</p>
+<p>The mathematical engine of Bayesian inference is Bayes' Theorem. It tells us how to update our belief in a hypothesis (<span class="arithmatex">\(H\)</span>) after observing some evidence (<span class="arithmatex">\(E\)</span>).</p>
+<div class="arithmatex">\[ 
+P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}
+\]</div>
 <p>Let's break down the terms:<br />
-*   $P(H|E)$: The <strong>Posterior</strong>. This is the probability of our hypothesis being true, given the evidence. This is what we want to calculate.<br />
-*   $P(E|H)$: The <strong>Likelihood</strong>. This is the probability of observing the evidence, assuming our hypothesis is true.<br />
-*   $P(H)$: The <strong>Prior</strong>. This is our initial belief in the hypothesis, before we've seen any evidence.<br />
-*   $P(E)$: The <strong>Marginal Likelihood</strong>. This is the total probability of observing the evidence, under all possible hypotheses. It acts as a normalization constant.</p>
+*   <span class="arithmatex">\(P(H|E)\)</span>: The <strong>Posterior</strong>. This is the probability of our hypothesis being true, given the evidence. This is what we want to calculate.<br />
+*   <span class="arithmatex">\(P(E|H)\)</span>: The <strong>Likelihood</strong>. This is the probability of observing the evidence, assuming our hypothesis is true.<br />
+*   <span class="arithmatex">\(P(H)\)</span>: The <strong>Prior</strong>. This is our initial belief in the hypothesis, before we've seen any evidence.<br />
+*   <span class="arithmatex">\(P(E)\)</span>: The <strong>Marginal Likelihood</strong>. This is the total probability of observing the evidence, under all possible hypotheses. It acts as a normalization constant.</p>
 <p>In practice, we often write the theorem as:<br />
 $$ <br />
 \text{Posterior} \propto \text{Likelihood} \cdot \text{Prior}<br />
@@ -71,31 +71,31 @@ $$ </p>
 <p>In many real-world problems, we are not interested in a single probability, but a continuous range of possibilities. For example, instead of asking "is this coin fair?", we might ask "what is the probability of this coin landing heads?". This is a value that could be anywhere between 0 and 1.</p>
 <p>In the Bayesian framework, we can represent our belief about this unknown probability with a <strong>probability distribution</strong>.</p>
 <h2>The Beta Distribution</h2>
-<p>The Beta distribution is a family of continuous probability distributions defined on the interval [0, 1]. It is a very natural choice for representing a belief about a probability. It is defined by two positive shape parameters, $\alpha$ and $\beta$.</p>
-<p>$$ <br />
-\text{Beta}(\alpha, \beta)<br />
-$$ </p>
+<p>The Beta distribution is a family of continuous probability distributions defined on the interval [0, 1]. It is a very natural choice for representing a belief about a probability. It is defined by two positive shape parameters, <span class="arithmatex">\(\alpha\)</span> and <span class="arithmatex">\(\beta\)</span>.</p>
+<div class="arithmatex">\[ 
+\text{Beta}(\alpha, \beta)
+\]</div>
 <ul>
-<li>The mean of the distribution is $\frac{\alpha}{\alpha + \beta}$.</li>
-<li>The shape of the distribution can be interpreted as representing the knowledge gained from $\alpha - 1$ "successes" and $\beta - 1$ "failures".</li>
+<li>The mean of the distribution is <span class="arithmatex">\(\frac{\alpha}{\alpha + \beta}\)</span>.</li>
+<li>The shape of the distribution can be interpreted as representing the knowledge gained from <span class="arithmatex">\(\alpha - 1\)</span> "successes" and <span class="arithmatex">\(\beta - 1\)</span> "failures".</li>
 </ul>
 <p>For example, a flat prior (representing no knowledge) can be modeled with a Beta(1, 1) distribution, which is a uniform distribution.</p>
 <h2>Conjugate Priors</h2>
 <p>The Beta distribution has a very special relationship with the binomial distribution (which describes the number of successes in a series of independent trials). The Beta distribution is a <strong>conjugate prior</strong> for the binomial likelihood.</p>
 <p>This means that if you:<br />
-1.  Start with a <strong>prior</strong> belief about a probability, represented by a Beta distribution, $\text{Beta}(\alpha, \beta)$.<br />
-2.  Observe new evidence in the form of $k$ successes and $n-k$ failures.<br />
+1.  Start with a <strong>prior</strong> belief about a probability, represented by a Beta distribution, <span class="arithmatex">\(\text{Beta}(\alpha, \beta)\)</span>.<br />
+2.  Observe new evidence in the form of <span class="arithmatex">\(k\)</span> successes and <span class="arithmatex">\(n-k\)</span> failures.<br />
 3.  Your <strong>posterior</strong> belief will also be a Beta distribution, with updated parameters:<br />
     $$ <br />
     \text{Beta}(\alpha + k, \beta + n - k)<br />
     $$ </p>
-<p>This makes calculations much easier and provides a very intuitive way to think about updating beliefs. You just add the number of successes to $\alpha$ and the number of failures to $\beta$.</p>
+<p>This makes calculations much easier and provides a very intuitive way to think about updating beliefs. You just add the number of successes to <span class="arithmatex">\(\alpha\)</span> and the number of failures to <span class="arithmatex">\(\beta\)</span>.</p>
 <h2>Example: Coin Flipping</h2>
 <p>Suppose you want to determine the fairness of a coin.<br />
-*   <strong>Prior:</strong> You have no idea if it's fair, so you start with a uniform prior, $\text{Beta}(1, 1)$.<br />
+*   <strong>Prior:</strong> You have no idea if it's fair, so you start with a uniform prior, <span class="arithmatex">\(\text{Beta}(1, 1)\)</span>.<br />
 *   <strong>Evidence:</strong> You flip the coin 10 times and get 7 heads and 3 tails.<br />
-*   <strong>Posterior:</strong> Your new belief about the coin's probability of landing heads is represented by the distribution $\text{Beta}(1+7, 1+3) = \text{Beta}(8, 4)$.</p>
-<p>The peak of this new distribution is at $7/10 = 0.7$, which is our most likely estimate for the probability of heads. But the distribution also tells us about our uncertainty; there's still a chance the coin is fair, or even biased towards tails.</p>
+*   <strong>Posterior:</strong> Your new belief about the coin's probability of landing heads is represented by the distribution <span class="arithmatex">\(\text{Beta}(1+7, 1+3) = \text{Beta}(8, 4)\)</span>.</p>
+<p>The peak of this new distribution is at <span class="arithmatex">\(7/10 = 0.7\)</span>, which is our most likely estimate for the probability of heads. But the distribution also tells us about our uncertainty; there's still a chance the coin is fair, or even biased towards tails.</p>
 <h2>Bayesian A/B Testing</h2>
 <p>This framework can be applied to A/B testing. Instead of p-values, we can directly calculate the probability that variant B is better than variant A. We can model our belief about the conversion rate of each variant with a Beta distribution, update it with new data, and then compare the posterior distributions.</p>
 <h2>More on</h2>
@@ -113,5 +113,8 @@ $$ </p>
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

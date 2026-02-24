@@ -43,9 +43,9 @@
         <h2>Essence of Linear Algebra</h2>
         <dl>
           <dt>File size</dt>
-          <dd>10.3KB</dd>
+          <dd>12.2KB</dd>
           <dt>Lines of code</dt>
-          <dd>152</dd>
+          <dd>155</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -58,7 +58,7 @@
 *   <strong>Mathematics:</strong> Objects that can be added together and scaled.</p>
 <p>The core idea is that these are all different ways of looking at the same thing. A vector in 2D space can be represented by a pair of numbers, which are its coordinates.</p>
 <ul>
-<li><strong>Vector Addition:</strong> Geometrically, adding two vectors $\vec{v}$ and $\vec{w}$ is like placing the tail of $\vec{w}$ at the head of $\vec{v}$. The sum is the vector from the origin to the new position of $\vec{w}$'s head. Numerically, this is adding the corresponding components:<br />
+<li><strong>Vector Addition:</strong> Geometrically, adding two vectors <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span> is like placing the tail of <span class="arithmatex">\(\vec{w}\)</span> at the head of <span class="arithmatex">\(\vec{v}\)</span>. The sum is the vector from the origin to the new position of <span class="arithmatex">\(\vec{w}\)</span>'s head. Numerically, this is adding the corresponding components:<br />
     $$<br />
     \begin{bmatrix} v_1 \ v_2 \ \end{bmatrix} + \begin{bmatrix} w_1 \ w_2 \ \end{bmatrix} = \begin{bmatrix} v_1 + w_1 \ v_2 + w_2 \ \end{bmatrix}<br />
     $$</li>
@@ -69,55 +69,55 @@
 </ul>
 <h2>2. Linear Combinations, Span, and Basis Vectors</h2>
 <ul>
-<li><strong>Linear Combination:</strong> A linear combination of two vectors $\vec{v}$ and $\vec{w}$ is any vector of the form $a\vec{v} + b\vec{w}$, where $a$ and $b$ are scalars.</li>
+<li><strong>Linear Combination:</strong> A linear combination of two vectors <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span> is any vector of the form <span class="arithmatex">\(a\vec{v} + b\vec{w}\)</span>, where <span class="arithmatex">\(a\)</span> and <span class="arithmatex">\(b\)</span> are scalars.</li>
 <li><strong>Span:</strong> The span of a set of vectors is the set of all possible linear combinations of those vectors.<ul>
 <li>The span of a single vector is a line.</li>
 <li>The span of two non-collinear vectors is a plane.</li>
 </ul>
 </li>
-<li><strong>Basis Vectors:</strong> A set of vectors that can be used to create any other vector in a given space through linear combinations. In 2D, the standard basis vectors are $\hat{i}$ (the unit vector in the x-direction) and $\hat{j}$ (the unit vector in the y-direction).<br />
+<li><strong>Basis Vectors:</strong> A set of vectors that can be used to create any other vector in a given space through linear combinations. In 2D, the standard basis vectors are <span class="arithmatex">\(\hat{i}\)</span> (the unit vector in the x-direction) and <span class="arithmatex">\(\hat{j}\)</span> (the unit vector in the y-direction).<br />
     $$<br />
     \hat{i} = \begin{bmatrix} 1 \ 0 \ \end{bmatrix}, \quad \hat{j} = \begin{bmatrix} 0 \ 1 \ \end{bmatrix}<br />
     $$<br />
-    A vector $\begin{bmatrix} x \ y \ \end{bmatrix}$ is just a linear combination of these basis vectors: $x\hat{i} + y\hat{j}$.</li>
+    A vector <span class="arithmatex">\(\begin{bmatrix} x \\ y \\ \end{bmatrix}\)</span> is just a linear combination of these basis vectors: <span class="arithmatex">\(x\hat{i} + y\hat{j}\)</span>.</li>
 </ul>
 <h2>3. Linear Transformations and Matrices</h2>
 <p>A <strong>linear transformation</strong> is a function that takes a vector as input and outputs another vector, satisfying two properties:<br />
 1.  Lines remain lines (no curving).<br />
 2.  The origin remains fixed.</p>
-<p>A linear transformation is completely determined by where it sends the basis vectors. A 2x2 matrix is a way to describe a 2D linear transformation. The columns of the matrix are the coordinates of where the basis vectors $\hat{i}$ and $\hat{j}$ land after the transformation.</p>
-<p>If a transformation sends $\hat{i}$ to $\begin{bmatrix} a \ c \ \end{bmatrix}$ and $\hat{j}$ to $\begin{bmatrix} b \ d \ \end{bmatrix}$, the matrix of the transformation is:<br />
+<p>A linear transformation is completely determined by where it sends the basis vectors. A 2x2 matrix is a way to describe a 2D linear transformation. The columns of the matrix are the coordinates of where the basis vectors <span class="arithmatex">\(\hat{i}\)</span> and <span class="arithmatex">\(\hat{j}\)</span> land after the transformation.</p>
+<p>If a transformation sends <span class="arithmatex">\(\hat{i}\)</span> to <span class="arithmatex">\(\begin{bmatrix} a \\ c \\ \end{bmatrix}\)</span> and <span class="arithmatex">\(\hat{j}\)</span> to <span class="arithmatex">\(\begin{bmatrix} b \\ d \\ \end{bmatrix}\)</span>, the matrix of the transformation is:<br />
 $$<br />
 \begin{bmatrix} a &amp; b \ c &amp; d \ \end{bmatrix}<br />
 $$</p>
-<p>To find where any vector $\vec{v} = \begin{bmatrix} x \ y \ \end{bmatrix}$ lands, we can use a matrix-vector product:<br />
+<p>To find where any vector <span class="arithmatex">\(\vec{v} = \begin{bmatrix} x \\ y \\ \end{bmatrix}\)</span> lands, we can use a matrix-vector product:<br />
 $$<br />
 \begin{bmatrix} a &amp; b \ c &amp; d \ \end{bmatrix} \begin{bmatrix} x \ y \ \end{bmatrix} = x \begin{bmatrix} a \ c \ \end{bmatrix} + y \begin{bmatrix} b \ d \ \end{bmatrix} = \begin{bmatrix} ax + by \ cx + dy \ \end{bmatrix}<br />
 $$</p>
 <h2>4. Matrix Multiplication as Composition</h2>
 <p>If you apply one linear transformation and then another, the result is a single, composite transformation. The matrix of this composite transformation is the product of the individual transformation matrices.</p>
-<p>If $T_1$ is represented by matrix $M_1$ and $T_2$ by $M_2$, the composite transformation $T_2 \circ T_1$ is represented by the matrix product $M_2 M_1$. Note the order: transformations are applied from right to left.</p>
+<p>If <span class="arithmatex">\(T_1\)</span> is represented by matrix <span class="arithmatex">\(M_1\)</span> and <span class="arithmatex">\(T_2\)</span> by <span class="arithmatex">\(M_2\)</span>, the composite transformation <span class="arithmatex">\(T_2 \circ T_1\)</span> is represented by the matrix product <span class="arithmatex">\(M_2 M_1\)</span>. Note the order: transformations are applied from right to left.</p>
 <h2>5. The Determinant</h2>
 <p>The determinant of a matrix represents the factor by which the area of a region changes after the transformation.<br />
 *   If the determinant is positive, the orientation of space is preserved.<br />
 *   If the determinant is negative, the orientation is flipped.<br />
 *   If the determinant is 0, the transformation squishes all of space onto a line or a point.</p>
-<p>For a 2x2 matrix $\begin{bmatrix} a &amp; b \ c &amp; d \ \end{bmatrix}$, the determinant is $ad - bc$.</p>
+<p>For a 2x2 matrix <span class="arithmatex">\(\begin{bmatrix} a &amp; b \\ c &amp; d \\ \end{bmatrix}\)</span>, the determinant is <span class="arithmatex">\(ad - bc\)</span>.</p>
 <h2>6. Inverse Matrices, Column Space, and Null Space</h2>
 <ul>
-<li><strong>Inverse Matrix:</strong> If a transformation has a non-zero determinant, it can be undone with an inverse transformation, represented by the inverse matrix, $M^{-1}$. Applying a transformation and then its inverse leaves you back where you started: $M^{-1}M = I$, where $I$ is the identity matrix (a transformation that does nothing).</li>
+<li><strong>Inverse Matrix:</strong> If a transformation has a non-zero determinant, it can be undone with an inverse transformation, represented by the inverse matrix, <span class="arithmatex">\(M^{-1}\)</span>. Applying a transformation and then its inverse leaves you back where you started: <span class="arithmatex">\(M^{-1}M = I\)</span>, where <span class="arithmatex">\(I\)</span> is the identity matrix (a transformation that does nothing).</li>
 <li><strong>Column Space:</strong> The span of the columns of a matrix. This is the set of all possible outputs of the transformation. If the determinant is 0, the column space is a line or a point.</li>
 <li><strong>Null Space (or Kernel):</strong> The set of all vectors that land on the origin after the transformation. For a non-zero determinant transformation, only the zero vector is in the null space.</li>
 </ul>
 <h2>7. Dot Product</h2>
-<p>The dot product of two vectors $\vec{v}$ and $\vec{w}$ has two equivalent definitions:<br />
-1.  <strong>Geometric:</strong> $\vec{v} \cdot \vec{w} = |\vec{v}| |\vec{w}| \cos(\theta)$, where $\theta$ is the angle between them. This tells you about the alignment of the two vectors.<br />
-2.  <strong>Numeric:</strong> $\vec{v} \cdot \vec{w} = v_1 w_1 + v_2 w_2 + \dots + v_n w_n$.</p>
+<p>The dot product of two vectors <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span> has two equivalent definitions:<br />
+1.  <strong>Geometric:</strong> <span class="arithmatex">\(\vec{v} \cdot \vec{w} = \|\vec{v}\| \|\vec{w}\| \cos(\theta)\)</span>, where <span class="arithmatex">\(\theta\)</span> is the angle between them. This tells you about the alignment of the two vectors.<br />
+2.  <strong>Numeric:</strong> <span class="arithmatex">\(\vec{v} \cdot \vec{w} = v_1 w_1 + v_2 w_2 + \dots + v_n w_n\)</span>.</p>
 <p>The dot product connects to linear transformations through the concept of <strong>duality</strong>. The dot product with a vector can be interpreted as a linear transformation from a space to the number line.</p>
 <h2>8. Cross Product</h2>
-<p>The cross product of two vectors $\vec{v}$ and $\vec{w}$ in 3D space, $\vec{v} \times \vec{w}$, results in a new vector that is:<br />
-*   <strong>Perpendicular</strong> to both $\vec{v}$ and $\vec{w}$.<br />
-*   Its <strong>magnitude</strong> is the area of the parallelogram formed by $\vec{v}$ and $\vec{w}$.<br />
+<p>The cross product of two vectors <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span> in 3D space, <span class="arithmatex">\(\vec{v} \times \vec{w}\)</span>, results in a new vector that is:<br />
+*   <strong>Perpendicular</strong> to both <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span>.<br />
+*   Its <strong>magnitude</strong> is the area of the parallelogram formed by <span class="arithmatex">\(\vec{v}\)</span> and <span class="arithmatex">\(\vec{w}\)</span>.<br />
 *   Its <strong>direction</strong> is given by the right-hand rule.</p>
 <p>The cross product can be calculated as the determinant of a special matrix:<br />
 $$<br />
@@ -125,10 +125,10 @@ $$<br />
 $$</p>
 <h2>9. Change of Basis</h2>
 <p>We can describe vectors using different basis vectors. To translate a vector's coordinates from our standard basis to a new basis, we can use a change of basis matrix. This matrix is constructed by taking the coordinates of the new basis vectors in our standard system.</p>
-<p>To translate a transformation matrix to a new basis, you use the formula $A^{-1}MA$, where $M$ is the original transformation matrix and $A$ is the change of basis matrix.</p>
+<p>To translate a transformation matrix to a new basis, you use the formula <span class="arithmatex">\(A^{-1}MA\)</span>, where <span class="arithmatex">\(M\)</span> is the original transformation matrix and <span class="arithmatex">\(A\)</span> is the change of basis matrix.</p>
 <h2>10. Eigenvectors and Eigenvalues</h2>
 <p>An <strong>eigenvector</strong> of a linear transformation is a vector that does not change direction during the transformation; it only gets scaled. The factor by which it is scaled is the <strong>eigenvalue</strong>.</p>
-<p>For a transformation with matrix $M$, an eigenvector $\vec{v}$ and its corresponding eigenvalue $\lambda$ satisfy the equation:<br />
+<p>For a transformation with matrix <span class="arithmatex">\(M\)</span>, an eigenvector <span class="arithmatex">\(\vec{v}\)</span> and its corresponding eigenvalue <span class="arithmatex">\(\lambda\)</span> satisfy the equation:<br />
 $$<br />
 M\vec{v} = \lambda\vec{v}<br />
 $$</p>
@@ -148,5 +148,8 @@ $$</p>
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

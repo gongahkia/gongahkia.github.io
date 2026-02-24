@@ -43,9 +43,9 @@
         <h2>Dynamic Programming</h2>
         <dl>
           <dt>File size</dt>
-          <dd>8.2KB</dd>
+          <dd>8.8KB</dd>
           <dt>Lines of code</dt>
-          <dd>131</dd>
+          <dd>134</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -76,17 +76,17 @@ Code snippets below are written in <a href="Rust.md">Rust</a>.</p>
 </ol>
 <h2>Example</h2>
 <p>Below is an example of dynamic programming within the <a href="https://leetcode.com/problems/longest-increasing-subsequence/">longest increasing subsequence problem</a>.</p>
-<p><em>eg.</em> Given a sequence $S= {a1, a2, a3, a4, \ldots , an-1, an }$, find the longest subset such that for all $j$ and $i$, $j \lt i$ in the subset $aj \lt ai$. </p>
+<p><em>eg.</em> Given a sequence <span class="arithmatex">\(S= \{a1, a2, a3, a4, \ldots , an-1, an \}\)</span>, find the longest subset such that for all <span class="arithmatex">\(j\)</span> and <span class="arithmatex">\(i\)</span>, <span class="arithmatex">\(j \lt i\)</span> in the subset <span class="arithmatex">\(aj \lt ai\)</span>. </p>
 <h3>Thought process</h3>
 <ol>
-<li>Find the value of the longest subsequences (LSi) at every index $i$ with last element of sequence being $ai$. </li>
+<li>Find the value of the longest subsequences (LSi) at every index <span class="arithmatex">\(i\)</span> with last element of sequence being <span class="arithmatex">\(ai\)</span>. </li>
 <li>Then largest LSi would be the longest subsequence in the given sequence.</li>
 </ol>
 <h3>Writing code</h3>
 <ol>
-<li>Assign LSi the value of $1$ since $ai$ is the last element of the sequence. </li>
-<li>For all $j$ such that $j \lt i$ and $aj \lt ai$, find the Largest LSj and add it to LSi. </li>
-<li>This algorithm has a time complexity $O(n^2)$.</li>
+<li>Assign LSi the value of <span class="arithmatex">\(1\)</span> since <span class="arithmatex">\(ai\)</span> is the last element of the sequence. </li>
+<li>For all <span class="arithmatex">\(j\)</span> such that <span class="arithmatex">\(j \lt i\)</span> and <span class="arithmatex">\(aj \lt ai\)</span>, find the Largest LSj and add it to LSi. </li>
+<li>This algorithm has a time complexity <span class="arithmatex">\(O(n^2)\)</span>.</li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">longest_increasing_subsequence</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="p">{</span>
 
@@ -127,5 +127,8 @@ Code snippets below are written in <a href="Rust.md">Rust</a>.</p>
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

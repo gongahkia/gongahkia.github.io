@@ -43,9 +43,9 @@
         <h2>Binary, Hanoi and Sierpinski</h2>
         <dl>
           <dt>File size</dt>
-          <dd>6.3KB</dd>
+          <dd>6.7KB</dd>
           <dt>Lines of code</dt>
-          <dd>107</dd>
+          <dd>110</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -61,11 +61,11 @@
     *   Only one disk can be moved at a time.<br />
     *   A larger disk may not be placed on top of a smaller disk.</p>
 <h3>The Recursive Solution</h3>
-<p>The solution to the puzzle is naturally recursive. To move a stack of $n$ disks from a source rod (A) to a destination rod (C), using an auxiliary rod (B):<br />
-1.  Move the top $n-1$ disks from A to B.<br />
-2.  Move the largest disk (the $n$-th disk) from A to C.<br />
-3.  Move the $n-1$ disks from B to C.</p>
-<p>This recursive algorithm leads to the fact that moving $n$ disks requires $2^n - 1$ moves.</p>
+<p>The solution to the puzzle is naturally recursive. To move a stack of <span class="arithmatex">\(n\)</span> disks from a source rod (A) to a destination rod (C), using an auxiliary rod (B):<br />
+1.  Move the top <span class="arithmatex">\(n-1\)</span> disks from A to B.<br />
+2.  Move the largest disk (the <span class="arithmatex">\(n\)</span>-th disk) from A to C.<br />
+3.  Move the <span class="arithmatex">\(n-1\)</span> disks from B to C.</p>
+<p>This recursive algorithm leads to the fact that moving <span class="arithmatex">\(n\)</span> disks requires <span class="arithmatex">\(2^n - 1\)</span> moves.</p>
 <h2>The Connection to Binary Numbers</h2>
 <p>The sequence of moves in the optimal solution to the Tower of Hanoi puzzle is directly related to binary counting.</p>
 <p>Consider the move number, starting from 1. If you write the move number in binary, the position of the least significant bit that is a '1' tells you which disk to move. For example, in a 3-disk puzzle:<br />
@@ -87,7 +87,7 @@
 3.  Repeating step 2 for each of the remaining smaller triangles indefinitely.</p>
 <h3>Sierpinski, Pascal, and Binary</h3>
 <p>The Sierpinski triangle also appears in other areas of mathematics. For example, if you take Pascal's triangle and color all the odd numbers black and all the even numbers white, you get a Sierpinski triangle. This is because the parity of the numbers in Pascal's triangle is related to binary representations and powers of 2, which also govern the Tower of Hanoi.</p>
-<p>The deep connection is that the recursive structure of the Tower of Hanoi solution ($T_n = 2T_{n-1} + 1$) is mirrored in the geometric construction of the Sierpinski triangle.</p>
+<p>The deep connection is that the recursive structure of the Tower of Hanoi solution (<span class="arithmatex">\(T_n = 2T_{n-1} + 1\)</span>) is mirrored in the geometric construction of the Sierpinski triangle.</p>
 <h2>More on</h2>
 <ul>
 <li><a href="https://www.youtube.com/watch?v=2SUvWfNJSsM">Binary, Hanoi and Sierpinski: 3Blue1Brown</a></li>
@@ -103,5 +103,8 @@
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

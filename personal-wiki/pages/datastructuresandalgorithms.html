@@ -43,9 +43,9 @@
         <h2>Data Structures and Algorithms</h2>
         <dl>
           <dt>File size</dt>
-          <dd>249.7KB</dd>
+          <dd>251.2KB</dd>
           <dt>Lines of code</dt>
-          <dd>1986</dd>
+          <dd>1989</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -55,8 +55,8 @@
 <ul>
 <li>Data structure: ordered collection of data provided by the language or defined and enforced by the programmer</li>
 <li>Algorithm: sequence of steps to solve a problem</li>
-<li>Big $O$ notation: describes performance of an algorithm as size of the dataset increases<ul>
-<li>$n$: variable representing size of dataset</li>
+<li>Big <span class="arithmatex">\(O\)</span> notation: describes performance of an algorithm as size of the dataset increases<ul>
+<li><span class="arithmatex">\(n\)</span>: variable representing size of dataset</li>
 </ul>
 </li>
 <li>Time complexity: time taken for an algorithm to complete execution</li>
@@ -65,7 +65,7 @@
 <h2>Big O Notation</h2>
 <ol>
 <li>CONSTANT time<ul>
-<li>$O(1)$</li>
+<li><span class="arithmatex">\(O(1)\)</span></li>
 <li>number of steps for algorithm to complete execution is CONSTANT regardless of size of dataset</li>
 </ul>
 </li>
@@ -89,7 +89,7 @@
 
 <ol>
 <li>LOGARITHMIC time<ul>
-<li>$O(\log n)$</li>
+<li><span class="arithmatex">\(O(\log n)\)</span></li>
 <li>number of steps for algorithm to complete execution is MARGINALLY LOWER as size of dataset increases</li>
 </ul>
 </li>
@@ -131,7 +131,7 @@
 
 <ol>
 <li>LINEAR time<ul>
-<li>$O(n)$</li>
+<li><span class="arithmatex">\(O(n)\)</span></li>
 <li>number of steps for algorithm to complete execution INCREASES PROPORTIONALLY to size of dataset</li>
 </ul>
 </li>
@@ -159,7 +159,7 @@
 
 <ol>
 <li>QUASILINEAR time<ul>
-<li>$O(n \log n)$</li>
+<li><span class="arithmatex">\(O(n \log n)\)</span></li>
 <li>similar to LINEAR time, but slows down further when working with larger datasets</li>
 </ul>
 </li>
@@ -225,7 +225,7 @@
 
 <ol>
 <li>QUADRATIC time<ul>
-<li>$O(n^2)$</li>
+<li><span class="arithmatex">\(O(n^2)\)</span></li>
 <li>QUADRATIC increase in number of steps for algorithm to complete execution for a given increase in size of dataset</li>
 </ul>
 </li>
@@ -255,7 +255,7 @@
 
 <ol>
 <li>FACTORIAL time<ul>
-<li>$O(n!)$</li>
+<li><span class="arithmatex">\(O(n!)\)</span></li>
 <li>extremely slow and rarely used</li>
 </ul>
 </li>
@@ -482,7 +482,7 @@
 </li>
 <li>Used because<ul>
 <li>advantageous to arraylists<ul>
-<li>faster insertion and deletion of nodes with $0(1)$ time complexity</li>
+<li>faster insertion and deletion of nodes with <span class="arithmatex">\(0(1)\)</span> time complexity</li>
 <li>low memory waste</li>
 </ul>
 </li>
@@ -668,8 +668,8 @@
 <li>Collision: when hashing a key returns the SAME index for more than one key</li>
 <li>Bucket: indexed storage location for one or more entries that functions like a LINKED LIST, allowing multiple entries to be stored in cases of collision</li>
 <li>Used because<ul>
-<li>best case <strong>CONSTANT time complexity</strong> of $O(1)$</li>
-<li>worst case <strong>LINEAR time complexity</strong> of $O(n)$<ul>
+<li>best case <strong>CONSTANT time complexity</strong> of <span class="arithmatex">\(O(1)\)</span></li>
+<li>worst case <strong>LINEAR time complexity</strong> of <span class="arithmatex">\(O(n)\)</span><ul>
 <li>less efficient for smaller datasets</li>
 <li>extremely efficient for larger datasets</li>
 </ul>
@@ -864,11 +864,11 @@
 <ul>
 <li>2d nested array of 0s and 1s which acts as a conceptual representation of adjacency between any two nodes in the graph</li>
 <li>Used because<ul>
-<li><strong>CONSTANT time complexity</strong> of $O(1)$<ul>
+<li><strong>CONSTANT time complexity</strong> of <span class="arithmatex">\(O(1)\)</span><ul>
 <li>relatively quicker compared to an ADJACENCY LIST for any given dataset</li>
 </ul>
 </li>
-<li><strong>QUADRATIC space complexity</strong> of $O(n^2)$<ul>
+<li><strong>QUADRATIC space complexity</strong> of <span class="arithmatex">\(O(n^2)\)</span><ul>
 <li>less efficient for smaller graph datasets</li>
 <li>extremely efficient for larger graph datasets</li>
 </ul>
@@ -932,8 +932,8 @@
 <li>Adjacency List<ul>
 <li>Array of LINKED LISTs, where each LINKED LIST head represents a unique node and its adjacent neighbour nodes</li>
 <li>Used because<ul>
-<li><strong>LINEAR time complexity</strong> of $O(n)$</li>
-<li>space complexity of $O(numVertex + numEdge)$<ul>
+<li><strong>LINEAR time complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
+<li>space complexity of <span class="arithmatex">\(O(numVertex + numEdge)\)</span><ul>
 <li>uses less space compared to an ADJACENCY MATRIX for any given dataset</li>
 </ul>
 </li>
@@ -1050,9 +1050,9 @@
 <li>Ordered tree where each parent node has only two child nodes <em>(binary)</em> and each parent node's value is greater than the left child node and smaller than the right child node, including the root node</li>
 <li>Used because<ul>
 <li>easier to locate a node when they are ordered within a binary search tree</li>
-<li>best case <strong>LOGARITHMIC time complexity</strong> of $O(log n)$</li>
-<li>worst case <strong>LINEAR time complexity</strong> of $O(n)$</li>
-<li><strong>LINEAR space complexity</strong> of $O(n)$</li>
+<li>best case <strong>LOGARITHMIC time complexity</strong> of <span class="arithmatex">\(O(log n)\)</span></li>
+<li>worst case <strong>LINEAR time complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
+<li><strong>LINEAR space complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
 </ul>
 </li>
 </ul>
@@ -1190,7 +1190,7 @@
 <h2>Algorithms</h2>
 <ol>
 <li>Linear Search<ul>
-<li><strong>LINEAR time complexity</strong> of $O(n)$</li>
+<li><strong>LINEAR time complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
 <li>iterates through a collection one element at a time</li>
 <li>pros<ul>
 <li>dataset can be unsorted</li>
@@ -1228,7 +1228,7 @@
 
 <ol>
 <li>Binary Search<ul>
-<li><strong>LOGARITHMIC time complexity</strong> of $O(log n)$</li>
+<li><strong>LOGARITHMIC time complexity</strong> of <span class="arithmatex">\(O(log n)\)</span></li>
 <li>eliminates half of the collection at each step to find the target element</li>
 <li>pros<ul>
 <li>more efficient for large datasets</li>
@@ -1278,8 +1278,8 @@
 
 <ol>
 <li>Interpolation Search<ul>
-<li><strong>average time complexity</strong> of $O(log(log n))$</li>
-<li><strong>worst case LINEAR time complexity</strong> of $O(n)$</li>
+<li><strong>average time complexity</strong> of <span class="arithmatex">\(O(log(log n))\)</span></li>
+<li><strong>worst case LINEAR time complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
 <li>guesses where a value might be based on estimated probe results, with incorrect probes narrowing the search area and recalculating a new probe</li>
 <li>improvement over BINARY searches that are best used for uniformly distributed datasets</li>
 <li>pros<ul>
@@ -1350,8 +1350,8 @@
 <li>repeat step 1</li>
 </ol>
 </li>
-<li><strong>time complexity</strong> of $O(numVertex + numEdge)$</li>
-<li><strong>LINEAR space complexity</strong> of $O(n)$</li>
+<li><strong>time complexity</strong> of <span class="arithmatex">\(O(numVertex + numEdge)\)</span></li>
+<li><strong>LINEAR space complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
 <li>pros<ul>
 <li>utilises a STACK</li>
 <li>child nodes are visited before sibling nodes</li>
@@ -1418,9 +1418,9 @@
 <li>once all directions have been expanded one node, repeat step 1</li>
 </ol>
 </li>
-<li><strong>time complexity</strong> of $O(numVertex + numEdge)$</li>
-<li><strong>LINEAR space complexity</strong> of $O(n)$ if implemented with a queue</li>
-<li><strong>space complexity</strong> of $O(numVertex + numEdge)$ if implemented with an adjacency list</li>
+<li><strong>time complexity</strong> of <span class="arithmatex">\(O(numVertex + numEdge)\)</span></li>
+<li><strong>LINEAR space complexity</strong> of <span class="arithmatex">\(O(n)\)</span> if implemented with a queue</li>
+<li><strong>space complexity</strong> of <span class="arithmatex">\(O(numVertex + numEdge)\)</span> if implemented with an adjacency list</li>
 <li>pros<ul>
 <li>utilises a QUEUE</li>
 <li>sibling nodes are visited before child nodes</li>
@@ -1485,8 +1485,8 @@
 
 <ol>
 <li>Bubble Sort<ul>
-<li><strong>QUADRATIC time complexity</strong> of $O(n^2)$</li>
-<li><strong>CONSTANT space complexity</strong> of $O(1)$</li>
+<li><strong>QUADRATIC time complexity</strong> of <span class="arithmatex">\(O(n^2)\)</span></li>
+<li><strong>CONSTANT space complexity</strong> of <span class="arithmatex">\(O(1)\)</span></li>
 <li>compares pairs of adjacent elements and swaps them if they are not in order</li>
 <li>pros<ul>
 <li>relatively fast for small datasets</li>
@@ -1526,8 +1526,8 @@
 
 <ol>
 <li>Selection Sort<ul>
-<li><strong>QUADRATIC time complexity</strong> of $O(n^2)$</li>
-<li><strong>CONSTANT space complexity</strong> of $O(1)$</li>
+<li><strong>QUADRATIC time complexity</strong> of <span class="arithmatex">\(O(n^2)\)</span></li>
+<li><strong>CONSTANT space complexity</strong> of <span class="arithmatex">\(O(1)\)</span></li>
 <li>iterates across each element in a collection and compares against and stores the minimum value, swapping variables after each iteration</li>
 <li>pros<ul>
 <li>relatively fast for small and medium datasets</li>
@@ -1571,13 +1571,13 @@
 
 <ol>
 <li>Insertion Sort<ul>
-<li><strong>QUADRATIC time complexity</strong> of $O(n^2)$</li>
-<li><strong>CONSTANT space complexity</strong> of $O(1)$</li>
+<li><strong>QUADRATIC time complexity</strong> of <span class="arithmatex">\(O(n^2)\)</span></li>
+<li><strong>CONSTANT space complexity</strong> of <span class="arithmatex">\(O(1)\)</span></li>
 <li>compares all elements to the left of a given element, then shift elements to the right to make room to insert a value</li>
 <li>pros<ul>
 <li>fast for small and medium datasets</li>
 <li>fewer steps than BUBBLE SORT</li>
-<li>best case LINEAR time complexity is $O(n)$ compared to SELECTION SORT'S $O(n^2)$</li>
+<li>best case LINEAR time complexity is <span class="arithmatex">\(O(n)\)</span> compared to SELECTION SORT'S <span class="arithmatex">\(O(n^2)\)</span></li>
 <li>lower CONSTANT space complexity since collection sorted in place</li>
 </ul>
 </li>
@@ -1619,8 +1619,8 @@
 
 <ol>
 <li>Merge Sort<ul>
-<li><strong>QUASILINEAR time complexity</strong> of $O(n log n)$</li>
-<li><strong>LINEAR space complexity</strong> of $O(n)$</li>
+<li><strong>QUASILINEAR time complexity</strong> of <span class="arithmatex">\(O(n log n)\)</span></li>
+<li><strong>LINEAR space complexity</strong> of <span class="arithmatex">\(O(n)\)</span></li>
 <li>recursively split collection in half, sort each half, then recombine the two halves</li>
 <li>pros<ul>
 <li>faster than all sorting algorithms with QUADRATIC time complexity <em>(bubble sort, selection sort, insertion sort)</em></li>
@@ -1694,9 +1694,9 @@
 
 <ol>
 <li>Quick Sort<ul>
-<li><strong>QUASILINEAR time complexity</strong> of $O(n log n)$ in best case and average case</li>
-<li><strong>QUADRATIC time complexity</strong> of $O(n^2)$ in worst case </li>
-<li><strong>LOGARITHMIC space complexity</strong> of $O(log n)$</li>
+<li><strong>QUASILINEAR time complexity</strong> of <span class="arithmatex">\(O(n log n)\)</span> in best case and average case</li>
+<li><strong>QUADRATIC time complexity</strong> of <span class="arithmatex">\(O(n^2)\)</span> in worst case </li>
+<li><strong>LOGARITHMIC space complexity</strong> of <span class="arithmatex">\(O(log n)\)</span></li>
 <li>moves smaller elements in a collection to left side of a pivot element, then recursively divide the collection into 2 partitions</li>
 <li>pros<ul>
 <li>faster than all sorting algorithms with QUADRATIC time complexity <em>(bubble sort, selection sort, insertion sort)</em> in best and average cases</li>
@@ -1982,5 +1982,8 @@
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

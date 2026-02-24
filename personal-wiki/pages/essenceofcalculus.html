@@ -43,9 +43,9 @@
         <h2>Essence of Calculus</h2>
         <dl>
           <dt>File size</dt>
-          <dd>7.1KB</dd>
+          <dd>8.2KB</dd>
           <dt>Lines of code</dt>
-          <dd>115</dd>
+          <dd>118</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -56,33 +56,33 @@
 <h2>Derivatives</h2>
 <p>The derivative of a function at a point gives the <strong>instantaneous rate of change</strong> at that point.</p>
 <h3>Geometric Intuition: The Slope of a Tangent</h3>
-<p>Geometrically, the derivative of a function $f(x)$ at a point $x=a$ is the slope of the line that is tangent to the graph of the function at that point. It tells you how "steep" the function is at that exact point.</p>
+<p>Geometrically, the derivative of a function <span class="arithmatex">\(f(x)\)</span> at a point <span class="arithmatex">\(x=a\)</span> is the slope of the line that is tangent to the graph of the function at that point. It tells you how "steep" the function is at that exact point.</p>
 <h3>The "Nudge" Intuition</h3>
-<p>To find the rate of change at a point, we can "nudge" the input by a tiny amount, which we'll call $dx$. This causes a corresponding tiny change in the output of the function, $df$. The derivative is the ratio of these two tiny changes:<br />
+<p>To find the rate of change at a point, we can "nudge" the input by a tiny amount, which we'll call <span class="arithmatex">\(dx\)</span>. This causes a corresponding tiny change in the output of the function, <span class="arithmatex">\(df\)</span>. The derivative is the ratio of these two tiny changes:<br />
 $$<br />
 \frac{df}{dx}<br />
 $$<br />
-This is not a fraction in the traditional sense, but a symbol representing the derivative of $f$ with respect to $x$.</p>
+This is not a fraction in the traditional sense, but a symbol representing the derivative of <span class="arithmatex">\(f\)</span> with respect to <span class="arithmatex">\(x\)</span>.</p>
 <h3>The Formal Definition</h3>
-<p>The intuition of "nudging" is formalized using the concept of a limit. The derivative of a function $f(x)$ is:<br />
-$$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$<br />
+<p>The intuition of "nudging" is formalized using the concept of a limit. The derivative of a function <span class="arithmatex">\(f(x)\)</span> is:<br />
+$<span class="arithmatex">\(f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}\)</span>$<br />
 This formula calculates the slope of a line between two points on the curve and then finds the limit as those two points get infinitely close to each other.</p>
 <h3>Key Derivative Rules</h3>
 <ul>
-<li><strong>Power Rule:</strong> $\frac{d}{dx}x^n = nx^{n-1}$</li>
-<li><strong>Product Rule:</strong> $\frac{d}{dx}(f(x)g(x)) = f'(x)g(x) + f(x)g'(x)$</li>
-<li><strong>Chain Rule:</strong> $\frac{d}{dx}f(g(x)) = f'(g(x))g'(x)$. This is for nested functions and can be thought of as multiplying the rates of change of the outer and inner functions.</li>
+<li><strong>Power Rule:</strong> <span class="arithmatex">\(\frac{d}{dx}x^n = nx^{n-1}\)</span></li>
+<li><strong>Product Rule:</strong> <span class="arithmatex">\(\frac{d}{dx}(f(x)g(x)) = f'(x)g(x) + f(x)g'(x)\)</span></li>
+<li><strong>Chain Rule:</strong> <span class="arithmatex">\(\frac{d}{dx}f(g(x)) = f'(g(x))g'(x)\)</span>. This is for nested functions and can be thought of as multiplying the rates of change of the outer and inner functions.</li>
 </ul>
 <h2>Integrals</h2>
 <p>The integral is the second major idea of calculus. It is a way of summing up infinitely many, infinitesimally small quantities.</p>
 <h3>Geometric Intuition: Area Under a Curve</h3>
-<p>Geometrically, the definite integral of a function $f(x)$ from a point $a$ to a point $b$ is the <strong>area under the curve</strong> between those two points.</p>
+<p>Geometrically, the definite integral of a function <span class="arithmatex">\(f(x)\)</span> from a point <span class="arithmatex">\(a\)</span> to a point <span class="arithmatex">\(b\)</span> is the <strong>area under the curve</strong> between those two points.</p>
 <h3>The "Slicing" Intuition</h3>
 <p>To calculate this area, we can slice it into a series of infinitely thin rectangles.<br />
-*   Each rectangle has a width of $dx$.<br />
-*   The height of a rectangle at a point $x$ is given by the value of the function, $f(x)$.<br />
-*   The area of each tiny rectangle is $f(x)dx$.<br />
-*   The integral is the sum of the areas of all these rectangles. The integral symbol, $\int$, is an elongated "S" to stand for "sum".<br />
+*   Each rectangle has a width of <span class="arithmatex">\(dx\)</span>.<br />
+*   The height of a rectangle at a point <span class="arithmatex">\(x\)</span> is given by the value of the function, <span class="arithmatex">\(f(x)\)</span>.<br />
+*   The area of each tiny rectangle is <span class="arithmatex">\(f(x)dx\)</span>.<br />
+*   The integral is the sum of the areas of all these rectangles. The integral symbol, <span class="arithmatex">\(\int\)</span>, is an elongated "S" to stand for "sum".<br />
     $$ \int_a^b f(x) dx $$</p>
 <h2>The Fundamental Theorem of Calculus</h2>
 <p>This is the central theorem of calculus, as it provides the explicit link between derivatives and integrals. It shows that they are, in a sense, inverse operations.</p>
@@ -90,11 +90,11 @@ This formula calculates the slope of a line between two points on the curve and 
 <p>The first part of the theorem states that if you have a function representing the area under a curve, its derivative is the original function. In other words, the rate at which the area under a curve grows is equal to the height of the curve at that point.<br />
 $$ \frac{d}{dx} \int_a^x f(t) dt = f(x) $$</p>
 <h3>Part 2: The Integral of a Derivative</h3>
-<p>The second part of the theorem gives us a practical way to calculate definite integrals. It says that to find the area under the curve of a function $f(x)$ from $a$ to $b$, you just need to find its <strong>antiderivative</strong>, $F(x)$ (a function whose derivative is $f(x)$), and then calculate the change in $F(x)$ from $a$ to $b$.<br />
+<p>The second part of the theorem gives us a practical way to calculate definite integrals. It says that to find the area under the curve of a function <span class="arithmatex">\(f(x)\)</span> from <span class="arithmatex">\(a\)</span> to <span class="arithmatex">\(b\)</span>, you just need to find its <strong>antiderivative</strong>, <span class="arithmatex">\(F(x)\)</span> (a function whose derivative is <span class="arithmatex">\(f(x)\)</span>), and then calculate the change in <span class="arithmatex">\(F(x)\)</span> from <span class="arithmatex">\(a\)</span> to <span class="arithmatex">\(b\)</span>.<br />
 $$ \int_a^b f(x) dx = F(b) - F(a) \quad \text{where } F'(x) = f(x) $$</p>
 <h2>Taylor Series</h2>
 <p>A Taylor series is a way to approximate any smooth function with an infinite polynomial. The idea is to make the polynomial match the function's value, its first derivative, its second derivative, and so on, at a particular point.</p>
-<p>The formula for the Taylor series of a function $f(x)$ around a point $a$ is:<br />
+<p>The formula for the Taylor series of a function <span class="arithmatex">\(f(x)\)</span> around a point <span class="arithmatex">\(a\)</span> is:<br />
 $$ f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(a)}{n!} (x-a)^n = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots $$</p>
 <h2>More on</h2>
 <ul>
@@ -111,5 +111,8 @@ $$ f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(a)}{n!} (x-a)^n = f(a) + f'(a)(x-a) 
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>

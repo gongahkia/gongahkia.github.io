@@ -43,9 +43,9 @@
         <h2>The Central Limit Theorem</h2>
         <dl>
           <dt>File size</dt>
-          <dd>6.7KB</dd>
+          <dd>7.2KB</dd>
           <dt>Lines of code</dt>
-          <dd>104</dd>
+          <dd>107</dd>
         </dl>
       </section>
       <section class="note-content">
@@ -58,7 +58,7 @@
 <p>The <strong>distribution</strong> of a random variable describes the probability of each possible outcome. For a fair six-sided die, the distribution is uniform, as each outcome (1, 2, 3, 4, 5, 6) has an equal probability of 1/6. Other distributions can have different shapes (e.g., skewed, bimodal, etc.).</p>
 <h2>The Process of Sampling</h2>
 <p>The core idea of the Central Limit Theorem involves a process of sampling from a population:<br />
-1.  Take a <strong>sample</strong> of a certain size, $n$, from a population.<br />
+1.  Take a <strong>sample</strong> of a certain size, <span class="arithmatex">\(n\)</span>, from a population.<br />
 2.  Calculate the <strong>mean</strong> of this sample.<br />
 3.  Repeat this process many times, collecting a list of sample means.</p>
 <p>The Central Limit Theorem is about the distribution of this list of sample means.</p>
@@ -66,13 +66,13 @@
 <p>As you collect more and more sample means, their distribution starts to take on a familiar shape: the <strong>normal distribution</strong> (bell curve). This happens even if the original population's distribution was not a bell curve at all.</p>
 <p>Imagine rolling a die 10 times and taking the average. This is one sample mean. If you do this thousands of times and plot a histogram of all the averages you found, the histogram will look like a normal distribution.</p>
 <h2>The Theorem Stated</h2>
-<p>The Central Limit Theorem states that for a sufficiently large sample size ($n$), the distribution of the sample means ($\bar{x}$) will be approximately normal.</p>
+<p>The Central Limit Theorem states that for a sufficiently large sample size (<span class="arithmatex">\(n\)</span>), the distribution of the sample means (<span class="arithmatex">\(\bar{x}\)</span>) will be approximately normal.</p>
 <p>This new distribution has two important properties:<br />
-1.  Its mean, $\mu_{\bar{x}}$, is the same as the mean of the original population, $\mu$.<br />
+1.  Its mean, <span class="arithmatex">\(\mu_{\bar{x}}\)</span>, is the same as the mean of the original population, <span class="arithmatex">\(\mu\)</span>.<br />
     $$<br />
     \mu_{\bar{x}} = \mu<br />
     $$<br />
-2.  Its standard deviation, $\sigma_{\bar{x}}$ (also known as the <strong>standard error</strong>), is the standard deviation of the original population, $\sigma$, divided by the square root of the sample size, $n$.<br />
+2.  Its standard deviation, <span class="arithmatex">\(\sigma_{\bar{x}}\)</span> (also known as the <strong>standard error</strong>), is the standard deviation of the original population, <span class="arithmatex">\(\sigma\)</span>, divided by the square root of the sample size, <span class="arithmatex">\(n\)</span>.<br />
     $$<br />
     \sigma_{\bar{x}} = \frac{\sigma}{\sqrt{n}}<br />
     $$<br />
@@ -100,5 +100,8 @@ This second property is very important: it means that as you increase your sampl
   </main>
   <div class="wrapper"></div>
   
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 </body>
 </html>
