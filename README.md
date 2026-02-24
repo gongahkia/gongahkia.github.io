@@ -7,7 +7,9 @@ Monorepo for my personal [site](./), [blog](./blog/) and [wiki](./personal-wiki/
 
 ## Wiki Notes
 
-<a href="https://github.com/gongahkia/gongahkia.github.io/releases/tag/notes-2026-02-02"><b>Download</b></a> my notes as a ZIP file. If you like them, consider [**sponsoring**](https://github.com/sponsors/gongahkia) this repository.  
+<a href="https://github.com/gongahkia/gongahkia.github.io/releases/tag/notes-2026-02-02"><b>Download</b></a> my notes as a ZIP file.   
+
+If you like them, consider [**sponsoring**](https://github.com/sponsors/gongahkia) this repository.  
 
 ## Usage
 
