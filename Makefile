@@ -28,6 +28,8 @@ help:
 build:
 	@python3 build.py
 	@npx -y pagefind --site personal-wiki/pages --output-path personal-wiki/pagefind 2>/dev/null || echo "warn: pagefind not available, skipping search index"
+	@rm -f blog/posts/*.md personal-wiki/notes/*.md
+	@echo "build: scratchpad .md files removed"
 
 # Build Pagefind search index for wiki
 search:
