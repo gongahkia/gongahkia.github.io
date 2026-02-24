@@ -20,21 +20,15 @@ help:
 	@echo "  make build-wiki     - Build all wiki HTML from markdown"
 	@echo "  make clean-wiki     - Remove generated wiki HTML files"
 
-	@echo "  make search         - Build Pagefind search index for wiki"
 	@echo "  make sitemap        - Generate sitemap.xml"
 	@echo "  make up             - Pull latest changes and show status"
 	@echo "  make history        - Show git log"
 
-# Unified build: wiki + blog index + sitemap + search index
+# Unified build: wiki + blog index + sitemap
 build:
 	@python3 build.py
-	@npx -y pagefind --site personal-wiki/pages --output-path personal-wiki/pagefind 2>/dev/null || echo "warn: pagefind not available, skipping search index"
 	@rm -f blog/posts/*.md personal-wiki/notes/*.md
 	@echo "build: scratchpad .md files removed"
-
-# Build Pagefind search index for wiki
-search:
-	@npx -y pagefind --site personal-wiki/pages --output-path personal-wiki/pagefind
 
 # Create a new blog post (markdown with frontmatter)
 blog:
