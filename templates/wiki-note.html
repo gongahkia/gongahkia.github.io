@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% block extra_scripts %}
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+{% endblock %}
 {% block extra_preloads %}
   <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntlMono-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
 {% endblock %}

@@ -39,7 +39,12 @@ def extract_md_title(md_content):
     return match.group(1).strip() if match else "Untitled"
 def md_to_html(md_content):
     """convert markdown string to html"""
-    md = markdown.Markdown(extensions=['fenced_code', 'tables', 'nl2br', 'codehilite'])
+    md = markdown.Markdown(extensions=[
+        'fenced_code', 'tables', 'nl2br', 'codehilite',
+        'pymdownx.arithmatex',
+    ], extension_configs={
+        'pymdownx.arithmatex': {'generic': True},
+    })
     return md.convert(md_content)
 def parse_frontmatter(text):
     """parse YAML frontmatter from markdown file, returns (metadata_dict, content_str)"""
