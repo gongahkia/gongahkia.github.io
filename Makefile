@@ -1,4 +1,4 @@
-.PHONY: blog book film tech-writeup wiki build build-wiki clean-wiki help up history sitemap search
+.PHONY: blog book film tech-writeup wiki build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -19,6 +19,7 @@ help:
 	@echo "  make wiki           - Create a new wiki note (interactive)"
 	@echo "  make build-wiki     - Build all wiki HTML from markdown"
 	@echo "  make clean-wiki     - Remove generated wiki HTML files"
+
 	@echo "  make search         - Build Pagefind search index for wiki"
 	@echo "  make sitemap        - Generate sitemap.xml"
 	@echo "  make up             - Pull latest changes and show status"
