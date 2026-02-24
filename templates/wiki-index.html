@@ -2,29 +2,10 @@
 {% block canonical %}
   <link rel="canonical" href="https://gabrielongzm.com/personal-wiki/">
 {% endblock %}
-{% block extra_styles %}
-  <link href="pagefind/pagefind-ui.css" rel="stylesheet">
-  <style>
-    .pagefind-ui { --pagefind-ui-text: var(--foreground-color); --pagefind-ui-background: var(--background-color); --pagefind-ui-border: var(--foreground-color); --pagefind-ui-border-width: var(--thin-border-width); --pagefind-ui-border-radius: 0; --pagefind-ui-font: inherit; }
-    #search { width: 100%; margin-bottom: calc(var(--unit-size) / 2); }
-    .pagefind-ui .pagefind-ui__form:before { display: none; }
-    .pagefind-ui .pagefind-ui__search-input { font-family: inherit; font-size: inherit; border: var(--thick-border-width) solid var(--foreground-color); background: var(--background-color); color: var(--foreground-color); padding: calc(var(--unit-size) / 3); padding-left: calc(var(--unit-size) / 3); outline: none; }
-    .pagefind-ui .pagefind-ui__search-input:focus { outline: none; box-shadow: none; border-color: var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__result { border-top: var(--thin-border-width) solid var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__result:first-child { border-top: none; }
-    .pagefind-ui .pagefind-ui__result-link { color: var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__result-excerpt { color: var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__result-excerpt mark { color: var(--foreground-color); background: transparent; font-weight: bold; }
-    .pagefind-ui .pagefind-ui__message { color: var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__button { color: var(--foreground-color); background: var(--background-color); border: var(--thin-border-width) solid var(--foreground-color); }
-    .pagefind-ui .pagefind-ui__search-clear { color: var(--foreground-color); background: var(--background-color); }
-  </style>
-{% endblock %}
 {% block content %}
       <section class="introductionPortion">
         <h2>Gabriel's Personal Wiki</h2>
         <p><i>My notes from the things I've learnt. Available as a <a href="https://github.com/gongahkia/personal-wiki/releases"><b>ZIP file</b></a>.</i></p>
-        <div id="search"></div>
       </section>
       <section class="booksAndBlog">
         {% for note in notes %}
@@ -36,8 +17,4 @@
         </dl>
         {% endfor %}
       </section>
-{% endblock %}
-{% block extra_scripts %}
-  <script src="pagefind/pagefind-ui.js"></script>
-  <script>window.addEventListener('DOMContentLoaded', () => { new PagefindUI({ element: "#search", showSubResults: true, showImages: false, basePath: "pagefind/", processResult: function(result) { result.url = "pages/" + result.url.replace(/^\/+/, ""); if (result.sub_results) { result.sub_results.forEach(function(sub) { sub.url = "pages/" + sub.url.replace(/^\/+/, ""); }); } return result; } }); });</script>
 {% endblock %}
