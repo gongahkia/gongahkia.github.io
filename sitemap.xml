@@ -913,13 +913,31 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gabrielongzm.com/blog/posts/watersong.html</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://gabrielongzm.com/blog/posts/marty_supreme.html</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://gabrielongzm.com/blog/posts/fancy_bear_goes_phishing.html</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://gabrielongzm.com/blog/posts/wuthering_heights.html</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gabrielongzm.com/blog/posts/the_healing_hippo_of_hinode_park.html</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
