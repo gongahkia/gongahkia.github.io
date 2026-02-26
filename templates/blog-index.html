@@ -27,9 +27,9 @@
             <i>Release Year: {{ post.year }}</i>
             <br>
             <strong>{{ post.rating }}/5</strong>
-            {% elif post.duration %}
+            {% elif post.status %}
             <br>
-            {{ post.duration }}
+            {{ post.date_range }}
             <br>
             <strong>{{ post.status }}</strong>
             {% endif %}

@@ -61,7 +61,7 @@ REQUIRED_FIELDS = { # per post type
     "blog": ["title", "date"],
     "book": ["title", "date", "author", "isbn", "category", "rating"],
     "film": ["title", "date", "director", "year", "rating"],
-    "tech-writeup": ["title", "date", "tech_stack", "duration", "status"],
+    "tech-writeup": ["title", "date", "tech_stack", "status"],
 }
 def validate_frontmatter(meta, filepath):
     """validate required frontmatter fields, returns list of errors"""
@@ -274,10 +274,7 @@ def build_blog():
                 "rating": meta.get("rating", ""),
             })
         elif post_type == "tech-writeup":
-            post_info.update({
-                "duration": meta.get("duration", ""),
-                "status": meta.get("status", ""),
-            })
+            post_info.update({"status": meta.get("status", ""), "date_range": meta.get("date_range", "")})
         all_posts.append(post_info)
     html_files = sorted(posts_dir.glob("*.html"))
     for html_file in html_files:
@@ -300,11 +297,8 @@ def build_blog():
                 "year": meta.get("year", ""),
                 "rating": meta.get("rating", "").replace("/5", ""),
             })
-        elif meta.get("tech stack") or meta.get("duration"):
-            post_info.update({
-                "duration": meta.get("duration", ""),
-                "status": meta.get("status", ""),
-            })
+        elif meta.get("tech stack") or meta.get("status"):
+            post_info.update({"status": meta.get("status", ""), "date_range": meta.get("timeline", "")})
         all_posts.append(post_info)
     def parse_date(d):
         """parse date string to sortable datetime; handles 'X to Y' ranges by using start"""

@@ -17,18 +17,18 @@
       <section class="writeup-details">
         <h2>{{ title }}</h2>
         <dl>
-          <dt>Date</dt>
-          <dd>{{ date }}</dd>
+          <dt>Timeline</dt>
+          <dd>{{ date_range }}</dd>
           <dt>Tech Stack</dt>
           <dd>{{ tech_stack }}</dd>
-          <dt>Duration</dt>
-          <dd>{{ duration }}</dd>
           <dt>Status</dt>
           <dd><strong>{{ status }}</strong></dd>
           {% if github %}<dt>GitHub</dt>
           <dd><a href="{{ github }}">{{ github }}</a></dd>{% endif %}
           {% if demo %}<dt>Demo</dt>
           <dd><a href="{{ demo }}">{{ demo }}</a></dd>{% endif %}
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
         </dl>
       </section>
       <section class="writeup-content">

@@ -165,7 +165,7 @@ tech:
 			echo "Error: start and end date cannot be the same."; \
 		fi; \
 	done; \
-	date="$$start_date to $$end_date"; \
+	date_range="$$start_date to $$end_date"; \
 	printf "Enter title (required): "; \
 	read title; \
 	while [ -z "$$title" ]; do \
@@ -175,8 +175,6 @@ tech:
 	done; \
 	printf "Enter tech stack (comma-separated): "; \
 	read tech_stack; \
-	printf "Enter duration/timeline: "; \
-	read duration; \
 	printf "Enter status (Active/Archived/Deprecated): "; \
 	read status; \
 	printf "Enter GitHub URL (optional): "; \
@@ -184,7 +182,7 @@ tech:
 	printf "Enter demo URL (optional): "; \
 	read demo; \
 	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: tech-writeup\ntech_stack: \"$$tech_stack\"\nduration: \"$$duration\"\nstatus: \"$$status\"\ngithub: \"$$github\"\ndemo: \"$$demo\"\n---\n\nAdd writeup content here.\n" > blog/posts/$$filename; \
+	printf -- "---\ntitle: \"$$title\"\ndate: $$current_date\ntype: tech-writeup\ntech_stack: \"$$tech_stack\"\ndate_range: \"$$date_range\"\nstatus: \"$$status\"\ngithub: \"$$github\"\ndemo: \"$$demo\"\n---\n\nAdd writeup content here.\n" > blog/posts/$$filename; \
 	echo "Created blog/posts/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 
