@@ -26,9 +26,7 @@ help:
 
 # Unified build: wiki + blog index + sitemap
 build:
-	@python3 build.py
-	@rm -f blog/posts/*.md personal-wiki/notes/*.md
-	@echo "build: scratchpad .md files removed"
+	@python3 build.py && rm -f blog/posts/*.md personal-wiki/notes/*.md && echo "build: scratchpad .md files removed"
 
 # Create a new blog post (markdown with frontmatter)
 blog:

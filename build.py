@@ -52,8 +52,11 @@ def parse_frontmatter(text):
         return {}, text
     parts = text.split("---", 2)
     if len(parts) < 3:
-        return {}, text
-    meta = yaml.safe_load(parts[1]) or {}
+        return {"__fm_error__": "missing closing ---"}, text
+    try:
+        meta = yaml.safe_load(parts[1]) or {}
+    except yaml.YAMLError as e:
+        return {"__yaml_error__": str(e)}, parts[2].strip()
     content = parts[2].strip()
     return meta, content
 # --- frontmatter validation ---
@@ -65,6 +68,10 @@ REQUIRED_FIELDS = { # per post type
 }
 def validate_frontmatter(meta, filepath):
     """validate required frontmatter fields, returns list of errors"""
+    if "__yaml_error__" in meta:
+        return [f"{filepath}: invalid YAML in frontmatter: {meta['__yaml_error__']}"]
+    if "__fm_error__" in meta:
+        return [f"{filepath}: {meta['__fm_error__']}"]
     post_type = meta.get("type", "blog")
     required = REQUIRED_FIELDS.get(post_type, ["title", "date"])
     errors = []
@@ -161,9 +168,10 @@ def build_wiki():
     pages_dir = ROOT / "personal-wiki" / "pages"
     pages_dir.mkdir(exist_ok=True)
     if not notes_dir.exists():
-        print("warn: personal-wiki/notes/ not found, skipping wiki build")
-        return []
-    md_files = sorted(notes_dir.glob("*.md"))
+        print("warn: personal-wiki/notes/ not found, scanning html-only")
+        md_files = []
+    else:
+        md_files = [f for f in sorted(notes_dir.glob("*.md")) if not f.name.startswith(".")]
     print(f"wiki: found {len(md_files)} notes")
     template = env.get_template("wiki-note.html")
     notes_info = []
@@ -176,7 +184,7 @@ def build_wiki():
         output_path = pages_dir / output_filename
         rendered = template.render(
             title=title, content=html_content,
-            file_size="...", loc="...", # placeholder, calculated after write
+            file_size="__WIKI_FILE_SIZE__", loc="__WIKI_LOC__", # placeholder, calculated after write
             meta_description=f"Wiki Note: {title} - Gabriel Ong",
             og_title=f"{title} | Gabriel Ong Wiki",
             og_type="article",
@@ -188,7 +196,7 @@ def build_wiki():
         size_kb = size_bytes / 1024
         file_size = f"{size_bytes}B" if size_kb < 1 else f"{size_kb:.1f}KB"
         loc = len(rendered.splitlines())
-        rendered = rendered.replace("...", file_size, 1).replace("...", str(loc), 1) # replace placeholders
+        rendered = rendered.replace("__WIKI_FILE_SIZE__", file_size).replace("__WIKI_LOC__", str(loc)) # replace placeholders
         output_path.write_text(rendered, encoding="utf-8")
         notes_info.append({"title": title, "filename": output_filename, "size": file_size})
         print(f"  wiki: {md_file.name} -> {output_filename}")
@@ -228,7 +236,7 @@ def build_blog():
         "tech-writeup": "tech-writeup.html",
         "film": "film-review.html",
     }
-    md_files = sorted(posts_dir.glob("*.md"))
+    md_files = [f for f in sorted(posts_dir.glob("*.md")) if not f.name.startswith(".")]
     for md_file in md_files:
         raw = md_file.read_text(encoding="utf-8")
         meta, content = parse_frontmatter(raw)
@@ -276,12 +284,13 @@ def build_blog():
         elif post_type == "tech-writeup":
             post_info.update({"status": meta.get("status", ""), "date_range": meta.get("date_range", "")})
         all_posts.append(post_info)
-    html_files = sorted(posts_dir.glob("*.html"))
+    html_files = [f for f in sorted(posts_dir.glob("*.html")) if not f.name.startswith(".")]
     for html_file in html_files:
         if any(p["filename"] == html_file.name for p in all_posts):
             continue # already processed from markdown
         meta = parse_html_post(html_file)
         if not meta.get("title"):
+            print(f"warn: skipping {html_file.name} — could not extract title")
             continue
         post_info = {"title": meta["title"], "date": meta.get("date", ""), "filename": html_file.name}
         if meta.get("author"):
@@ -294,7 +303,7 @@ def build_blog():
         elif meta.get("director"):
             post_info.update({
                 "director": meta.get("director", ""),
-                "year": meta.get("year", ""),
+                "year": meta.get("release year", meta.get("year", "")),
                 "rating": meta.get("rating", "").replace("/5", ""),
             })
         elif meta.get("tech stack") or meta.get("status"):
@@ -309,6 +318,7 @@ def build_blog():
                 return datetime.strptime(d, fmt)
             except (ValueError, TypeError):
                 continue
+        print(f"warn: unparseable date '{d}', sorting to end")
         return datetime.min
     all_posts.sort(key=lambda p: parse_date(p.get("date", "")), reverse=True)
     idx_template = env.get_template("blog-index.html")
