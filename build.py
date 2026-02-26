@@ -307,7 +307,9 @@ def build_blog():
             })
         all_posts.append(post_info)
     def parse_date(d):
-        """parse date string to sortable tuple"""
+        """parse date string to sortable datetime; handles 'X to Y' ranges by using start"""
+        if isinstance(d, str) and " to " in d:
+            d = d.split(" to ")[0].strip()
         for fmt in ("%d %b %Y", "%Y-%m-%d", "%d %B %Y"):
             try:
                 return datetime.strptime(d, fmt)

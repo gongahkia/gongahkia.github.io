@@ -1,4 +1,4 @@
-.PHONY: blog book film tech-writeup wiki build build-wiki clean-wiki help up history sitemap
+.PHONY: blog book film tech wiki build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -15,7 +15,7 @@ help:
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make film           - Create a new film review (interactive)"
-	@echo "  make tech-writeup   - Create a new tech writeup (interactive)"
+	@echo "  make tech           - Create a new tech writeup (interactive)"
 	@echo "  make wiki           - Create a new wiki note (interactive)"
 	@echo "  make build-wiki     - Build all wiki HTML from markdown"
 	@echo "  make clean-wiki     - Remove generated wiki HTML files"
@@ -142,12 +142,30 @@ film:
 	echo "Run 'make build' after editing to rebuild index"
 
 # Create a new tech writeup (markdown with frontmatter)
-tech-writeup:
+tech:
 	@echo "Creating new tech writeup..."
 	@current_date=$$(date +"%e %b %Y" | xargs); \
-	printf "Enter date (default: $$current_date): "; \
-	read date; \
-	date=$${date:-$$current_date}; \
+	printf "Enter start date (default: $$current_date): "; \
+	read start_date; \
+	start_date=$${start_date:-$$current_date}; \
+	printf "Is this an ongoing project? (Y/N): "; \
+	read ongoing; \
+	while [ "$$ongoing" != "Y" ] && [ "$$ongoing" != "N" ]; do \
+		echo "Please enter Y or N."; \
+		printf "Is this an ongoing project? (Y/N): "; \
+		read ongoing; \
+	done; \
+	if [ "$$ongoing" = "Y" ]; then end_date_default="Present"; else end_date_default="$$current_date"; fi; \
+	end_date="$$start_date"; \
+	while [ "$$end_date" = "$$start_date" ] && [ "$$end_date" != "Present" ]; do \
+		printf "Enter end date (default: $$end_date_default): "; \
+		read end_date_input; \
+		end_date=$${end_date_input:-$$end_date_default}; \
+		if [ "$$end_date" = "$$start_date" ]; then \
+			echo "Error: start and end date cannot be the same."; \
+		fi; \
+	done; \
+	date="$$start_date to $$end_date"; \
 	printf "Enter title (required): "; \
 	read title; \
 	while [ -z "$$title" ]; do \
