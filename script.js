@@ -65,6 +65,7 @@ function restoreTheme() { // apply saved theme from localStorage
     document.documentElement.style.setProperty('--click-text-color', clickTextColor);
 }
 restoreTheme();
+window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); });
 
 // ----- setup code -----
 
