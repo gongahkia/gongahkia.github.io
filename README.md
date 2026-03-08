@@ -1,5 +1,7 @@
 ![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/fetch-contributions.yml/badge.svg)
 ![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/wiki-release.yml/badge.svg)
+![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/pages.yml/badge.svg)
+![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/fetch-contributions.yml/badge.svg)
 
 # `Site, Notes, Blog`
 
