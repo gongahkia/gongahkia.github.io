@@ -34,12 +34,19 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build site artifact
-        run: python3 build.py --output dist
+        run: python3 build.py --output "$GITHUB_WORKSPACE/dist"
+
+      - name: Verify build output
+        run: |
+          test -d "$GITHUB_WORKSPACE/dist"
+          test -f "$GITHUB_WORKSPACE/dist/index.html"
+          test -f "$GITHUB_WORKSPACE/dist/CNAME"
+          ls -la "$GITHUB_WORKSPACE/dist" | sed -n '1,40p'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ${{ github.workspace }}/dist
 
   deploy:
     environment:
