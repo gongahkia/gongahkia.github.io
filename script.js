@@ -2,32 +2,25 @@
 
 // --- actual running code ---
 
-const theButton = document.getElementById("infinityButton");
+const themeLabel = document.querySelector('label[for="dark-mode"]');
 let isDarkMode = false; 
 
-theButton?.addEventListener("click", pressTheButton);
+themeLabel?.addEventListener("click", pressTheButton);
 
-function pressTheButton() {
-    isDarkMode = !isDarkMode; 
-    const newColor = isDarkMode ? generateDarkColor() : generateLightColor();
-    console.log(newColor, isDarkMode); 
-    document.body.style.backgroundColor = newColor;
-    const articleTag = document.getElementsByClassName("overallArticleTags")[0];
-    const footerTag = document.getElementsByTagName("footer")[0];
-    const imageTag = document.getElementById("gongImage");
-    if (isDarkMode) {
-        theButton.setAttribute("style", "filter:invert(1);");
-        articleTag.setAttribute("style", "filter:invert(1);");
-        footerTag.setAttribute("style", "filter:invert(1);");
-        imageTag.style.filter = "invert(1)";
+function applyThemeState(nextMode, bgColor) {
+    isDarkMode = nextMode;
+    document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+    if (bgColor) {
+        document.body.style.backgroundColor = bgColor;
     } else {
-        theButton.style.filter = "none";
-        articleTag.style.filter = "none";
-        footerTag.style.filter = "none";
-        imageTag.style.filter = "none";
+        document.body.style.removeProperty("background-color");
     }
-    const clickTextColor = isDarkMode ? '#CCCCCC' : '#363636';
-    document.documentElement.style.setProperty('--click-text-color', clickTextColor);
+}
+
+function pressTheButton(event) {
+    event?.preventDefault();
+    const newColor = isDarkMode ? generateDarkColor() : generateLightColor();
+    applyThemeState(!isDarkMode, newColor);
     localStorage.setItem('theme_isDarkMode', isDarkMode);
     localStorage.setItem('theme_bgColor', newColor);
 }
@@ -48,21 +41,12 @@ function generateLightColor() {
 
 function restoreTheme() { // apply saved theme from localStorage
     const saved = localStorage.getItem('theme_isDarkMode');
-    if (saved === null) return;
-    isDarkMode = saved === 'true';
     const bgColor = localStorage.getItem('theme_bgColor');
-    if (bgColor) document.body.style.backgroundColor = bgColor;
-    const articleTag = document.getElementsByClassName("overallArticleTags")[0];
-    const footerTag = document.getElementsByTagName("footer")[0];
-    const imageTag = document.getElementById("gongImage");
-    if (isDarkMode) {
-        if (theButton) theButton.style.filter = "invert(1)";
-        if (articleTag) articleTag.style.filter = "invert(1)";
-        if (footerTag) footerTag.style.filter = "invert(1)";
-        if (imageTag) imageTag.style.filter = "invert(1)";
+    if (saved === null) {
+        applyThemeState(false, null);
+        return;
     }
-    const clickTextColor = isDarkMode ? '#CCCCCC' : '#363636';
-    document.documentElement.style.setProperty('--click-text-color', clickTextColor);
+    applyThemeState(saved === 'true', bgColor);
 }
 restoreTheme();
 window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); });

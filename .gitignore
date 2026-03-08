@@ -1,7 +1,7 @@
 node_modules/
 package-lock.json
-blog/posts/*.md
-personal-wiki/notes/*.md
 __pycache__/
 *.pyc
 .DS_Store
+dist/
+migration-reports/

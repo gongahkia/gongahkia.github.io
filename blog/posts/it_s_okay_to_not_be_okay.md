@@ -1,0 +1,53 @@
+---
+title: "It’s okay to not be okay"
+date: "12 Jun 2021"
+type: "blog"
+---
+
+Today’s post is going to be a bit different from the usual fare.
+
+It isn’t really a post. There aren’t any pre-post drafts. There’s no narrative arc I’m trying to draw here, nor is there a lesson I’m trying to derive from my experience.
+
+To be very frank, it matters very little to me whether anyone is reading this or not. I’m typing this down more for myself. In fact, it means nothing to me what your opinions on this are. I pray I’m able to look back on this some time from now, and gain a greater appreciation for the Lord’s sustaining grace and mercy upon a wretch like myself.
+
+Over the past few weeks, most keenly marked by my move into Signals Institute @ Stagmont camp and the beginning of my SCS professional term, but I’m sure originating from the beginning of BMT, I’ve been changing, both physically and mentally.
+
+Whether I want to admit it or not, NS has changed the way I value people, time, and experience. Some for the better, a lot for the worst.
+
+I’m tired. Still, I’m not sure where my weariness is coming from. This isn’t the typical dread I feel when approaching a looming deadline or interview. It’s something that’s entirely foreign, yet smothering in its loathsome familiarity. It resides in the back of my head when I wake up and go about my day, and though it rarely causes any panic attacks (it seems my stupid pride has prevented me from freaking out in front of platoon mates (or more likely, God’s grace)), it presents itself as a pale, sickly yellow that blots out the highs and dampens the lows of my days.
+
+On days when I’m particularly happy, when I go out with company I treasure so much, this chromatic queasiness retreats to the recesses of my thoughts, but it never fully goes away.
+
+Since entering NS, I’ve been able to ignore this for the most part. Spending my weekends out with friends has allowed me to distract from the festering sore that has been feeding upon my soul.
+
+Yet, over the past 2-ish weeks of Phase 2 lockdown, even as I have been able to go out on weekends with friends, my mental state has not been in a great place.
+
+Due to circumstances far out of my control, and the shrewd pragmatism this world calls ‘wisdom’ that I’ve seemed to adopt, I’ve silently grown bitter toward my predicament. I have become more self-centered, more irritable, less loving, and seem to have lost a passion, not just for God and His word, but for life in general.
+
+These days, it seems apart from working out and listening to spotify, I don’t look forward to much. Outings with dear ones pepper and brighten my bookouts, and I try to remain happy by clinging to these outposts of joy that color the blank slate my life has seemed to become.
+
+Still, I know this isn’t real joy. This joy is one that fades. It is one that is fleeting and entirely based upon my interactions with ultimately, inherently sinful, flawed people. Here, I get a bitter taste in my mouth as the weariness that tells me things won’t get better reminds me that people will disappoint me and I won’t ever find happiness.
+
+To make it clear, this isn’t a self-help public service announcement. I don’t think the situation is to get rid of this grief by my own effort, because I really do think its foolish to ground my joy upon a fleeting foundation. In fact, I know where my joy must come from.
+
+The fact that the Lord sent His only begotten, perfect Son, to die on the cross for all my sins, so that a repugnant, vile sinner like me could be deemed righteous by a Holy God, is a reality that I cannot fully comprehend, but it is one that must bring me to my knees in brokenness and greater repentance, as His grace and mercy simultaneously brings me joy beyond reason.
+
+Still, I struggle. I sit alone with my thoughts on this Saturday night, and I know I’m not okay. I’m not fully sure why, but I feel tired of living, and I’m unsure of whether this is emotional or spiritual duress.
+
+Regardless, as the title of this update states, I think it’s fine if I don’t get immediate comfort now. If I must cry into the night for the Father’s mercy and grace, if this emptiness that I’ve been plagued with is meant to deepen my relationship with Him, then it is one that I must go through.
+
+My mother and father are fond of the sentence “there are no wasted journeys”. I’ve always found it overly simplistic, but today, upon reflection, it’s probably more applicable than I ever realised.
+
+I’m tired. Of smiling and telling others I’m okay. Of having to fulfill social obligations and niceties to people I don’t want to spend time with or be close to. Of not being able to spend time with people I want to grow closer to.
+
+But that’s how life is. And I think, if the Father has etched his law upon my heart, if He has governed the cosmos and every molecule to follow His sovereign will, then His plan for me that He formulated at the foundation of time itself for His glory must be one that is magnificent, and is one that far surpasses my foolish complexion as of now. I don’t know why I feel like this now, but I know the Father is faithful, loving, jealous for His name and righteous beyond measure.
+
+It’s okay to not be okay. But its imperative that I repent. Only then will I be able to appreciate the blazing truth that is His word in scripture, and praise Him for His mercy and grace. It is good for me to suffer and puzzle over this now, if it brings me to a greater awareness of my inadequacy to provide for even the simplest things for myself.
+
+Dear Father, please break my pride apart, so that I know all I have is bestowed upon me by your grace alone. You are God and I am a stubborn worm who overestimates his own worth, so praise be to you for all things, and glory to you for calling me your child. May I never grow conceited and boast of anything, except for your mercy and great love.
+
+***Psalm 22:6-10***
+
+*But I am a worm and not a person, A disgrace of mankind and despised by the people. All who see me deride me; They sneer, they shake their heads, saying, “Turn him over to the Lord; let Him save him; Let Him rescue him, because He delights in him.” Yet You are He who brought me forth from the womb; You made me trust when upon my mother’s breasts. I was cast upon You from birth; You have been my God from my mother’s womb.*
+
+Soli Deo gloria.

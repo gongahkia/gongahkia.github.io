@@ -57,7 +57,7 @@
 }
 
 /* defines some custom layers */
-@layer margin, size, font, font-size, text-decoration, color, border, grid, figure, dark-mode;
+@layer margin, size, font, font-size, text-decoration, color, flex, border, grid, figure, dark-mode;
 
 /* resets all margins and paddings to zero for all elements as a default */
 @layer margin { 
@@ -75,7 +75,7 @@
         --thick-border-width: 2px;
         --thin-border-width: 0.5px;
     }
-    :root:has(input#dark-mode:checked) {
+    :root[data-theme="dark"] {
         --thick-border-width: 1.5px;
     }
 }
@@ -153,11 +153,13 @@
         --background-color: color-mix(in oklab, var(--color-black) 0%, var(--color-white));
         --foreground-color: color-mix(in oklab, var(--color-black) 80%, var(--color-white));
         --thin-border-color: var(--foreground-color);
+        --click-text-color: #363636;
     }
-    :root:has(input#dark-mode:checked) {
+    :root[data-theme="dark"] {
         --background-color: color-mix(in oklab, var(--color-black) 100%, var(--color-white));
         --foreground-color: color-mix(in oklab, var(--color-black) 20%, var(--color-white));
         --thin-border-color: color-mix(in oklab, var(--foreground-color), transparent 50%);
+        --click-text-color: #cccccc;
     }
     html, body {
         background-color: var(--background-color);
@@ -441,35 +443,29 @@
 
 /* defines styles when toggling dark mode */
 @layer dark-mode {
-    input#dark-mode {
+    #dark-mode {
         display: none;
     }
-    input#dark-mode ~ label {
+    #dark-mode + label {
         display: inline-block;
         position: absolute;
         top: calc((var(--unit-size) - var(--thick-border-width)) / 4 - var(--unit-size) / 2 + var(--unit-size) / 6); /* place icon above the article top border with symmetric spacing */
         right: max(calc((100vw - 4 * var(--column-size) - 3 * var(--unit-size) ) / 2), var(--unit-size));
     }
-    input#dark-mode ~ label#dark-mode-light {
-        display: none;
-    }
-    input#dark-mode:checked ~ label#dark-mode-light {
-        display: inline-block;
-    }
-    input#dark-mode:checked ~ label#dark-mode-dark {
-        display: none;
-    }
-    input#dark-mode ~ label {
+    #dark-mode + label {
         cursor: pointer;
         padding: 10px;
     }
-    input#dark-mode ~ label svg {
+    #dark-mode + label img {
+        display: block;
         width: var(--unit-size);
         height: var(--unit-size);
     }
-    input#dark-mode ~ label svg path {
-        fill: var(--foreground-color);
-    }
+}
+
+:root[data-theme="dark"] #infinityButton,
+:root[data-theme="dark"] #gongImage {
+    filter: invert(1);
 }
 
 footer {
