@@ -7,6 +7,20 @@ let isDarkMode = false;
 
 themeLabel?.addEventListener("click", pressTheButton);
 
+function parseStoredRgb(color) {
+    const match = color?.match(/\d+/g);
+    if (!match || match.length < 3) return null;
+    return match.slice(0, 3).map(Number);
+}
+
+function isDarkBackground(color) {
+    const rgb = parseStoredRgb(color);
+    if (!rgb) return null;
+    const [r, g, b] = rgb;
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance < 0.5;
+}
+
 function applyThemeState(nextMode, bgColor) {
     isDarkMode = nextMode;
     document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
@@ -19,8 +33,9 @@ function applyThemeState(nextMode, bgColor) {
 
 function pressTheButton(event) {
     event?.preventDefault();
-    const newColor = isDarkMode ? generateDarkColor() : generateLightColor();
-    applyThemeState(!isDarkMode, newColor);
+    const nextMode = !isDarkMode;
+    const newColor = nextMode ? generateDarkColor() : generateLightColor();
+    applyThemeState(nextMode, newColor);
     localStorage.setItem('theme_isDarkMode', isDarkMode);
     localStorage.setItem('theme_bgColor', newColor);
 }
@@ -46,7 +61,11 @@ function restoreTheme() { // apply saved theme from localStorage
         applyThemeState(false, null);
         return;
     }
-    applyThemeState(saved === 'true', bgColor);
+    const savedMode = saved === 'true';
+    const inferredMode = isDarkBackground(bgColor);
+    const restoredMode = inferredMode ?? savedMode;
+    applyThemeState(restoredMode, bgColor);
+    localStorage.setItem('theme_isDarkMode', String(restoredMode));
 }
 restoreTheme();
 window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); });

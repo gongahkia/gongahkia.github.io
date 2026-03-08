@@ -463,8 +463,7 @@
     }
 }
 
-:root[data-theme="dark"] #infinityButton,
-:root[data-theme="dark"] #gongImage {
+:root[data-theme="dark"] #infinityButton {
     filter: invert(1);
 }
 
