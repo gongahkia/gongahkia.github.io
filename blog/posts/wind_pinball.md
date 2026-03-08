@@ -1,5 +1,5 @@
 ---
-title: "Book Title"
+title: "Wind/Pinball"
 author: "Haruki Murakami"
 isbn: "9780385352123"
 category: "Fiction"
