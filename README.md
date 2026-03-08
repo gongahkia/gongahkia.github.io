@@ -18,25 +18,11 @@ If you like them, consider [**sponsoring**](https://github.com/sponsors/gongahki
 $ make help
 ```
 
-### Current content model
-
-* Blog posts and wiki notes can be authored in Markdown and built into static HTML.
-* Existing checked-in HTML blog posts and wiki notes remain supported as legacy content.
-* `make build` writes a full deployable site tree into `dist/` and preserves Markdown authoring files.
-* `make clean-wiki` only removes generated HTML for Markdown-backed wiki notes and leaves legacy HTML-only notes untouched.
-* GitHub Pages is intended to deploy from a GitHub Actions artifact built from source, not from tracked generated HTML on `main`.
-
-## Automated workflows
+## Github actions
 
 * [`fetch-contributions.yml`](./.github/workflows/fetch-contributions.yml): Update GitHub contributions calendar on personal site daily
 * [`wiki-release.yml`](./.github/workflows/wiki-release.yml): ZIPs all Markdown wiki notes on changes
-* `pages.yml`: Builds `dist/` and deploys the site through GitHub Pages Actions
-
-## Migration workflow
-
-* Run `python3 scripts/reverse_engineer_content.py --target all --write --report migration-reports/content-migration.json` to recover Markdown sources from legacy HTML pages that do not already have mapped Markdown files.
-* Review the JSON and Markdown reports before removing any tracked generated HTML from `main`.
-* After the Pages workflow is merged, switch GitHub Pages in repository settings from `Deploy from a branch` to `GitHub Actions`.
+* [`pages.yml`](./.github/workflows/pages.yml): Builds `dist/` and deploys the site through GitHub Pages Actions
 
 ## Stack
 
