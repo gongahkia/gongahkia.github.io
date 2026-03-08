@@ -18,7 +18,7 @@ help:
 	@echo "  make tech           - Create a new tech writeup (interactive)"
 	@echo "  make wiki           - Create a new wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make build-wiki     - Build the deployable site into dist/ (legacy alias)"
-	@echo "  make clean-wiki     - Remove only tracked wiki HTML for Markdown-backed notes"
+	@echo "  make clean-wiki     - Remove built wiki pages and index from dist/"
 
 	@echo "  make sitemap        - Build the deployable site into dist/ (legacy alias)"
 	@echo "  make up             - Pull latest changes and show status"
@@ -260,21 +260,21 @@ build-wiki:
 	@python3 build.py --output dist
 	@echo "Build complete!"
 
-# Clean generated wiki HTML files
+# Clean built wiki HTML files from dist/
 clean-wiki:
-	@echo "Cleaning generated wiki files..."
+	@echo "Cleaning built wiki files from dist/..."
 	@removed=0; \
-	for md_file in personal-wiki/notes/*.md; do \
-		[ -e "$$md_file" ] || continue; \
-		stem=$$(basename "$$md_file" .md); \
-		html_file="personal-wiki/pages/$$(printf "%s" "$$stem" | tr '[:upper:]' '[:lower:]').html"; \
-		if [ -e "$$html_file" ]; then \
-			rm -f "$$html_file"; \
-			removed=$$((removed + 1)); \
-			echo "Removed $$html_file"; \
-		fi; \
-	done; \
-	echo "Clean complete! Removed $$removed generated wiki page(s); legacy HTML-only notes were preserved."
+	if [ -d dist/personal-wiki/pages ]; then \
+		count=$$(find dist/personal-wiki/pages -maxdepth 1 -name '*.html' | wc -l | tr -d ' '); \
+		rm -rf dist/personal-wiki/pages; \
+		removed=$$((removed + count)); \
+		echo "Removed dist/personal-wiki/pages ($$count file(s))"; \
+	fi; \
+	if [ -f dist/personal-wiki/index.html ]; then \
+		rm -f dist/personal-wiki/index.html; \
+		echo "Removed dist/personal-wiki/index.html"; \
+	fi; \
+	echo "Clean complete! Removed $$removed built wiki page(s) from dist/."
 
 # Generate sitemap.xml (legacy target, calls unified build)
 sitemap:
