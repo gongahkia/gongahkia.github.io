@@ -95,17 +95,23 @@ document.querySelector("#current-year").innerText = currentYear;
 // ----- click animation -----
 
 document.addEventListener('click', function(event) {
+    if (event.button !== 0 || event.detail === 0) return;
     const clickContainer = document.getElementById('click-container');
+    if (!clickContainer) return;
     const clickElement = document.createElement('div');
     const sounds = ['click', 'clack', 'thock', 'thonk', 'thup', 'pop', 'whump', 'thud', 'plip', 'clonk', 'snap', 'tck', 'tak', 'bonk', 'klak', 'tik', 'tock', 'plink', 'clunk', 'thwack', 'bop', 'klik', 'plonk', 'tunk', 'pok', 'ping', 'thwick', 'blip', 'clop', 'klock', 'thwump', 'tnk'];
     clickElement.textContent = sounds[Math.floor(Math.random() * sounds.length)];
     clickElement.classList.add('click-animation');
-    clickElement.style.left = (event.clientX - 20) + 'px';
-    clickElement.style.top = (event.clientY - 10) + 'px';
+    clickElement.style.left = event.clientX + 'px';
+    clickElement.style.top = event.clientY + 'px';
+    clickElement.style.setProperty('--click-drift', `${Math.round((Math.random() - 0.5) * 20)}px`);
+    clickElement.style.setProperty('--click-tilt', `${((Math.random() - 0.5) * 10).toFixed(2)}deg`);
     clickElement.style.color = getComputedStyle(document.documentElement).getPropertyValue('--click-text-color');
     clickContainer.appendChild(clickElement);
     setTimeout(() => {
-        clickContainer.removeChild(clickElement);
+        if (clickElement.parentNode === clickContainer) {
+            clickContainer.removeChild(clickElement);
+        }
     }, 1000);
 });
 

@@ -134,8 +134,31 @@
 /* define anchor tag decoration */
 @layer text-decoration {
     a {
+        position: relative;
+        display: inline-block;
+        isolation: isolate;
         text-decoration-line: underline;
         text-decoration-thickness: 1px;
+        text-underline-offset: 0.08em;
+    }
+    a::after {
+        content: "";
+        position: absolute;
+        left: -0.12em;
+        right: -0.12em;
+        top: -0.04em;
+        bottom: -0.04em;
+        border-radius: 0.18em;
+        background: color-mix(in oklab, var(--foreground-color) 18%, transparent);
+        transform: scaleX(0);
+        transform-origin: right center;
+        transition: transform 0.28s ease;
+        z-index: -1;
+    }
+    a:hover::after,
+    a:focus-visible::after {
+        transform: scaleX(1);
+        transform-origin: left center;
     }
 }
 
@@ -485,21 +508,37 @@ footer {
 
 .click-animation {
     position: absolute;
+    translate: -50% -50%;
     font-size: 14px;
     color: #333;
     user-select: none;
     pointer-events: none;
     animation: clickFade 1s ease-out forwards;
+    will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    a::after {
+        transition: none;
+    }
+
+    .click-animation {
+        animation-duration: 0.85s;
+    }
 }
 
 @keyframes clickFade {
     0% {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0) rotate(var(--click-tilt, 0deg)) scale(0.96);
+    }
+    15% {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(calc(var(--click-drift, 0px) * 0.18), -3px, 0) rotate(calc(var(--click-tilt, 0deg) * 0.8)) scale(1);
     }
     100% {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translate3d(var(--click-drift, 0px), -26px, 0) rotate(var(--click-tilt, 0deg)) scale(1.02);
     }
 }
 
