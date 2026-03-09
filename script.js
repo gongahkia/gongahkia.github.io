@@ -70,6 +70,14 @@ function restoreTheme() { // apply saved theme from localStorage
 restoreTheme();
 window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); });
 
+function assignLinkHighlightTilt() {
+    document.querySelectorAll('a').forEach((anchor) => {
+        anchor.style.setProperty('--link-highlight-tilt', `${((Math.random() - 0.5) * 1.6).toFixed(2)}deg`);
+    });
+}
+
+assignLinkHighlightTilt();
+
 // ----- setup code -----
 
 const config = {

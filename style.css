@@ -150,14 +150,14 @@
         bottom: -0.04em;
         border-radius: 0.18em;
         background: color-mix(in oklab, var(--foreground-color) 18%, transparent);
-        transform: scaleX(0);
+        transform: rotate(var(--link-highlight-tilt, 0deg)) scaleX(0);
         transform-origin: right center;
         transition: transform 0.28s ease;
         z-index: -1;
     }
     a:hover::after,
     a:focus-visible::after {
-        transform: scaleX(1);
+        transform: rotate(var(--link-highlight-tilt, 0deg)) scaleX(1);
         transform-origin: left center;
     }
 }
