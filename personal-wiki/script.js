@@ -105,3 +105,44 @@ document.addEventListener('click', function(event) {
         }
     }, 1000);
 });
+
+// ----- filter system -----
+
+const FILTERS = ['none', 'vhs'];
+let currentFilter = 'none';
+
+(function initFilterSystem() {
+    const overlay = document.createElement('div');
+    overlay.id = 'filter-overlay';
+    document.body.appendChild(overlay);
+
+    const btn = document.createElement('button');
+    btn.id = 'filter-toggle';
+    btn.title = 'Visual filter: none';
+    btn.innerHTML = '<img id="filterButton" src="asset/vhs.png" width="24" height="24"/>';
+    btn.addEventListener('click', function() {
+        const idx = FILTERS.indexOf(currentFilter);
+        currentFilter = FILTERS[(idx + 1) % FILTERS.length];
+        applyFilter(currentFilter);
+        localStorage.setItem('filter_mode', currentFilter);
+    });
+    const darkLabel = document.querySelector('label[for="dark-mode"]');
+    if (darkLabel && darkLabel.parentNode) {
+        darkLabel.after(btn);
+    }
+    const saved = localStorage.getItem('filter_mode');
+    if (saved && FILTERS.includes(saved) && saved !== 'none') {
+        applyFilter(saved);
+    }
+})();
+
+function applyFilter(filter) {
+    currentFilter = filter;
+    if (filter === 'none') {
+        document.documentElement.removeAttribute('data-filter');
+    } else {
+        document.documentElement.dataset.filter = filter;
+    }
+    const btn = document.getElementById('filter-toggle');
+    if (btn) btn.title = 'Visual filter: ' + filter;
+}

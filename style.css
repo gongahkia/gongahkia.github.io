@@ -163,9 +163,10 @@
 }
 
 /* define button decoration */
-#infinityButton {
-    color: var(--foreground-color);
+#infinityButton,
+#filter-toggle img {
     background: none;
+    filter: invert(0.2);
 }
 
 /* define core colors */
@@ -486,8 +487,9 @@
     }
 }
 
-:root[data-theme="dark"] #infinityButton {
-    filter: invert(1);
+:root[data-theme="dark"] #infinityButton,
+:root[data-theme="dark"] #filter-toggle img {
+    filter: invert(0.8);
 }
 
 footer {
@@ -545,3 +547,80 @@ footer {
 .author { font-style: italic; }
 .rating { font-weight: bold; }
 .isbn { font-style: italic; }
+
+/* --- filter system --- */
+
+#filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    display: none;
+}
+html[data-filter] #filter-overlay {
+    display: block;
+}
+#filter-overlay::before,
+#filter-overlay::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+#filter-toggle {
+    position: absolute;
+    top: calc((var(--unit-size) - var(--thick-border-width)) / 4 - var(--unit-size) / 2 + var(--unit-size) / 6);
+    right: max(calc((100vw - 4 * var(--column-size) - 3 * var(--unit-size)) / 2 + 44px), calc(var(--unit-size) + 44px));
+    cursor: pointer;
+    padding: 10px;
+    background: none;
+    border: none;
+    color: var(--foreground-color);
+}
+#filter-toggle img {
+    display: block;
+    width: var(--unit-size);
+    height: var(--unit-size);
+}
+
+/* vhs filter */
+html[data-filter="vhs"] #filter-overlay::before {
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+    animation: vhs-jitter 0.3s infinite;
+}
+html[data-filter="vhs"] #filter-overlay::after {
+    height: 6px;
+    background: linear-gradient(0deg, transparent, rgba(255,255,255,0.12) 50%, transparent);
+    animation: vhs-tracking 6s linear infinite;
+}
+html[data-filter="vhs"] main,
+html[data-filter="vhs"] .click-animation {
+    text-shadow: 1.5px 0 rgba(255,0,80,0.3), -1.5px 0 rgba(0,200,255,0.3);
+}
+html[data-filter="vhs"] #filter-overlay {
+    backdrop-filter: saturate(1.3) blur(0.2px);
+}
+@keyframes vhs-jitter {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-0.5px); }
+    50% { transform: translateX(0.3px); }
+    75% { transform: translateX(-0.3px); }
+    100% { transform: translateX(0); }
+}
+@keyframes vhs-tracking {
+    0% { top: -10px; }
+    100% { top: 100vh; }
+}
+
+/* filter reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    html[data-filter="crt"] #filter-overlay::before { animation: none; }
+    html[data-filter="vhs"] #filter-overlay::before { animation: none; }
+    html[data-filter="vhs"] #filter-overlay::after { animation: none; top: -100%; }
+}
