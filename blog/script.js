@@ -119,7 +119,9 @@ let currentFilter = 'none';
     const btn = document.createElement('button');
     btn.id = 'filter-toggle';
     btn.title = 'Visual filter: none';
-    btn.innerHTML = '<img id="filterButton" src="asset/vhs.png" width="24" height="24"/>';
+    const roller = document.getElementById('infinityButton');
+    const assetBase = roller ? roller.src.replace('roller.png', '') : 'asset/';
+    btn.innerHTML = '<img id="filterButton" src="' + assetBase + 'vhs.png" width="24" height="24"/>';
     btn.addEventListener('click', function() {
         const idx = FILTERS.indexOf(currentFilter);
         currentFilter = FILTERS[(idx + 1) % FILTERS.length];
@@ -130,11 +132,18 @@ let currentFilter = 'none';
     if (darkLabel && darkLabel.parentNode) {
         darkLabel.after(btn);
     }
+    restoreFilter();
+})();
+
+function restoreFilter() {
     const saved = localStorage.getItem('filter_mode');
     if (saved && FILTERS.includes(saved) && saved !== 'none') {
         applyFilter(saved);
+    } else {
+        applyFilter('none');
     }
-})();
+}
+window.addEventListener('pageshow', (e) => { if (e.persisted) restoreFilter(); });
 
 function applyFilter(filter) {
     currentFilter = filter;
