@@ -1,6 +1,6 @@
 ---
 title: "Invisible Dead"
-author: "Sam WiebeSam Wiebe"
+author: "Sam Wiebe"
 isbn: "9781681440712"
 category: Fiction
 rating: 4
