@@ -8,4 +8,4 @@ date: 1 Apr 2026
 type: book
 ---
 
-If *Strange Pictures* clealry felt like a debut piece, *Strange Houses* sees Uketsu graduate toward a distinctly easy-to-read style that belies a thrilling, well-constructed mystery.
+If *Strange Pictures* clearly felt like a debut piece, *Strange Houses* sees Uketsu graduate toward a distinctly easy-to-read style that belies a thrilling, well-constructed mystery.
