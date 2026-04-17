@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 dist/
 migration-reports/
+.claude/
+.obsidian/
