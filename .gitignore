@@ -7,3 +7,4 @@ dist/
 migration-reports/
 .claude/
 .obsidian/
+*.canvas
