@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Self-taught Computer Science
 
 # `Self-taught Computer Science`

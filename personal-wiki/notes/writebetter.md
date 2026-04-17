@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Write better
 
 # `Write better`

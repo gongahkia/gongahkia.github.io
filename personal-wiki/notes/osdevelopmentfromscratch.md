@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # OS Development from scratch
 
 # `OS Development from scratch`

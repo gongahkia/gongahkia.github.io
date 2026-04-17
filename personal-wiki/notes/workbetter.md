@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Work better
 
 # `Work better`

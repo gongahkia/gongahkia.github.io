@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Regular expressions
 
 # `Regular expressions`

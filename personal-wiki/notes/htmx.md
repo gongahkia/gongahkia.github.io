@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # htmx
 
 # `htmx`

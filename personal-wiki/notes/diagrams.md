@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Diagrams
 
 # `Diagrams`

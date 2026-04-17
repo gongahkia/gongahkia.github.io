@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Full-stack
 
 # `Full-stack`

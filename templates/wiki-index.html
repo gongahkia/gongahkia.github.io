@@ -6,15 +6,26 @@
       <section class="introductionPortion">
         <h2>Gabriel's Personal Wiki</h2>
         <p><i>My notes from the things I've learnt. Available as a <a href="https://github.com/gongahkia/gongahkia.github.io/releases"><b>ZIP file</b></a>.</i></p>
+        <nav class="blogFilterBar" aria-label="Filter notes by category">
+          <a href="#" class="filter-link" data-filter="general">General</a>
+          <a href="#" class="filter-link" data-filter="tech">Tech</a>
+        </nav>
       </section>
       <section class="booksAndBlog">
         {% for note in notes %}
-        <dl>
-          <dt>{{ note.size }}</dt>
+        <dl data-filter-category="{{ note.filter_category }}">
+          <dt>{{ note.date }}</dt>
           <dd>
             <a href="pages/{{ note.filename }}">{{ note.title }}</a>
+            <br>
+            {{ note.size }}
+            <br>
+            {{ note.loc }} lines
           </dd>
         </dl>
         {% endfor %}
+        <p class="filter-empty-message" data-filter-empty="general">No general notes yet</p>
+        <p class="filter-empty-message" data-filter-empty="tech">No tech notes yet</p>
+        <p class="filter-empty-message" data-filter-empty="none">No notes are selected yet</p>
       </section>
 {% endblock %}

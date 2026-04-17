@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Esolangs
 
 # `Esolangs`

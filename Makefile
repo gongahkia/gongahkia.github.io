@@ -1,4 +1,4 @@
-.PHONY: blog book film tech wiki build build-wiki clean-wiki help up history sitemap
+.PHONY: blog book film project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -15,8 +15,9 @@ help:
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make film           - Create a new film review (interactive)"
-	@echo "  make tech           - Create a new tech writeup (interactive)"
-	@echo "  make wiki           - Create a new wiki note in personal-wiki/notes/ (interactive)"
+	@echo "  make project        - Create a new tech writeup blog post (interactive)"
+	@echo "  make wiki           - Create a new General wiki note in personal-wiki/notes/ (interactive)"
+	@echo "  make tech           - Create a new Tech wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make build-wiki     - Build the deployable site into dist/ (legacy alias)"
 	@echo "  make clean-wiki     - Remove built wiki pages and index from dist/"
 
@@ -140,7 +141,7 @@ film:
 	echo "Run 'make build' after editing to rebuild index"
 
 # Create a new tech writeup (markdown with frontmatter)
-tech:
+project:
 	@echo "Creating new tech writeup..."
 	@current_date=$$(date +"%e %b %Y" | xargs); \
 	printf "Enter start date (default: $$current_date): "; \
@@ -185,9 +186,16 @@ tech:
 	echo "Run 'make build' after editing to rebuild index"
 
 
-# Create a new wiki note
-wiki:
-	@echo "Creating new wiki note..."
+# Create a new General wiki note
+wiki: CATEGORY=General
+wiki: _new_wiki_note
+
+# Create a new Tech wiki note
+tech: CATEGORY=Tech
+tech: _new_wiki_note
+
+_new_wiki_note:
+	@echo "Creating new $(CATEGORY) wiki note..."
 	@mkdir -p personal-wiki/notes; \
 	read -p "Subject: " title; \
 	read -p "Language extension: " language; \
@@ -198,7 +206,8 @@ wiki:
 		slug=$$(echo "$$title" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g' | sed 's/^_//' | sed 's/_$$//'); \
 	done; \
 	filepath=personal-wiki/notes/"$$slug".md; \
-	echo "# \`$$title\`" > "$$filepath"; \
+	printf -- "---\ncategory: $(CATEGORY)\n---\n" > "$$filepath"; \
+	echo "# \`$$title\`" >> "$$filepath"; \
 	echo "" >> "$$filepath"; \
 	echo "## Comments" >> "$$filepath"; \
 	echo "" >> "$$filepath"; \

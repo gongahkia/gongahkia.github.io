@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Bitwise operations
 
 # `Bitwise operations`

@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Mathematical analysis
 
 # `Mathematical analysis`

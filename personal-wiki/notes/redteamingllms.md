@@ -1,3 +1,6 @@
+---
+category: General
+---
 # Red Teaming LLMs
 
 # `Red Teaming LLMs`

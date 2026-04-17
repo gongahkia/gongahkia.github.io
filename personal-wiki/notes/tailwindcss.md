@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Tailwind CSS
 
 # `Tailwind CSS`

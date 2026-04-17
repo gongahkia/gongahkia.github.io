@@ -1,3 +1,6 @@
+---
+category: General
+---
 # The manual
 
 # `The manual`

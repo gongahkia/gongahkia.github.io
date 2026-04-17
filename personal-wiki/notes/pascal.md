@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Pascal
 
 # `Pascal`

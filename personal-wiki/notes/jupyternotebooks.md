@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Jupyter notebooks
 
 # `Jupyter notebooks`

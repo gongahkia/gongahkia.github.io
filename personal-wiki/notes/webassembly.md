@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Web Assembly
 
 # `Web Assembly`

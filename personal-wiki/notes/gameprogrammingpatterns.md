@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # Game programming patterns
 
 # `Game programming patterns`

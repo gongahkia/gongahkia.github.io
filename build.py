@@ -330,19 +330,28 @@ def build_wiki(output_dir: Path) -> list[dict]:
     notes_info = []
     generated_filenames = set()
 
+    wiki_default_date = "2 Feb 2026" # all notes treated as created on this date
+
     for md_file in md_files:
         raw_markdown = md_file.read_text(encoding="utf-8")
-        title, body = split_md_title(raw_markdown)
+        meta, content_after_fm = parse_frontmatter(raw_markdown)
+        title, body = split_md_title(content_after_fm)
         body = process_wikilinks(body, notes_dir)
         html_content = md_to_html(body)
         output_filename = md_file.stem.lower() + ".html"
         output_path = output_pages_dir / output_filename
-        render_wiki_note(template, title, html_content, output_path)
+        rendered = render_wiki_note(template, title, html_content, output_path)
+        category = str(meta.get("category", "General")).strip().lower() or "general"
+        if category not in ("general", "tech"):
+            category = "general"
         notes_info.append(
             {
                 "title": title,
                 "filename": output_filename,
                 "size": format_file_size(output_path.stat().st_size),
+                "loc": len(rendered.splitlines()),
+                "date": wiki_default_date,
+                "filter_category": category,
                 "source_path": md_file,
             }
         )
@@ -357,12 +366,16 @@ def build_wiki(output_dir: Path) -> list[dict]:
         if not meta.get("title"):
             continue
 
-        copy_file(html_file, output_pages_dir / html_file.name)
+        dest = output_pages_dir / html_file.name
+        copy_file(html_file, dest)
         notes_info.append(
             {
                 "title": meta["title"],
                 "filename": html_file.name,
                 "size": meta["file_size"],
+                "loc": len(dest.read_text(encoding="utf-8").splitlines()),
+                "date": wiki_default_date,
+                "filter_category": "general",
                 "source_path": html_file,
             }
         )

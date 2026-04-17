@@ -8,3 +8,5 @@ migration-reports/
 .claude/
 .obsidian/
 *.canvas
+CLAUDE.md
+AGENTS.md

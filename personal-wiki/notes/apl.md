@@ -1,3 +1,6 @@
+---
+category: Tech
+---
 # APL
 
 # `APL`
