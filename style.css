@@ -548,6 +548,33 @@ footer {
 .rating { font-weight: bold; }
 .isbn { font-style: italic; }
 
+/* --- blog category filter --- */
+.blogFilterBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--unit-size) / 2);
+    margin-top: calc(-1 * var(--unit-size) / 2);
+}
+.filter-link {
+    font-weight: bold;
+    text-decoration-line: underline;
+    cursor: pointer;
+}
+.filter-link.inactive {
+    opacity: 0.35;
+}
+.booksAndBlog dl.filter-hidden {
+    display: none;
+}
+.filter-empty-message {
+    display: none;
+    font-style: italic;
+    opacity: 0.6;
+}
+.filter-empty-message.show {
+    display: block;
+}
+
 /* --- filter system --- */
 
 #filter-overlay {

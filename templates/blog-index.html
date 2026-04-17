@@ -6,10 +6,16 @@
       <section class="introductionPortion">
         <h2>Gabriel's Blog</h2>
         <p><i>My thoughts on books mostly, and other media sometimes.</i></p>
+        <nav class="blogFilterBar" aria-label="Filter posts by category">
+          <a href="#" class="filter-link" data-filter="general">General</a>
+          <a href="#" class="filter-link" data-filter="film">Film</a>
+          <a href="#" class="filter-link" data-filter="book">Book</a>
+          <a href="#" class="filter-link" data-filter="project">Project</a>
+        </nav>
       </section>
       <section class="booksAndBlog">
         {% for post in posts %}
-        <dl>
+        <dl data-filter-category="{{ post.filter_category }}">
           <dt>{{ post.date }}</dt>
           <dd>
             <a href="posts/{{ post.filename }}">{{ post.title }}</a>
@@ -36,5 +42,10 @@
           </dd>
         </dl>
         {% endfor %}
+        <p class="filter-empty-message" data-filter-empty="general">No general posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="film">No film posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="book">No book posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="project">No project posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="none">No posts are selected yet</p>
       </section>
 {% endblock %}

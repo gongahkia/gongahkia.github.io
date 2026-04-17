@@ -417,6 +417,12 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
         "tech-writeup": "tech-writeup.html",
         "film": "film-review.html",
     }
+    filter_category_map = {
+        "blog": "general",
+        "book": "book",
+        "film": "film",
+        "tech-writeup": "project",
+    }
 
     md_files = [path for path in sorted(source_posts_dir.glob("*.md")) if not path.name.startswith(".")]
     generated_filenames = set()
@@ -467,6 +473,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             "date": date,
             "filename": output_filename,
             "source_path": md_file,
+            "filter_category": filter_category_map.get(post_type, "general"),
         }
         if post_type == "book":
             post_info.update(
@@ -506,11 +513,21 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
 
         copy_file(html_file, output_posts_dir / html_file.name)
 
+        if meta.get("author"):
+            legacy_category = "book"
+        elif meta.get("director"):
+            legacy_category = "film"
+        elif meta.get("tech stack") or meta.get("status"):
+            legacy_category = "project"
+        else:
+            legacy_category = "general"
+
         post_info = {
             "title": meta["title"],
             "date": meta.get("date", ""),
             "filename": html_file.name,
             "source_path": html_file,
+            "filter_category": legacy_category,
         }
         if meta.get("author"):
             post_info.update(

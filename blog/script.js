@@ -155,3 +155,72 @@ function applyFilter(filter) {
     const btn = document.getElementById('filter-toggle');
     if (btn) btn.title = 'Visual filter: ' + filter;
 }
+
+// ----- blog category filter -----
+
+const BLOG_CATEGORIES = ['general', 'film', 'book', 'project'];
+
+(function initBlogCategoryFilter() {
+    const filterBar = document.querySelector('.blogFilterBar');
+    if (!filterBar) return; // only on blog index
+
+    let state = loadCategoryState();
+
+    filterBar.querySelectorAll('.filter-link').forEach((link) => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cat = link.dataset.filter;
+            state[cat] = !state[cat];
+            saveCategoryState(state);
+            applyCategoryState(state);
+        });
+    });
+
+    applyCategoryState(state);
+})();
+
+function loadCategoryState() {
+    const defaults = BLOG_CATEGORIES.reduce((acc, c) => (acc[c] = true, acc), {});
+    try {
+        const saved = JSON.parse(localStorage.getItem('blog_category_filters'));
+        if (saved && typeof saved === 'object') {
+            return BLOG_CATEGORIES.reduce((acc, c) => (acc[c] = c in saved ? !!saved[c] : true, acc), {});
+        }
+    } catch (_) {}
+    return defaults;
+}
+
+function saveCategoryState(state) {
+    try {
+        localStorage.setItem('blog_category_filters', JSON.stringify(state));
+    } catch (_) {}
+}
+
+function applyCategoryState(state) {
+    document.querySelectorAll('.filter-link').forEach((link) => {
+        const cat = link.dataset.filter;
+        link.classList.toggle('inactive', !state[cat]);
+        link.setAttribute('aria-pressed', String(!!state[cat]));
+    });
+
+    const counts = BLOG_CATEGORIES.reduce((acc, c) => (acc[c] = 0, acc), {});
+    document.querySelectorAll('.booksAndBlog dl[data-filter-category]').forEach((dl) => {
+        const cat = dl.dataset.filterCategory;
+        counts[cat] = (counts[cat] || 0) + 1;
+        const show = !!state[cat];
+        dl.classList.toggle('filter-hidden', !show);
+    });
+
+    const noneSelected = BLOG_CATEGORIES.every((c) => !state[c]);
+
+    document.querySelectorAll('.filter-empty-message').forEach((msg) => {
+        const cat = msg.dataset.filterEmpty;
+        let show;
+        if (cat === 'none') {
+            show = noneSelected;
+        } else {
+            show = !noneSelected && !!state[cat] && (counts[cat] || 0) === 0;
+        }
+        msg.classList.toggle('show', show);
+    });
+}
