@@ -328,5 +328,6 @@ def matchEverything(obj: Any): String = obj match { // this function's match sta
 * Implicit
 * Object Oriented Programming
 * Combinators
+* [Functional Programming with Scala](https://github.com/xiaozhiliaoo/ScalaBooks/blob/main/Functional-Programming-in-Scala.pdf) by Paul Chiusano and Rúnar Bjarnason
 * [learn scala in y minutes](https://learnxinyminutes.com/docs/scala/)
 * [scala official documentation](https://www.scala-lang.org/)

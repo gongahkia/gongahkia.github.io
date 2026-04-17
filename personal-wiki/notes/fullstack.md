@@ -5,9 +5,7 @@ category: Tech
 
 # `Full-stack`
 
-To know anything, [you must know everything](https://www.newyorker.com/magazine/1966/04/09/you-must-know-everything).
-
-For clarity, this document is about full-stack architecture.
+To know anything, [you must know everything](https://www.newyorker.com/magazine/1966/04/09/you-must-know-everything). *(For clarity, this document is about full-stack architecture.)*
 
 ## Definitions
 

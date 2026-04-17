@@ -3,12 +3,9 @@ category: Tech
 ---
 # Cordova
 
-> [!NOTE]  
-> This document covers Apache Cordova.
-
 # `Cordova`
 
-Write once deploy everywhere.
+Write once deploy everywhere. *(Note this document covers [Apache Cordova](https://cordova.apache.org/).)*
 
 ## Purpose
 

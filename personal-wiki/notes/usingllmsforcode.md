@@ -28,6 +28,7 @@ On how to use LLMs to write code.
 * [tools.simonwillison.net](https://tools.simonwillison.net/)
 * [Colophon for the tools](https://tools.simonwillison.net/colophon)
 * [Using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#using-a-custom-github-actions-workflow)
+* [Ralph Wiggum Plugin](https://github.com/anthropics/claude-code/blob/main/plugins/ralph-wiggum/README.md)
 * [monolith](https://github.com/Y2Z/monolith)
 * [files-to-prompt](https://github.com/simonw/files-to-prompt)
 * [LLM tool](https://llm.datasette.io/)

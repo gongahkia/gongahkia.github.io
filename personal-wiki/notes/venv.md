@@ -5,9 +5,7 @@ category: Tech
 
 # `Venv`
 
-Virtual environments.
-
-This document discusses venvs specifically within the context of Python.
+Virtual environments for [Python](https://docs.python.org/3/library/venv.html).
 
 ## What is a venv?
 

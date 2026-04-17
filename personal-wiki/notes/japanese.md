@@ -7,8 +7,6 @@ category: General
 
 The thing they say in anime.
 
-![](https://i.pinimg.com/originals/33/3f/b1/333fb11a919390152d8017637223146d.gif)
-
 ## Introduction
 
 This document is structured according to the [JLPT](https://www.jlpt.jp/e/) syllabus.

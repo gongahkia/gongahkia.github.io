@@ -5,6 +5,8 @@ category: General
 
 # `Write better`
 
+Everything starts from how you [communicate your ideas](https://www.gsb.stanford.edu/insights/simple-superpower-how-communicate-any-idea-any-audience).
+
 ## Write better code
 
 1. Read good code, which is

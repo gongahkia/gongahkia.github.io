@@ -7,8 +7,6 @@ category: Tech
 
 Or at least, how [Randy](https://www.youtube.com/@randyprime) thinks you should go about learning it.
 
-![](https://i.imgflip.com/50fv1x.jpg)
-
 ## The abbreviated guide
 
 1. Learn C
@@ -76,5 +74,5 @@ Or at least, how [Randy](https://www.youtube.com/@randyprime) thinks you should 
 ## More on
 
 * [Handmade Hero's introduction to C](https://guide.handmadehero.org/intro-to-c/) by Molly Rocket
-* [/RES](https://randy.gg/res/) by randy.gg
+* [Randy's Resources](https://randy.gg/res/) by randy.gg
 * [The Way to Jai](https://github.com/Ivo-Balbaert/The_Way_to_Jai) Github repository

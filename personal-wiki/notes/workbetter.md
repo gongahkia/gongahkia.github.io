@@ -7,9 +7,7 @@ category: General
 
 Mindset is everything. Learn from the best.
 
-## Jean-Michel Basquiat
-
-![](https://www.hollywoodreporter.com/wp-content/uploads/2023/03/Credit-Brad-Branson-Jean-Michel-Basquiat-in-LA-copy.jpg?w=1024)
+## [Jean-Michel Basquiat](https://en.wikipedia.org/wiki/Jean-Michel_Basquiat)
 
 1. Source material.
 2. Steal like an artist.
@@ -17,9 +15,7 @@ Mindset is everything. Learn from the best.
 4. Speed.
 5. Study, memorize, internalize.
 
-## Prince Rogers Nelson
-
-![](https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F160421134259-34-prince-file.jpg)
+## [Prince Rogers Nelson](https://en.wikipedia.org/wiki/Prince_(musician))
 
 1. Work fast.
 2. Become a finisher.
@@ -28,9 +24,7 @@ Mindset is everything. Learn from the best.
 5. Sleep.
 6. Vault mentality.
 
-## Miyamoto Musashi
-
-![](https://c4.wallpaperflare.com/wallpaper/229/581/150/manga-anime-musashi-miyamoto-musashi-hd-wallpaper-preview.jpg)
+## [Miyamoto Musashi](https://en.wikipedia.org/wiki/Miyamoto_Musashi)
 
 1. Accept everything just the way it is.
 2. Do not regret what you have done.
@@ -40,16 +34,12 @@ Mindset is everything. Learn from the best.
 6. Seek nothing outside of yourself.
 7. No matter where you go, there you are.
 
-## Yuto Horigome
-
-![](https://www.si.com/.image/t_share/MTgyNjcyOTQwNzU4NzM4Mjcy/yuto-horigome.jpg)
+## [Yuto Horigome](https://en.wikipedia.org/wiki/Yuto_Horigome_(skateboarder))
 
 1. In Japan, skateboarding is really frowned upon. Maybe because of that, having to overcome that, I think it made me a stronger person.
 2. Having trust in yourself is the most important thing. Having the confidence in yourself.
 
-## A$AP Rocky
-
-![](https://media.gq.com/photos/59e9040298a70509f42ed8d1/master/pass/asap%20rocky%20gq%20style%20cover%20b.jpg)
+## [A$AP Rocky](https://en.wikipedia.org/wiki/ASAP_Rocky)
 
 1. Anything worth being, anything historical, anything new, anything impossible, all that shit takes sacrifice. And it takes risk.
 2. When you doing something creative and shit, and everything feels too easy, that's a red flag. That means its beneath you. You gotta go hard.
@@ -57,24 +47,18 @@ Mindset is everything. Learn from the best.
 4. I want everybody to be their own pioneers. Dream big. If you're an outcast, be an outcast. If you fit in, fit in. Just be yourself.
 5. Imitation is the best form of flattery. If people wasn't trying to imitate you, you're doing something wrong.
 
-## Grant Sanderson
-
-![](https://cdn.firespring.com/images/1ccfc825-9ceb-406d-bbc6-94a3f59261e3.png)
+## [Grant Sanderson](https://www.3blue1brown.com/about/)
 
 1. A little ingredient that makes following your dreams a little more likely to work out is to ask yourself what's possible now that wasn't possible 10 years ago and which might get harder 10 years from now.
 2. My final piece of advice is to not treat passion as something to follow. Think of it as an initial velocity vector. It gives a clear direction to point yourself and loving what you do can have you move quickly. But you should expect and you should even hope that the specific direction that you're moving changes based on the force vectors around you.
 3. The mechanism behind the exponential function is that it applies when the rate of change is proportional to the thing in and of itself. The things that you develop should enable increasingly greater development of those things.
 
-## Shūzō Matsuoka
-
-![](https://static.wikia.nocookie.net/joke-battles/images/8/85/Matsuoka_2.jpg/revision/latest/scale-to-width-down/1200?cb=20160613022400)
+## [Shūzō Matsuoka](https://en.wikipedia.org/wiki/Shuzo_Matsuoka)
 
 1. Are you just living day to day? Are you lost and confused? You can't think about the past. It'll just turn to anger. You also can't think about the future. It just turns to worry. In that case, hold on for dear life. Stake your entire life in the here and now. If you live in the here and now, you will be ALIVE!
 2. Be more passionate. Burn the passionate blood. When people become passionate, they find their true selves. Be more passionate!
 
-## Beau Miles
-
-![](https://awschool.com.au/content/uploads/Beau-Miles.jpg)
+## [Beau Miles](https://beaumiles.com/)
 
 1. Adventure isn’t about where you go, but how you see the world.
 2. Life’s best lessons are often found off the beaten path.
