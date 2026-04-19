@@ -1660,6 +1660,7 @@ Here is a summary of the more commonly used demonstratives.
 * [r/LearnJapanese](https://www.reddit.com/r/LearnJapanese/)
 * [how to use minna no nihongo to study](https://www.reddit.com/r/LearnJapanese/comments/p5d3fj/how_do_you_use_minna_no_nihonho_for_self_study/)
 * [why Genki is good](https://www.thejapanguy.com/ultimate-genki-textbook-review/)
+* [iamcheyan/fudoki](https://github.com/iamcheyan/fudoki)
 
 ### Prerequisite knowledge
 
