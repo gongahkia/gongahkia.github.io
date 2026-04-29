@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block canonical %}
+  <link rel="canonical" href="https://gabrielongzm.com/papers/">
+{% endblock %}
+{% block content %}
+      <section class="introductionPortion">
+        <h2>Gabriel's Papers</h2>
+        <p><i>Research papers I've published to arXiv.</i></p>
+      </section>
+      <section class="booksAndBlog">
+        {% for paper in papers %}
+        <dl>
+          <dt>{{ paper.date }}</dt>
+          <dd>
+            <a href="pages/{{ paper.filename }}">{{ paper.title }}</a>
+            <br>
+            <span class="author">{{ paper.authors }}</span>
+            <br>
+            <a href="{{ paper.arxiv }}">arXiv:{{ paper.arxiv_id }}{% if paper.arxiv_category %} [{{ paper.arxiv_category }}]{% endif %}</a>
+            {% if paper.github %}
+            <br>
+            <a href="{{ paper.github }}">{{ paper.github }}</a>
+            {% endif %}
+          </dd>
+        </dl>
+        {% endfor %}
+        {% if not papers %}
+        <p><i>No papers yet.</i></p>
+        {% endif %}
+      </section>
+{% endblock %}

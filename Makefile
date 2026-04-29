@@ -1,4 +1,4 @@
-.PHONY: blog book film project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
+.PHONY: blog book film project paper wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -16,6 +16,7 @@ help:
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make film           - Create a new film review (interactive)"
 	@echo "  make project        - Create a new tech writeup blog post (interactive)"
+	@echo "  make paper          - Create a new paper entry in papers/sources/ (interactive)"
 	@echo "  make wiki           - Create a new General wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make tech           - Create a new Tech wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make build-wiki     - Build the deployable site into dist/ (legacy alias)"
@@ -185,6 +186,42 @@ project:
 	echo "Created blog/posts/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 
+
+# Create a new paper entry (markdown with frontmatter)
+paper:
+	@echo "Creating new paper..."
+	@mkdir -p papers/sources; \
+	current_date=$$(date +"%e %b %Y" | xargs); \
+	printf "Enter date (default: $$current_date): "; \
+	read date; \
+	date=$${date:-$$current_date}; \
+	printf "Enter paper title (required): "; \
+	read title; \
+	while [ -z "$$title" ]; do \
+		echo "Paper title is required."; \
+		printf "Enter paper title (required): "; \
+		read title; \
+	done; \
+	printf "Enter authors (default: Gabriel Ong): "; \
+	read authors; \
+	authors=$${authors:-Gabriel Ong}; \
+	printf "Enter arXiv URL (required): "; \
+	read arxiv; \
+	while [ -z "$$arxiv" ]; do \
+		echo "arXiv URL is required."; \
+		printf "Enter arXiv URL (required): "; \
+		read arxiv; \
+	done; \
+	printf "Enter arXiv ID (e.g. 2604.01234, optional): "; \
+	read arxiv_id; \
+	printf "Enter arXiv category (e.g. cs.CL, optional): "; \
+	read arxiv_category; \
+	printf "Enter GitHub URL (optional): "; \
+	read github; \
+	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
+	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nauthors: \"$$authors\"\narxiv: \"$$arxiv\"\narxiv_id: \"$$arxiv_id\"\narxiv_category: \"$$arxiv_category\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
+	echo "Created papers/sources/$$filename"; \
+	echo "Run 'make build' after editing to rebuild index"
 
 # Create a new General wiki note
 wiki: CATEGORY=General

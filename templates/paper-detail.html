@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "{{ title }}",
+    "author": {
+      "@type": "Person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block extra_scripts %}
+  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+{% endblock %}
+{% block extra_preloads %}
+  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntlMono-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
+{% endblock %}
+{% block extra_styles %}
+  <style>pre { overflow-x: auto; max-width: 100%; }</style>
+{% endblock %}
+{% block content %}
+      <section class="paper-details">
+        <h2>{{ title }}</h2>
+        <dl>
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
+          <dt>Authors</dt>
+          <dd>{{ authors }}</dd>
+          <dt>arXiv</dt>
+          <dd><a href="{{ arxiv }}">{{ arxiv }}{% if arxiv_id %} (arXiv:{{ arxiv_id }}{% if arxiv_category %} [{{ arxiv_category }}]{% endif %}){% endif %}</a></dd>
+          {% if github %}<dt>GitHub</dt>
+          <dd><a href="{{ github }}">{{ github }}</a></dd>{% endif %}
+        </dl>
+      </section>
+      <section class="paper-content">
+        {{ content }}
+      </section>
+{% endblock %}

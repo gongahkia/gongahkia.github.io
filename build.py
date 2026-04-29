@@ -38,6 +38,7 @@ ROOT_STATIC_DIRS = [
 SECTION_STATIC_DIRS = {
     "blog": ["script.js", "asset"],
     "personal-wiki": ["script.js", "asset"],
+    "papers": ["script.js", "asset"],
 }
 
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=False)
@@ -167,6 +168,7 @@ REQUIRED_FIELDS = {
     "book": ["title", "date", "author", "isbn", "category", "rating"],
     "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "status"],
+    "paper": ["title", "date", "authors", "arxiv"],
 }
 
 
@@ -656,6 +658,121 @@ def generate_sitemap(urls: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
+    """Build paper detail pages and index into the output directory."""
+    sources_dir = ROOT / "papers" / "sources"
+    output_pages_dir = output_dir / "papers" / "pages"
+    output_pages_dir.mkdir(parents=True, exist_ok=True)
+
+    md_files = []
+    if sources_dir.exists():
+        md_files = [path for path in sorted(sources_dir.glob("*.md")) if not path.name.startswith(".")]
+
+    print(f"papers: found {len(md_files)} markdown papers")
+
+    detail_template = env.get_template("paper-detail.html")
+    papers_info = []
+    validation_errors = []
+
+    for md_file in md_files:
+        raw = md_file.read_text(encoding="utf-8")
+        meta, content = parse_frontmatter(raw)
+        meta["type"] = "paper" # force type for validation
+        errors = validate_frontmatter(meta, md_file)
+        validation_errors.extend(errors)
+        if errors:
+            continue
+
+        title = str(meta["title"])
+        date = str(meta["date"])
+        authors = str(meta.get("authors", ""))
+        arxiv = str(meta.get("arxiv", ""))
+        arxiv_id = str(meta.get("arxiv_id", ""))
+        arxiv_category = str(meta.get("arxiv_category", ""))
+        github = str(meta.get("github", ""))
+        output_filename = md_file.stem.lower() + ".html"
+
+        rendered = detail_template.render(
+            title=title,
+            date=date,
+            authors=authors,
+            arxiv=arxiv,
+            arxiv_id=arxiv_id,
+            arxiv_category=arxiv_category,
+            github=github,
+            content=md_to_html(content),
+            meta_description=f"Paper: {title} - Gabriel Ong",
+            og_title=f"{title} | Gabriel Ong",
+            og_type="article",
+            page_title=f"{title} | Gabriel Ong",
+            base_path="../..",
+            section_path="..",
+        )
+
+        output_path = output_pages_dir / output_filename
+        output_path.write_text(rendered, encoding="utf-8")
+        print(f"  papers: {md_file.name} -> dist/papers/pages/{output_filename}")
+
+        papers_info.append({
+            "title": title,
+            "date": date,
+            "authors": authors,
+            "arxiv": arxiv,
+            "arxiv_id": arxiv_id,
+            "arxiv_category": arxiv_category,
+            "github": github,
+            "filename": output_filename,
+            "source_path": md_file,
+        })
+
+    def parse_date(date_value: str) -> datetime:
+        for fmt in ("%d %b %Y", "%Y-%m-%d", "%d %B %Y"):
+            try:
+                return datetime.strptime(date_value, fmt)
+            except (TypeError, ValueError):
+                continue
+        return datetime.min
+
+    papers_info.sort(key=lambda paper: parse_date(paper.get("date", "")), reverse=True)
+
+    index_template = env.get_template("papers-index.html")
+    index_html = index_template.render(
+        papers=papers_info,
+        meta_description="Gabriel Ong's research papers published on arXiv.",
+        og_title="Papers | Gabriel Ong",
+        og_type="website",
+        page_title="Papers | Gabriel Ong",
+        base_path="..",
+        section_path=".",
+    )
+    (output_dir / "papers" / "index.html").write_text(index_html, encoding="utf-8")
+    print(f"  papers: generated dist/papers/index.html ({len(papers_info)} papers)")
+
+    if validation_errors:
+        print("\npapers frontmatter validation errors:")
+        for error in validation_errors:
+            print(f"  {error}")
+
+    urls = [
+        {
+            "loc": f"{BASE_URL}/papers/",
+            "priority": "0.8",
+            "changefreq": "weekly",
+            "source_path": ROOT / "templates" / "papers-index.html",
+        }
+    ]
+    urls.extend(
+        {
+            "loc": f"{BASE_URL}/papers/pages/{paper['filename']}",
+            "priority": "0.7",
+            "changefreq": "monthly",
+            "source_path": paper["source_path"],
+        }
+        for paper in papers_info
+    )
+    return urls, validation_errors
+
+
 def build_site(output_dir: Path) -> list[str]:
     print("=== building gabrielongzm.com ===\n")
     print(f"output: {output_dir}")
@@ -672,14 +789,19 @@ def build_site(output_dir: Path) -> list[str]:
         }
     ]
 
-    print("\n[1/3] building wiki...")
+    print("\n[1/4] building wiki...")
     all_urls.extend(build_wiki(output_dir))
 
-    print("\n[2/3] building blog...")
+    print("\n[2/4] building blog...")
     blog_urls, errors = build_blog(output_dir)
     all_urls.extend(blog_urls)
 
-    print("\n[3/3] generating sitemap...")
+    print("\n[3/4] building papers...")
+    paper_urls, paper_errors = build_papers(output_dir)
+    all_urls.extend(paper_urls)
+    errors.extend(paper_errors)
+
+    print("\n[4/4] generating sitemap...")
     (output_dir / "sitemap.xml").write_text(generate_sitemap(all_urls), encoding="utf-8")
     print(f"  sitemap: {len(all_urls)} URLs")
 
