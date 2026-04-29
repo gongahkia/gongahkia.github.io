@@ -1,18 +1,18 @@
 ---
-title: "Yuho and DSLs for the law"
+title: "Yuho and DSLs"
 date: 29 Apr 2026
 type: paper
 authors: "Gabriel Ong"
 arxiv: "https://arxiv.org/pdf/2604.24717"
-arxiv_id: "2604.24717"
-arxiv_category: "cs.PL"
+arxiv_id: "2604/24717"
+arxiv_category: "cs.CL"
 github: "https://github.com/gongahkia/yuho"
 ---
 
 ## Abstract
 
-Balls
+Add abstract here.
 
 ## Notes
 
-Just a test
+Thoughts and experiences on this paper.

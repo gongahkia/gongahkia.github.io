@@ -16,10 +16,10 @@
             <br>
             <span class="author">{{ paper.authors }}</span>
             <br>
-            <a href="{{ paper.arxiv }}">arXiv:{{ paper.arxiv_id }}{% if paper.arxiv_category %} [{{ paper.arxiv_category }}]{% endif %}</a>
+            <i><a href="{{ paper.arxiv }}">arXiv:{{ paper.arxiv_id }}{% if paper.arxiv_category %} [{{ paper.arxiv_category }}]{% endif %}</a></i>
             {% if paper.github %}
             <br>
-            <a href="{{ paper.github }}">GitHub Repo</a>
+            <i><a href="{{ paper.github }}">GitHub Repo</a></i>
             {% endif %}
           </dd>
         </dl>
