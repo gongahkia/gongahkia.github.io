@@ -738,7 +738,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
     index_template = env.get_template("papers-index.html")
     index_html = index_template.render(
         papers=papers_info,
-        meta_description="Gabriel Ong's research papers published on arXiv.",
+        meta_description="Gabriel Ong's research papers published.",
         og_title="Papers | Gabriel Ong",
         og_type="website",
         page_title="Papers | Gabriel Ong",
