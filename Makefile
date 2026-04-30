@@ -209,9 +209,9 @@ paper:
 		printf "Enter paper title (required): "; \
 		read title; \
 	done; \
-	printf "Enter authors (default: Gabriel Ong): "; \
+	printf "Enter authors (default: Gabriel Ong Zhe Mian): "; \
 	read authors; \
-	authors=$${authors:-Gabriel Ong}; \
+	authors=$${authors:-Gabriel Ong Zhe Mian}; \
 	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
 	if [ "$$source" = "a" ] || [ "$$source" = "A" ]; then \
 		printf "Enter arXiv URL (required): "; \
