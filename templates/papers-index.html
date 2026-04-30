@@ -17,7 +17,7 @@
             <span class="author">{{ paper.authors }}</span>
             <br>
             {% if paper.source == "zenodo" %}
-            <i><a href="{{ paper.zenodo }}">Zenodo &middot; {{ paper.resource_type }} &middot; DOI: {{ paper.doi }}</a></i>
+            <i><a href="{{ paper.zenodo }}">{{ paper.doi }}</a></i>
             {% else %}
             <i><a href="{{ paper.arxiv }}">arXiv:{{ paper.arxiv_id }}{% if paper.arxiv_category %} [{{ paper.arxiv_category }}]{% endif %}</a></i>
             {% endif %}
