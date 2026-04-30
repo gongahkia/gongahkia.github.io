@@ -192,6 +192,13 @@ paper:
 	@echo "Creating new paper..."
 	@mkdir -p papers/sources; \
 	current_date=$$(date +"%e %b %Y" | xargs); \
+	printf "Source? (a)rXiv / (z)enodo: "; \
+	read source; \
+	while [ "$$source" != "a" ] && [ "$$source" != "A" ] && [ "$$source" != "z" ] && [ "$$source" != "Z" ]; do \
+		echo "Source must be 'a' or 'z'."; \
+		printf "Source? (a)rXiv / (z)enodo: "; \
+		read source; \
+	done; \
 	printf "Enter date (default: $$current_date): "; \
 	read date; \
 	date=$${date:-$$current_date}; \
@@ -205,21 +212,54 @@ paper:
 	printf "Enter authors (default: Gabriel Ong): "; \
 	read authors; \
 	authors=$${authors:-Gabriel Ong}; \
-	printf "Enter arXiv URL (required): "; \
-	read arxiv; \
-	while [ -z "$$arxiv" ]; do \
-		echo "arXiv URL is required."; \
+	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
+	if [ "$$source" = "a" ] || [ "$$source" = "A" ]; then \
 		printf "Enter arXiv URL (required): "; \
 		read arxiv; \
-	done; \
-	printf "Enter arXiv ID (e.g. 2604.01234, optional): "; \
-	read arxiv_id; \
-	printf "Enter arXiv category (e.g. cs.CL, optional): "; \
-	read arxiv_category; \
-	printf "Enter GitHub URL (optional): "; \
-	read github; \
-	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nauthors: \"$$authors\"\narxiv: \"$$arxiv\"\narxiv_id: \"$$arxiv_id\"\narxiv_category: \"$$arxiv_category\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
+		while [ -z "$$arxiv" ]; do \
+			echo "arXiv URL is required."; \
+			printf "Enter arXiv URL (required): "; \
+			read arxiv; \
+		done; \
+		printf "Enter arXiv ID (e.g. 2604.01234, optional): "; \
+		read arxiv_id; \
+		printf "Enter arXiv category (e.g. cs.CL, optional): "; \
+		read arxiv_category; \
+		printf "Enter GitHub URL (optional): "; \
+		read github; \
+		printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nsource: arxiv\nauthors: \"$$authors\"\narxiv: \"$$arxiv\"\narxiv_id: \"$$arxiv_id\"\narxiv_category: \"$$arxiv_category\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
+	else \
+		printf "Enter Zenodo URL (required): "; \
+		read zenodo; \
+		while [ -z "$$zenodo" ]; do \
+			echo "Zenodo URL is required."; \
+			printf "Enter Zenodo URL (required): "; \
+			read zenodo; \
+		done; \
+		printf "Enter DOI (e.g. 10.5281/zenodo.12345, required): "; \
+		read doi; \
+		while [ -z "$$doi" ]; do \
+			echo "DOI is required."; \
+			printf "Enter DOI (e.g. 10.5281/zenodo.12345, required): "; \
+			read doi; \
+		done; \
+		printf "Enter resource type (Dataset/Software/Publication/Presentation/Poster/Lesson, required): "; \
+		read resource_type; \
+		while [ -z "$$resource_type" ]; do \
+			echo "Resource type is required."; \
+			printf "Enter resource type (Dataset/Software/Publication/Presentation/Poster/Lesson, required): "; \
+			read resource_type; \
+		done; \
+		printf "Enter version (default: v1): "; \
+		read version; \
+		version=$${version:-v1}; \
+		printf "Enter license (default: CC-BY-4.0): "; \
+		read license; \
+		license=$${license:-CC-BY-4.0}; \
+		printf "Enter GitHub URL (optional): "; \
+		read github; \
+		printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nsource: zenodo\nauthors: \"$$authors\"\nzenodo: \"$$zenodo\"\ndoi: \"$$doi\"\nresource_type: \"$$resource_type\"\nversion: \"$$version\"\nlicense: \"$$license\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
+	fi; \
 	echo "Created papers/sources/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 

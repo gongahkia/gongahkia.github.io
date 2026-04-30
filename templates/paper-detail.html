@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block structured_data %}
+  {% set ld_type = "ScholarlyArticle" %}
+  {% if source == "zenodo" %}
+    {% if resource_type == "Dataset" %}{% set ld_type = "Dataset" %}
+    {% elif resource_type == "Software" %}{% set ld_type = "SoftwareSourceCode" %}
+    {% elif resource_type in ["Presentation", "Poster", "Lesson"] %}{% set ld_type = "CreativeWork" %}
+    {% endif %}
+  {% endif %}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
+    "@type": "{{ ld_type }}",
     "headline": "{{ title }}",
     "author": {
       "@type": "Person",
@@ -31,8 +38,23 @@
           <dd>{{ date }}</dd>
           <dt>Authors</dt>
           <dd>{{ authors }}</dd>
+          {% if source == "zenodo" %}
+          <dt>Source</dt>
+          <dd>Zenodo</dd>
+          <dt>DOI</dt>
+          <dd><a href="https://doi.org/{{ doi }}">{{ doi }}</a></dd>
+          <dt>Resource type</dt>
+          <dd>{{ resource_type }}</dd>
+          {% if license %}<dt>License</dt>
+          <dd>{{ license }}</dd>{% endif %}
+          {% if version %}<dt>Version</dt>
+          <dd>{{ version }}</dd>{% endif %}
+          <dt>Record</dt>
+          <dd><a href="{{ zenodo }}">{{ zenodo }}</a></dd>
+          {% else %}
           <dt>arXiv</dt>
           <dd>{% if arxiv_id %}arXiv:{{ arxiv_id }}{% if arxiv_category %} [{{ arxiv_category }}]{% endif %}<br>{% endif %}<a href="{{ arxiv }}">{{ arxiv }}</a></dd>
+          {% endif %}
           {% if github %}<dt>GitHub Repository</dt>
           <dd><a href="{{ github }}">{{ github }}</a></dd>{% endif %}
         </dl>

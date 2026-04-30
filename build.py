@@ -168,7 +168,9 @@ REQUIRED_FIELDS = {
     "book": ["title", "date", "author", "isbn", "category", "rating"],
     "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "status"],
-    "paper": ["title", "date", "authors", "arxiv"],
+    "paper": ["title", "date", "authors"],
+    "paper:arxiv": ["title", "date", "authors", "arxiv"],
+    "paper:zenodo": ["title", "date", "authors", "zenodo", "doi", "resource_type"],
 }
 
 
@@ -180,12 +182,16 @@ def validate_frontmatter(meta: dict, filepath: Path) -> list[str]:
         return [f"{filepath}: {meta['__fm_error__']}"]
 
     post_type = meta.get("type", "blog")
-    required = REQUIRED_FIELDS.get(post_type, ["title", "date"])
+    key = post_type
+    if post_type == "paper":
+        source = str(meta.get("source", "arxiv")).lower() # default arxiv for back-compat
+        key = f"paper:{source}" if f"paper:{source}" in REQUIRED_FIELDS else "paper"
+    required = REQUIRED_FIELDS.get(key, ["title", "date"])
     errors = []
 
     for field in required:
         if not meta.get(field):
-            errors.append(f"{filepath}: missing required field '{field}' for type '{post_type}'")
+            errors.append(f"{filepath}: missing required field '{field}' for type '{key}'")
 
     return errors
 
@@ -686,9 +692,15 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
         title = str(meta["title"])
         date = str(meta["date"])
         authors = str(meta.get("authors", ""))
+        source = str(meta.get("source", "arxiv")).lower() # default arxiv for back-compat
         arxiv = str(meta.get("arxiv", ""))
         arxiv_id = str(meta.get("arxiv_id", ""))
         arxiv_category = str(meta.get("arxiv_category", ""))
+        zenodo = str(meta.get("zenodo", ""))
+        doi = str(meta.get("doi", ""))
+        resource_type = str(meta.get("resource_type", ""))
+        version = str(meta.get("version", ""))
+        license_ = str(meta.get("license", ""))
         github = str(meta.get("github", ""))
         output_filename = md_file.stem.lower() + ".html"
 
@@ -696,9 +708,15 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             title=title,
             date=date,
             authors=authors,
+            source=source,
             arxiv=arxiv,
             arxiv_id=arxiv_id,
             arxiv_category=arxiv_category,
+            zenodo=zenodo,
+            doi=doi,
+            resource_type=resource_type,
+            version=version,
+            license=license_,
             github=github,
             content=md_to_html(content),
             meta_description=f"Paper: {title} - Gabriel Ong",
@@ -717,9 +735,15 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             "title": title,
             "date": date,
             "authors": authors,
+            "source": source,
             "arxiv": arxiv,
             "arxiv_id": arxiv_id,
             "arxiv_category": arxiv_category,
+            "zenodo": zenodo,
+            "doi": doi,
+            "resource_type": resource_type,
+            "version": version,
+            "license": license_,
             "github": github,
             "filename": output_filename,
             "source_path": md_file,
