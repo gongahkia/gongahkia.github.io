@@ -39,16 +39,14 @@
           <dt>Authors</dt>
           <dd>{{ authors }}</dd>
           {% if source == "zenodo" %}
-          <dt>Zenodo DOI</dt>
-          <dd><a href="https://doi.org/{{ doi }}">{{ doi }}</a></dd>
+          <dt>Zenodo</dt>
+          <dd><a href="https://doi.org/{{ doi }}">{{ doi }}</a><br><a href="{{ zenodo }}">{{ zenodo }}</a></dd>
           <dt>Resource type</dt>
           <dd>{{ resource_type }}</dd>
           {% if license %}<dt>License</dt>
           <dd>{{ license }}</dd>{% endif %}
           {% if version %}<dt>Version</dt>
           <dd>{{ version }}</dd>{% endif %}
-          <dt>Record</dt>
-          <dd><a href="{{ zenodo }}">{{ zenodo }}</a></dd>
           {% else %}
           <dt>arXiv</dt>
           <dd>{% if arxiv_id %}arXiv:{{ arxiv_id }}{% if arxiv_category %} [{{ arxiv_category }}]{% endif %}<br>{% endif %}<a href="{{ arxiv }}">{{ arxiv }}</a></dd>
