@@ -27,16 +27,13 @@ Most evacuation systems implicitly make the assumption that communicating the ha
 
 ## What Chiyoda does different
 
-In *Chiyoda*, agents do not move through a perfect map of the world. Instead, they carry pre-existing beliefs *(about exits, hazards, congestion, and danger etc.*) and can 
-actively observe their surroundings, receive messages *(via beacons)*, hear from emergency responders and pass distorted local gossip to each other. 
+In *Chiyoda*, agents do not move through a perfect map of the world. Instead, they carry pre-existing beliefs *(about exits, hazards, congestion, and danger etc.*) and can actively observe their surroundings, receive messages *(via beacons)*, hear from emergency responders and pass distorted local gossip to each other. 
 
 These imperfect notions then direct how the agents route through the world.
 
-That distinction: that a message can both be correct and nonetheless remain "risky" information was what interested me in 2024 and what continues to drive the writing of this paper in 2026.
+That distinction - that *a message can both be correct and nonetheless remain "risky" information* was what interested me in 2024 and what continues to drive the writing of this paper in 2026.
 
 ***TlDR***: When does communication of a risk improve belief and safety holistically, and when does it creates harmful convergence *(in a physical medium)*?
-
-If this sounds interesting to you, feel free to check it out on Zenodo at [10.5281/zenodo.19905070](https://zenodo.org/records/19905070)
 
 ## Thoughts
 
@@ -47,3 +44,5 @@ In terms of possible angles for further unexplored scope, LLM-bounded and genera
 ## Closing
 
 Either way, v1 of *Chiyoda* is the iteration I'm happiest with right now. Really grateful for the experience, and I also extend my thanks to anyone who does take the time to read it and give me their feedback.
+
+If this sounds interesting to you, feel free to check it out on Zenodo at [10.5281/zenodo.19905070](https://zenodo.org/records/19905070)
