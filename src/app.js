@@ -869,7 +869,7 @@ function expandRouteList(collection, previewCountValue) {
   entries.classList.add("is-expanding");
   entries.append(template.content);
   list.dataset.expanded = "true";
-  if (collection === "work") appendWorkContributions(list, startCount + remaining.length + 1);
+  if (collection === "work") appendWorkContributions(list, startCount + 1);
   queueMarqueeRefresh(list);
 
   const endHeight = entries.scrollHeight;
