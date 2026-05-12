@@ -43,6 +43,8 @@ jobs:
           test -f dist/index.html
           test -f dist/CNAME
           test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          grep -q '<urlset' dist/sitemap.xml
           ls -la dist | sed -n '1,40p'
 
       - name: Upload Pages artifact

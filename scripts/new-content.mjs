@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const force = process.env.FORCE === "1";
+const homePath = path.join(root, "content", "home.json");
 
 const target = process.argv[2];
 const scriptedAnswers = input.isTTY ? null : readFileSync(0, "utf8").split(/\r?\n/);
@@ -20,6 +21,15 @@ function today() {
     year: "numeric",
     timeZone: "Asia/Singapore",
   }).format(new Date()).replace(/,/g, "");
+}
+
+function homeUpdatedToday() {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "Asia/Singapore",
+  }).format(new Date());
 }
 
 function slugify(value) {
@@ -105,6 +115,20 @@ async function writeNewFile(relativePath, contents) {
   await fs.writeFile(absolutePath, contents, "utf8");
   console.log(`Created ${relativePath}`);
   console.log("Run `make build` or `npm run dev` after editing to refresh generated pages.");
+}
+
+async function touchHomeUpdated() {
+  const nextUpdated = homeUpdatedToday();
+  const raw = await fs.readFile(homePath, "utf8");
+  const home = JSON.parse(raw);
+  if (home.updated === nextUpdated) return;
+
+  const updated = raw.replace(/("updated"\s*:\s*)"[^"]*"/, `$1${JSON.stringify(nextUpdated)}`);
+  if (updated === raw) throw new Error("Unable to find content/home.json updated field.");
+  JSON.parse(updated);
+
+  await fs.writeFile(homePath, updated, "utf8");
+  console.log(`Updated content/home.json timestamp to ${nextUpdated}`);
 }
 
 async function createBlog() {
@@ -227,7 +251,7 @@ async function createWiki(category) {
   );
 }
 
-try {
+async function main() {
   switch (target) {
     case "blog":
       await createBlog();
@@ -253,6 +277,12 @@ try {
     default:
       throw new Error("Usage: node scripts/new-content.mjs blog|book|film|project|paper|wiki|tech");
   }
+
+  await touchHomeUpdated();
+}
+
+try {
+  await main();
 } finally {
   rl?.close();
 }

@@ -12,10 +12,16 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
+# AI search and user-requested retrieval - allow
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+
 # AI scrapers - block
 User-agent: GPTBot
-Disallow: /
-User-agent: ChatGPT-User
 Disallow: /
 User-agent: CCBot
 Disallow: /
@@ -30,8 +36,6 @@ Disallow: /
 User-agent: anthropic-ai
 Disallow: /
 User-agent: Cohere-ai
-Disallow: /
-User-agent: PerplexityBot
 Disallow: /
 User-agent: FacebookBot
 Disallow: /
