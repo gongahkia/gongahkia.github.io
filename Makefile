@@ -12,6 +12,7 @@ help:
 	@echo "  make paper     - Create a new paper source with an optional cover PNG path"
 	@echo "  make wiki      - Create a new General wiki note"
 	@echo "  make tech      - Create a new Tech wiki note"
+	@echo "  content creation commands update content/home.json's updated date"
 	@echo "  FORCE=1 make <target> overwrites an existing generated source filename"
 
 dev:
