@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "sync:content": "node scripts/sync-content.mjs",
+    "dev": "npm run sync:content && vite --host 127.0.0.1",
+    "build": "npm run sync:content && vite build && node scripts/generate-route-wrappers.mjs",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.3",
+    "vite": "^8.0.11"
+  }
+}

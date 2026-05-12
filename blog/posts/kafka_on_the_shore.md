@@ -1,0 +1,87 @@
+---
+title: "Kafka on the Shore"
+author: "Haruki Murakami"
+isbn: "9780099458326"
+category: "Fiction"
+rating: "4"
+date: "2 Aug 2021"
+type: "book"
+---
+
+Tell me… what does a broken heart sound like?
+
+In what might be his most heavily translated, and thus, misunderstood work, Murakami presents readers an uncanny reality, where dimensions of alternate logic regularly converge with the reality we are most familiar with.
+
+What happens when someone’s purpose in life fizzled out long ago, but they must keep on living?
+
+Within the titular protagonist, Kafka Tamura’s world, metaphors seem to replace meaning, as the implausible begins occurring at a frightening frequency, and consequences of staggering proportions pile up quickly.
+
+But what does this mean for the autodiegetic focaliser, Kafka?
+
+It’s evident from the beginning of the book that Kafka is an edgy teenager, that much is made clear. When he describes himself as someone who only has “half his shadow”, or when he references the “storm” within himself, I am quickly reminded of every other 15-year old Singaporean who has buried their lack of a personality under a few layers of irony and ‘wokeness’.
+
+Still, does this alone invalidate Kafka’s search for meaning and identity throughout the story? Physically, he might only have covered a few prefectures in Japan, but emotionally, it’s clear by the book’s closing lines that he has truly become “the world’s strongest fifteen-year old”. Despite this however, it feels overly dismissive for me to label Kafka on the Shore a Bildungsroman.
+
+Sure, it covers the themes expected of said genre, but it feels to me that Murakami’s novel cuts at a deeper intention than just that.
+
+There are many questions, but the answers are few and far between.
+
+Can one’s actions be detached from morality and intention?
+
+What exactly happened to Hoshino?
+
+Who the heck is Crow?
+
+Frankly, I can’t claim to know the definitive answer to any of these questions. But maybe that’s okay.
+
+Murakami might have written Kafka on the Shore with clear intentions, but it seems that one common strand which runs through the story is the importance of ideas.
+
+When ideas are too abstract and cannot be conceived in physical terms, we imbue the meaning into an object that we can comprehend in human terms.
+
+In other words, we use metaphors.
+
+This might be the most over-referenced idea in Kafka on the Shore, but it’s for good reason.
+
+In many of the encounters within Kafka on the Shore, abstraction leads to complexity manifesting as visual or literal walking metaphors. Be it Colonel Sanders, the entrance stone, Kafka’s projection of his father’s curse on him of ‘Oedipus’, Johnny Walker, Murakami is not stingy with his metaphors and symbols.
+
+More than this, I find another repeated notion that peppers the book is that of roles and duties. Be it Oshima, Miss Saeki, Nakata, Hoshino, Kafka or any other character within the present narrative, Murakami weaves a complex web of interlocking relationships, where each individual must fulfill their predetermined role at a given point of time.
+
+Much like a jenga tower made of flesh, every person’s involvement is vital for the story to progress to its conclusion, at times causing character’s actions to seem almost ‘ritualistic’, even as it is clear that they are as befuddled as to the reasons for any of their decisions.
+
+In this fashion, it can be said that the conclusion of Kafka on the Shore is inevitable. In the same manner a freight train hurtling toward a brick wall would result in casualties, from the moment Kafka decides to leave home in the first chapter, every following action is a direct consequence of what came before it.
+
+Kafka has grown, but at what cost?
+
+In the final chapter, Kafka steels his heart once more. He lays down the emptiness he feels inside, holds the memories of the one he loved inside him, and looks to the future. He boards a train to return to a “big, empty house”, but now, should he ever feel the need to run away again, he has a place to run away too.
+
+The first time Kafka fled his home, it was because he felt like he would “die there”. He couldn’t bear the loneliness that his mother’s abandonment, and his sister’s departure, had caused him.
+
+So he ran. Amidst all the chaos and confusion, he woke with bloody hands, he ran from the police, he ran from reality, and at one point, he ran deep into the heart of a dark forest, to the edge of the world. There, Kafka strays so far that he finds what lies in the world of memories for those who have crossed into the land of the dead, where meaning surpasses formalization.
+
+Interestingly enough, Kafka is pulled back from the crinkles of oblivion by the words of the one who pushed him to seek it in the first place.
+
+“I want you to remember me”
+
+“If you remember me, then I don’t care if everyone else forgets.
+
+In spite of all his struggle, Kafka found himself making friends with many people. Those who would give him shelter, those who cared for his well being, took his angst and suffering seriously, and helped him remember.
+
+Later in the book, Oshima reminds Kafka “the world is a metaphor, Kafka Tamura”, “but for you and me this library alone is no metaphor”. Metaphors are fickle, beautiful, and lovely in their variability. But ultimately, what grounds us as human beings to reality, is concrete meaning, and the lives of those around us.
+
+In the end, Kafka’s heart isn’t healed. He’s still very much the same person that chose to escape at the beginning of the book. But he’s no longer a boy, he’s grown up, even if for just a little bit.
+
+It’s cold. The ending of Kafka on the Shore hits you quick and unexpectedly. Who else but Murakami would leave the dense world he concocted at such a surprising time?
+
+Still, I like it. We, the readers, have been made privy to many of Kafka’s private thoughts throughout the book, so it’s fitting that at the end of his journey, Kafka becomes just another person gazing out a window of a moving train on a rainy day.
+
+Just as it should be.
+
+~ 🚪 ~
+
+Okay haha that’s the end of what I think I can write on Murakami’s Kafka on the Shore for now.
+
+There’s so much I didn’t even begin to unpack here, Nakata’s journey, the labyrinth within Kafka, the doctrine of correspondences, the converging of different realities. Hopefully I’ll be given the chance to write on this wonderful book again, perhaps after a few more reads.
+
+Still, this will do for now. Thanks for reading!
+
+Soli Deo gloria.

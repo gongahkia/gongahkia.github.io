@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Gabriel Ong</title>
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        var dark =
+          t === "dark" ||
+          (!t && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.setAttribute(
+          "data-theme",
+          dark ? "dark" : "light",
+        );
+      })();
+
+      (function () {
+        document.documentElement.classList.add("hover-cold");
+        var firstX = -1;
+        var firstY = -1;
+        function arm() {
+          document.documentElement.classList.remove("hover-cold");
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerdown", arm);
+        }
+        function onMove(e) {
+          if (firstX < 0) {
+            firstX = e.clientX;
+            firstY = e.clientY;
+            return;
+          }
+          if (Math.abs(e.clientX - firstX) + Math.abs(e.clientY - firstY) > 12)
+            arm();
+        }
+        window.addEventListener("pointermove", onMove, { passive: true });
+        window.addEventListener("pointerdown", arm, { passive: true });
+      })();
+    </script>
+    <link rel="icon" href="/asset/blob.ico" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="click-container" aria-hidden="true"></div>
+    <div id="root"></div>
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>

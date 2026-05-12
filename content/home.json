@@ -1,0 +1,164 @@
+{
+  "updated": "May 11, 2026",
+  "profile": {
+    "name": "Gabriel Ong",
+    "alternateName": "王哲勉",
+    "location": "Singapore",
+    "role": "Technical Product Manager in training",
+    "portrait": "/asset/portrait/gong-2.png",
+    "intro": "I like making things. I've been writing software for 6 years and thinking about product for 1."
+  },
+  "links": {
+    "accounts": [
+      { "label": "LinkedIn", "href": "https://www.linkedin.com/in/gabriel-zmong/" },
+      { "label": "GitHub", "href": "https://github.com/gongahkia" },
+      { "label": "ORCID", "href": "https://orcid.org/0009-0002-4509-3960" },
+      { "label": "X", "href": "https://x.com/gongahkia" },
+      { "label": "Goodreads", "href": "https://www.goodreads.com/user/show/198498126-gongahkia" }
+    ],
+    "writing": [
+      { "label": "Blog", "href": "/blog/" },
+      { "label": "Personal Wiki", "href": "/personal-wiki/" },
+      { "label": "Papers", "href": "/papers/" }
+    ],
+    "resume": [
+      { "label": "main.pdf", "href": "/resume/main.pdf" }
+    ],
+    "mail": [
+      { "label": "gabrielzmong@gmail.com", "href": "mailto:gabrielzmong@gmail.com", "note": "Business" },
+      { "label": "gabriel.ong.2023@scis.smu.edu.sg", "href": "mailto:gabriel.ong.2023@scis.smu.edu.sg", "note": "School" }
+    ]
+  },
+  "works": [
+    {
+      "slug": "hot-cross-buns",
+      "title": "hot cross buns",
+      "date": "May 2026",
+      "href": "https://github.com/gongahkia/hot-cross-buns",
+      "summary": "FOSS Google Calendar & Tasks Wrapper for MacOS",
+      "detail": [
+        "This was the first user-facing project that I thoroughly iterated on, both the systems (backend, fault tolerance, optimization) and the product (UX, frontend, user journey).",
+        "My main takeaway is that the actual development of software is really only about 35% of the initial effort, validation and user feedback are what really make or break the product's success and adoption.",
+        "I was probably also particularly passionate about polishing Hot Cross Buns up since I wanted to use it.",
+        "Anyway, check it out here at https://gabrielongzm.com/hot-cross-buns/."
+      ]
+    },
+    {
+      "slug": "goodman",
+      "title": "goodman",
+      "date": "April 2026",
+      "href": "https://github.com/gongahkia/goodman",
+      "summary": "T&C Vetter Browser Extension",
+      "detail": [
+        "Quite literally threw this together over a weekend because I was getting so frustrated with the absurd number of websites that intentionally obscure their terms and conditions pages behind auto-approvals and nested subpages.",
+        "GitHub repo here https://github.com/gongahkia/goodman if you're interested."
+      ]
+    },
+    {
+      "slug": "sea-kayak",
+      "title": "sea kayak",
+      "date": "2025",
+      "href": "https://github.com/gongahkia/sea-kayak",
+      "summary": "Singapore's Daily Legal Updates Web App",
+      "detail": [
+        "Made this with the hope that it'd encourage a more consistent approach towards consuming bite-sized legal updates in Singapore",
+        "This project also kickstarted me beginning to put in effort into prettifying the frontends of my projects.",
+        "I think I'm the only user at the moment, but check it out here at https://sea-kayak.vercel.app/ if it sounds like something you'd enjoy.",
+        "Thanks!"
+      ]
+    },
+    {
+      "slug": "junas",
+      "title": "junas",
+      "date": "2025",
+      "href": "https://github.com/gongahkia/junas",
+      "summary": "Junior Associate Legal Agent",
+      "detail": [
+        "Building Junas forced me to hit the ground running with agent harnesses and guardrails, but more importantly taught me how to scope (and cut) product features based on real user impact and needs.",
+        "Implementing more features just because the engineering is fun and the tech is cool is tempting, but if it leads to building a solution that's looking for a problem, then its likely you're building something noone would actually use.",
+        "The project is here at https://github.com/gongahkia/junas for those interested. I might continue iterating on it in the future."
+      ]
+    },
+    {
+      "slug": "skill-hunter",
+      "title": "skill hunter",
+      "date": "2024",
+      "href": "https://github.com/gongahkia/skill-hunter",
+      "summary": "SSO Legislation Browser Extension",
+      "detail": [
+        "My first substantial project (built for people other than just myself) that also catapulted me into the wonderful world of browser extension scripting.",
+        "More significantly, building and deploying Skill Hunter showed me that more often than not, the products with the highest adoption metrics are just small tools that solve a specific problem well with minimal installation friction.",
+        "Not every software problem has to be solved with a full-blown app. If reading SSO Legislation sometimes feels overwhelming, consider checking it out at https://github.com/gongahkia/skill-hunter."
+      ]
+    },
+    {
+      "slug": "yuho",
+      "title": "yuho",
+      "date": "2024",
+      "href": "https://github.com/gongahkia/yuho",
+      "summary": "Domain-specific language for Singapore Criminal Law",
+      "detail": [
+        "I've always been interested in the notion of rules-as-code in systems design, and this idea of creating a DSL that could encode Singapore statutes just so happened to come at a time when I was also actively learning about handwriting interpreters (and to a lesser extent, esolangs).",
+        "So Yuho was basically the convergence of all these factors interesecting at the perfect time.",
+        "It's not much of a product in the traditional sense (if anything its closer to a proof-of-concept), but it's one of my proudest and most thoroughly-researched pet projects by far. You can find it here at https://github.com/gongahkia/yuho.",
+        "(Edit on 1 May 2026: I have since written and published a paper about Yuho on Zenodo hre https://zenodo.org/records/19935537. Take a look if you like reading about language frameworks!)"
+      ]
+    }
+  ],
+  "skills": [
+    { "label": "Product", "value": "Product discovery, PRDs, Product Metrics" },
+    { "label": "Frontend", "value": "React, React Native, Next.js, Vue.js, Svelte, Electron.js, Flutter" },
+    { "label": "Backend", "value": "Python, TypeScript, Java, Go, Rust, SQL, Node.js, PHP, Haskell, Lua" },
+    { "label": "Cloud", "value": "GCP, Supabase, MongoDB, Pinecone, AWS, Cloudflare, Docker, Kubernetes, GitHub Actions, CI/CD, Linux" },
+    { "label": "AI & ML", "value": "PyTorch, TensorFlow, Hugging Face, LangChain, Pydantic AI, WebLLM" },
+    { "label": "Legal", "value": "Contract Law, Criminal Law, Tort Law, Intellectual Property Law, Privacy Law, Company Law" },
+    { "label": "Languages", "value": "English (native), Mandarin (bilingual), Japanese (elementary), Korean (beginner)" }
+  ],
+  "education": [
+    {
+      "date": "Aug 2023 - Apr 2027",
+      "title": "Bachelor of Science (Computing and Law)",
+      "href": "https://computing.smu.edu.sg/bsc-computing-law",
+      "meta": "Singapore Management University",
+      "note": "GPA: 3.60/4.00"
+    },
+    {
+      "date": "Jan 2019 - Dec 2020",
+      "title": "International Baccalaureate Diploma Programme (IBDP)",
+      "href": "https://www.acsindep.moe.edu.sg/the-acs-independent-experience/ibdp/",
+      "meta": "Anglo Chinese School (Independent)",
+      "note": "Score: 44/45"
+    }
+  ],
+  "experience": [
+    { "date": "May 2026 - Aug 2026", "title": "Ministry of Home Affairs Singapore", "href": "https://www.mha.gov.sg/", "meta": "Artificial Intelligence Engineer Intern" },
+    { "date": "Jan 2026 - May 2026", "title": "Elefant", "href": "https://elefant.net.ai/", "meta": "Full Stack Engineer Intern" },
+    { "date": "Aug 2025 - Dec 2025", "title": "WhyHow.AI", "href": "https://whyhow.ai/", "meta": "Backend Developer Intern" },
+    { "date": "May 2025 - Aug 2025", "title": "SMU Yong Pung How School of Law", "href": "https://law.smu.edu.sg/", "meta": "Research Assistant" },
+    { "date": "May 2025 - Aug 2025", "title": "Custom Automated Systems", "href": "https://customautosys.com/home", "meta": "Software Engineer Intern" },
+    { "date": "Jan 2025 - Apr 2025", "title": "SMU Yong Pung How School of Law", "href": "https://law.smu.edu.sg/", "meta": "Research Assistant" },
+    { "date": "Sep 2024 - Dec 2024", "title": "Elefant", "href": "https://elefant.net.ai/", "meta": "Data Engineer Intern" },
+    { "date": "Aug 2023 - Oct 2024", "title": "SMU Legal Innovation and Technology (LIT)", "href": "https://law.smu.edu.sg/student-activities/student-clubs/smu-legal-innovation-and-technology-lit", "meta": "Tech Development Director" }
+  ],
+  "awards": [
+    { "date": "Sep 2025", "title": "Champion of SMU LIT Hackathon 2025 - MinLaw Track 2", "href": "https://www.smulit.org/lit-hackathon-2025-problem-statements", "meta": "SMU Legal Innovation & Technology" },
+    { "date": "Aug 2025", "title": "Second place for Vibe-Building Hackathon 2025", "href": "https://www.nusproductclub.com/", "meta": "NUS Product Club" },
+    { "date": "Feb 2025", "title": "GeeksHacking Choice Award for HackOMania 2025", "href": "https://hackomania.geekshacking.com/", "meta": "GeeksHacking" },
+    { "date": "Sep 2024", "title": "Champion of YouthxHack 2024 - Digital Defence", "href": "https://www.cyberyouth.sg/events/youthxhack-2024-total-defence-edition", "meta": "Cyber Youth Singapore" },
+    { "date": "Aug 2023 - Apr 2027", "title": "Global Impact Scholarship", "href": "https://admissions.smu.edu.sg/financial-matters/financial-aid/smu-global-impact-scholarship-award", "meta": "Singapore Management University" }
+  ],
+  "certifications": [
+    { "date": "May 2026", "title": "Google AI Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/TIN1OQB5BS4S", "meta": "Credential ID: TIN1OQB5BS4S" },
+    { "date": "May 2026", "title": "Google AI Essentials Specialization", "href": "https://www.coursera.org/account/accomplishments/specialization/LASFI96HRCL4", "meta": "Credential ID: LASFI96HRCL4" },
+    { "date": "Feb 2025", "title": "Data Manipulation with pandas", "href": "https://www.datacamp.com/completed/statement-of-accomplishment/course/494b8f47107335b7a6c8c960a281dcfdd3025db3", "meta": "Credential ID: 494b8f47107335b7a6c8c960a281dcfdd3025db3" },
+    { "date": "Jul 2024", "title": "Google Cybersecurity Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/ZRUJ9SDLQE4V", "meta": "Credential ID: ZRUJ9SDLQE4V" },
+    { "date": "Jun 2024", "title": "Google Advanced Data Analytics Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/ULP7G5LBRNM7", "meta": "Credential ID: ULP7G5LBRNM7" },
+    { "date": "Jun 2024", "title": "Google Data Analytics Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/W5ZUSVKCJYKB", "meta": "Credential ID: W5ZUSVKCJYKB" },
+    { "date": "May 2024", "title": "Google Digital Marketing & E-commerce Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/33NVBXNXMJBX", "meta": "Credential ID: 33NVBXNXMJBX" },
+    { "date": "May 2024", "title": "Google Project Management Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/NFAAP9Y8GUJH", "meta": "Credential ID: NFAAP9Y8GUJH" },
+    { "date": "May 2024", "title": "Google UX Design Specialization", "href": "https://www.coursera.org/account/accomplishments/professional-cert/UV7R9TD85GAB", "meta": "Credential ID: UV7R9TD85GAB" },
+    { "date": "Dec 2023", "title": "Building Web Applications in PHP", "href": "https://www.coursera.org/account/accomplishments/verify/E5K7JMPKCVEA", "meta": "Credential ID: E5K7JMPKCVEA" },
+    { "date": "Dec 2023", "title": "Arm Cortex-M Architecture and Software Development Specialization", "href": "https://www.coursera.org/account/accomplishments/specialization/RN5ZPETRCCQR", "meta": "Credential ID: RN5ZPETRCCQR" },
+    { "date": "Jun 2021", "title": "Advanced Certificate in Infocomm Technology", "href": "https://www.linkedin.com/in/gabriel-zmong/details/certifications/", "meta": "Credential ID: 100017282" }
+  ]
+}
