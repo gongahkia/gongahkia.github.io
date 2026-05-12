@@ -23,11 +23,3 @@ $ make help
 * [`fetch-contributions.yml`](./.github/workflows/fetch-contributions.yml): Update GitHub contributions calendar on personal site daily
 * [`wiki-release.yml`](./.github/workflows/wiki-release.yml): ZIPs all Markdown wiki notes on changes
 * [`pages.yml`](./.github/workflows/pages.yml): Builds `dist/` and deploys the site through GitHub Pages Actions
-
-## Stack
-
-![JavaScript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
-![HTML](https://img.shields.io/badge/-HTML-000?&logo=html5)
-![CSS](https://img.shields.io/badge/-CSS-000?&logo=css3)
-![Python](https://img.shields.io/badge/-Python-000?&logo=python)
-![Github Pages](https://img.shields.io/badge/-Github%20Pages-000?&logo=github)
