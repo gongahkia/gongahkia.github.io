@@ -45,6 +45,7 @@ const state = {
   marqueeResizeTimer: null,
 };
 
+const contributionGridCache = new WeakMap();
 const marqueeScrollSpeed = 82;
 const marqueeTravelRatio = 0.72;
 const marqueeMinimumDuration = 1.35;
@@ -267,6 +268,7 @@ async function loadSite() {
   const response = await fetch("/content/site.json");
   if (!response.ok) throw new Error("Unable to load generated content manifest.");
   state.site = await response.json();
+  primeContributionGraph();
   return state.site;
 }
 
@@ -381,6 +383,24 @@ function contributionsSection(contributions, options = {}) {
   const showTitle = options.showTitle !== false;
   const titleStagger = options.stagger ?? 0;
   const panelStagger = showTitle ? titleStagger + 1 : titleStagger;
+  const weeks = contributionGridMarkup(contributions);
+
+  return `
+    <section class="${sectionClass}"${sectionAttrs}>
+      ${showTitle ? `<h2 class="section-title stagger-in" style="--stagger:${titleStagger}">github</h2>` : ""}
+      <div class="contrib-panel stagger-in" style="--stagger:${panelStagger}">
+        <a href="https://github.com/gongahkia">${escapeHtml(contributions.total)} contributions in the past year</a>
+        <div class="contrib-scroll" aria-label="GitHub contribution calendar" role="img">
+          <span class="contrib-grid">${weeks}</span>
+        </div>
+      </div>
+    </section>`;
+}
+
+function contributionGridMarkup(contributions) {
+  const cached = contributionGridCache.get(contributions);
+  if (cached) return cached;
+
   const max = Math.max(1, contributions.max ?? 1);
   const weeks = contributions.weeks
     .map(
@@ -396,16 +416,13 @@ function contributionsSection(contributions, options = {}) {
     )
     .join("");
 
-  return `
-    <section class="${sectionClass}"${sectionAttrs}>
-      ${showTitle ? `<h2 class="section-title stagger-in" style="--stagger:${titleStagger}">github</h2>` : ""}
-      <div class="contrib-panel stagger-in" style="--stagger:${panelStagger}">
-        <a href="https://github.com/gongahkia">${escapeHtml(contributions.total)} contributions in the past year</a>
-        <div class="contrib-scroll" aria-label="GitHub contribution calendar" role="img">
-          <span class="contrib-grid">${weeks}</span>
-        </div>
-      </div>
-    </section>`;
+  contributionGridCache.set(contributions, weeks);
+  return weeks;
+}
+
+function primeContributionGraph() {
+  const contributions = state.site?.home?.contributions;
+  if (contributions?.weeks?.length) contributionGridMarkup(contributions);
 }
 
 function workContributionsSection(stagger = 0) {
@@ -796,7 +813,7 @@ function renderList(collection, options = {}) {
   const visibleEntries = entries.slice(0, initialCount);
   const rows = visibleEntries.map((entry, index) => entryRow(entry, collection, index + 2)).join("");
   const contributionGraph =
-    collection === "work" && !expandFromHome ? workContributionsSection(initialCount + 2) : "";
+    collection === "work" && !expandFromHome ? workContributionsSection(initialCount + 1) : "";
 
   return `
     ${backButton("list")}
@@ -852,6 +869,7 @@ function expandRouteList(collection, previewCountValue) {
   entries.classList.add("is-expanding");
   entries.append(template.content);
   list.dataset.expanded = "true";
+  if (collection === "work") appendWorkContributions(list, startCount + remaining.length + 1);
   queueMarqueeRefresh(list);
 
   const endHeight = entries.scrollHeight;
@@ -862,7 +880,6 @@ function expandRouteList(collection, previewCountValue) {
     entries.classList.remove("is-expanding");
     entries.style.height = "";
     entries.removeEventListener("transitionend", onTransitionEnd);
-    if (collection === "work") appendWorkContributions(list, startCount + remaining.length + 2);
   };
   const onTransitionEnd = (event) => {
     if (event.propertyName === "height") finish();
