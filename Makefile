@@ -1,4 +1,4 @@
-.PHONY: help dev build preview blog book film project paper wiki tech build-wiki clean-wiki sitemap up history
+.PHONY: help dev build preview blog book film project paper wiki tech clean-wiki up history
 
 help:
 	@echo "Available commands:"
@@ -12,7 +12,6 @@ help:
 	@echo "  make paper     - Create a new paper source with an optional cover PNG path"
 	@echo "  make wiki      - Create a new General wiki note"
 	@echo "  make tech      - Create a new Tech wiki note"
-	@echo "  make build-wiki, make sitemap - Legacy aliases for make build"
 	@echo "  FORCE=1 make <target> overwrites an existing generated source filename"
 
 dev:
@@ -44,10 +43,6 @@ wiki:
 
 tech:
 	@node scripts/new-content.mjs tech
-
-build-wiki: build
-
-sitemap: build
 
 clean-wiki:
 	@rm -rf dist/personal-wiki/pages dist/personal-wiki/index.html
