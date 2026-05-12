@@ -25,28 +25,30 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.12"
+          node-version: "22"
+          cache: npm
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: npm ci
 
       - name: Build site artifact
-        run: python3 build.py --output "$GITHUB_WORKSPACE/dist"
+        run: npm run build
 
       - name: Verify build output
         run: |
-          test -d "$GITHUB_WORKSPACE/dist"
-          test -f "$GITHUB_WORKSPACE/dist/index.html"
-          test -f "$GITHUB_WORKSPACE/dist/CNAME"
-          ls -la "$GITHUB_WORKSPACE/dist" | sed -n '1,40p'
+          test -d dist
+          test -f dist/index.html
+          test -f dist/CNAME
+          test -f dist/robots.txt
+          ls -la dist | sed -n '1,40p'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ github.workspace }}/dist
+          path: dist
 
   deploy:
     environment:
