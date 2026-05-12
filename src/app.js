@@ -43,11 +43,11 @@ const state = {
   renderId: 0,
   signatureClockTimer: null,
   marqueeResizeTimer: null,
-  marqueeHoldTimer: null,
-  activeTouchMarquee: null,
-  activeTouchMarqueePointer: null,
-  suppressNextMarqueeClick: false,
 };
+
+const marqueeScrollSpeed = 82;
+const marqueeTravelRatio = 0.72;
+const marqueeMinimumDuration = 1.35;
 
 const singaporeTimeFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Singapore",
@@ -678,15 +678,20 @@ function refreshMarquees(scope = root) {
 
     field.classList.remove("is-overflowing");
     field.style.removeProperty("--marquee-distance");
-    field.style.removeProperty("--marquee-duration");
+    field.style.removeProperty("--marquee-hover-duration");
 
     const overflow = Math.ceil(text.scrollWidth - field.clientWidth);
     if (overflow <= 2) return;
 
+    const distance = overflow + 18;
+    const duration = Math.max(
+      marqueeMinimumDuration,
+      distance / (marqueeScrollSpeed * marqueeTravelRatio),
+    );
+
     field.classList.add("is-overflowing");
-    field.style.setProperty("--marquee-distance", `${overflow + 18}px`);
-    field.style.setProperty("--marquee-duration", `${Math.min(10, Math.max(3.2, overflow / 28 + 2.4)).toFixed(2)}s`);
-    field.style.setProperty("--marquee-hover-duration", `${Math.min(6, Math.max(1.8, overflow / 56 + 1.4)).toFixed(2)}s`);
+    field.style.setProperty("--marquee-distance", `${distance}px`);
+    field.style.setProperty("--marquee-hover-duration", `${duration.toFixed(2)}s`);
   });
 }
 
@@ -695,52 +700,6 @@ function queueMarqueeRefresh(scope = root) {
     refreshMarquees(scope);
     document.fonts?.ready.then(() => refreshMarquees(scope));
   });
-}
-
-function clearTouchMarquee({ suppressClick = false } = {}) {
-  window.clearTimeout(state.marqueeHoldTimer);
-  state.marqueeHoldTimer = null;
-  state.activeTouchMarquee?.classList.remove("is-touch-marquee");
-  state.activeTouchMarquee = null;
-  state.activeTouchMarqueePointer = null;
-
-  if (suppressClick) {
-    state.suppressNextMarqueeClick = true;
-    window.setTimeout(() => {
-      state.suppressNextMarqueeClick = false;
-    }, 500);
-  }
-}
-
-function armTouchMarquee(event) {
-  if (event.pointerType === "mouse" || event.button !== 0) return;
-
-  const field = event.target.closest?.(".marquee-field.is-overflowing");
-  if (!field || !root.contains(field)) return;
-
-  clearTouchMarquee();
-  state.activeTouchMarquee = field;
-  state.activeTouchMarqueePointer = {
-    id: event.pointerId,
-    x: event.clientX,
-    y: event.clientY,
-  };
-  state.marqueeHoldTimer = window.setTimeout(() => {
-    field.classList.add("is-touch-marquee");
-  }, 430);
-}
-
-function updateTouchMarquee(event) {
-  const pointer = state.activeTouchMarqueePointer;
-  if (!pointer || pointer.id !== event.pointerId) return;
-
-  const distance = Math.abs(event.clientX - pointer.x) + Math.abs(event.clientY - pointer.y);
-  if (distance > 14) clearTouchMarquee();
-}
-
-function releaseTouchMarquee() {
-  const wasActive = state.activeTouchMarquee?.classList.contains("is-touch-marquee");
-  clearTouchMarquee({ suppressClick: wasActive });
 }
 
 function spawnClickSound(event) {
@@ -1114,13 +1073,6 @@ function bindSignatureClock() {
 }
 
 document.addEventListener("click", (event) => {
-  if (state.suppressNextMarqueeClick) {
-    state.suppressNextMarqueeClick = false;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    return;
-  }
-
   spawnClickSound(event);
 
   const back = event.target.closest("[data-back]");
@@ -1172,17 +1124,6 @@ window.addEventListener("resize", () => {
   window.clearTimeout(state.marqueeResizeTimer);
   state.marqueeResizeTimer = window.setTimeout(() => queueMarqueeRefresh(), 120);
 });
-
-document.addEventListener("pointerdown", armTouchMarquee, { passive: true });
-document.addEventListener("pointermove", updateTouchMarquee, { passive: true });
-document.addEventListener("pointerup", releaseTouchMarquee);
-document.addEventListener("pointercancel", () => clearTouchMarquee());
-document.addEventListener("pointerleave", () => clearTouchMarquee());
-document.addEventListener(
-  "scroll",
-  () => clearTouchMarquee(),
-  { capture: true, passive: true },
-);
 
 document.addEventListener("focusin", (event) => {
   const row = event.target.closest?.(".info-row");

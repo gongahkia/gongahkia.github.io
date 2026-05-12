@@ -627,19 +627,6 @@ button {
   will-change: transform;
 }
 
-.marquee-field.is-overflowing {
-  -webkit-touch-callout: none;
-}
-
-.marquee-field.is-touch-marquee .marquee-text {
-  width: max-content;
-  min-width: 100%;
-  overflow: visible;
-  animation: row-marquee var(--marquee-duration, 5s) linear 0.08s infinite
-    alternate;
-  text-overflow: clip;
-}
-
 .row-copy {
   display: flex;
   min-width: 0;
@@ -1439,8 +1426,7 @@ button {
     width: max-content;
     min-width: 100%;
     overflow: visible;
-    animation: row-marquee var(--marquee-hover-duration, var(--marquee-duration, 5s)) linear 0.24s
-      infinite alternate;
+    animation: row-marquee var(--marquee-hover-duration, 5s) linear 0.24s infinite alternate;
     text-overflow: clip;
   }
 }
