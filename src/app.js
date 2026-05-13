@@ -1245,6 +1245,36 @@ function bindSignatureClock() {
   state.signatureClockTimer = window.setInterval(updateClock, 1000);
 }
 
+function resetEntryTilt(entry) {
+  entry?.style.removeProperty("--entry-tilt-x");
+  entry?.style.removeProperty("--entry-tilt-y");
+  entry?.style.removeProperty("--entry-shadow-x");
+  entry?.style.removeProperty("--entry-shadow-y");
+}
+
+function updateEntryTilt(event) {
+  if (!event.pointerType || event.pointerType === "touch") return;
+
+  const entry = event.target.closest?.("[data-entry-shell][data-search-text]");
+  if (!entry || !root.contains(entry)) return;
+
+  const divider = entry.querySelector(".entry-divider:not(.more-row)");
+  if (!divider) return;
+
+  const rect = divider.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const x = (event.clientX - rect.left) / rect.width - 0.5;
+  const y = (event.clientY - rect.top) / rect.height - 0.5;
+  const clampedX = Math.max(-0.5, Math.min(0.5, x));
+  const clampedY = Math.max(-0.5, Math.min(0.5, y));
+
+  entry.style.setProperty("--entry-tilt-x", `${(-clampedY * 7).toFixed(2)}deg`);
+  entry.style.setProperty("--entry-tilt-y", `${(clampedX * 8).toFixed(2)}deg`);
+  entry.style.setProperty("--entry-shadow-x", `${(clampedX * 10).toFixed(1)}px`);
+  entry.style.setProperty("--entry-shadow-y", `${(clampedY * 8 + 7).toFixed(1)}px`);
+}
+
 document.addEventListener("click", (event) => {
   spawnClickSound(event);
 
@@ -1291,6 +1321,14 @@ document.addEventListener("input", (event) => {
   if (!event.target.matches("[data-search]")) return;
   applyCollectionFilter(document);
   queueMarqueeRefresh();
+});
+
+document.addEventListener("pointermove", updateEntryTilt, { passive: true });
+
+document.addEventListener("pointerout", (event) => {
+  const entry = event.target.closest?.("[data-entry-shell][data-search-text]");
+  if (!entry || !root.contains(entry) || entry.contains(event.relatedTarget)) return;
+  resetEntryTilt(entry);
 });
 
 window.addEventListener("resize", () => {

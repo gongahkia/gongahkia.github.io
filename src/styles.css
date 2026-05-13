@@ -678,7 +678,8 @@ button {
       color-mix(in srgb, var(--primary) 6%, transparent)
     );
   box-shadow:
-    0 8px 18px -18px color-mix(in srgb, var(--heading) 42%, transparent),
+    var(--entry-shadow-x, 0) var(--entry-shadow-y, 7px) 18px -18px
+      color-mix(in srgb, var(--heading) 48%, transparent),
     0 0 0 1px color-mix(in srgb, var(--heading) 5%, transparent) inset;
   opacity: 0;
   transform: scaleX(0.985) rotate(var(--row-hover-tilt, -0.12deg));
@@ -815,6 +816,9 @@ button {
   line-height: 1;
   text-transform: lowercase;
   transform: rotate(-0.7deg);
+  transition:
+    box-shadow 0.25s ease-out,
+    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .text-thumb.blog {
@@ -868,9 +872,11 @@ button {
   animation: polaroid-pop 0.35s cubic-bezier(0.22, 0.03, 0.26, 1) both;
   animation-delay: calc(0.15s + var(--stagger, 0) * 65ms + 60ms);
   transition:
+    box-shadow 0.25s ease-out,
     transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
     scale 0.25s;
   user-select: none;
+  transform-style: preserve-3d;
 }
 
 .paper-cover-card {
@@ -1620,11 +1626,22 @@ button {
       scale(1.03);
   }
 
-  :root:not(.hover-cold) .entry-shell.has-single:hover .polaroid-card,
-  :root:not(.hover-cold) .entry-shell.has-single:hover .post-it-card,
-  :root:not(.hover-cold) .entry-shell.has-single:hover .paper-cover-card {
-    transform: rotate(calc(var(--rot-to, 0deg) + var(--hover-tilt, 1.5deg)))
-      scale(1.04);
+  :root:not(.hover-cold)
+    .entry-shell:has(.entry-divider:not(.more-row)):hover
+    :is(.polaroid-card, .post-it-card, .paper-cover-card, .text-thumb),
+  :root:not(.hover-cold)
+    .entry-shell:has(.entry-divider:not(.more-row)):focus-within
+    :is(.polaroid-card, .post-it-card, .paper-cover-card, .text-thumb) {
+    box-shadow:
+      calc(var(--entry-shadow-x, 0px) * 0.45)
+        calc(var(--entry-shadow-y, 7px) * 0.45) 8px -4px #00000061,
+      0 0 0 0.5px #00000008;
+    transform:
+      perspective(150px)
+      rotateX(var(--entry-tilt-x, 0deg))
+      rotateY(var(--entry-tilt-y, 0deg))
+      rotate(calc(var(--rot-to, -0.7deg) + var(--hover-tilt, 0.8deg)))
+      scale(1.045);
   }
 
   :root:not(.hover-cold) .entry-shell:hover .marquee-field.is-overflowing .marquee-text,
