@@ -36,10 +36,6 @@ const clickSounds = [
   "tnk",
 ];
 
-const signatureBubblePortrait = new URL(
-  "../archived/personal-site-v11/asset/portrait/gong-2.png",
-  import.meta.url,
-).href;
 const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", ":("];
 const signatureBubbleInitialDelay = [1000, 2500];
 const signatureBubbleInterval = [2600, 4200];
@@ -796,25 +792,15 @@ function randomBetween(min, max) {
 
 function spawnSignatureBubble(layer) {
   const bubble = document.createElement("span");
-  const isPortrait = state.signatureBubbleSpawnCount > 0 && Math.random() < 0.2;
-  bubble.className = `signature-bubble${isPortrait ? " is-portrait" : ""}`;
+  bubble.className = "signature-bubble";
   bubble.style.setProperty("--bubble-left", `${randomBetween(-6, 28).toFixed(1)}px`);
   bubble.style.setProperty("--bubble-top", `${randomBetween(-2, 14).toFixed(1)}px`);
   bubble.style.setProperty("--bubble-drift", `${randomBetween(-10, 13).toFixed(1)}px`);
   bubble.style.setProperty("--bubble-lift", `${randomBetween(18, 28).toFixed(1)}px`);
   bubble.style.setProperty("--bubble-tilt", `${randomBetween(-8, 7).toFixed(2)}deg`);
   bubble.style.setProperty("--bubble-tail-tilt", `${randomBetween(-12, 16).toFixed(2)}deg`);
-
-  if (isPortrait) {
-    const image = document.createElement("img");
-    image.src = signatureBubblePortrait;
-    image.alt = "";
-    image.decoding = "async";
-    bubble.append(image);
-  } else {
-    const index = state.signatureBubbleSpawnCount % signatureBubbleMessages.length;
-    bubble.textContent = signatureBubbleMessages[index];
-  }
+  const index = state.signatureBubbleSpawnCount % signatureBubbleMessages.length;
+  bubble.textContent = signatureBubbleMessages[index];
 
   layer.append(bubble);
   state.signatureBubbleSpawnCount += 1;
@@ -1245,36 +1231,6 @@ function bindSignatureClock() {
   state.signatureClockTimer = window.setInterval(updateClock, 1000);
 }
 
-function resetEntryTilt(entry) {
-  entry?.style.removeProperty("--entry-tilt-x");
-  entry?.style.removeProperty("--entry-tilt-y");
-  entry?.style.removeProperty("--entry-shadow-x");
-  entry?.style.removeProperty("--entry-shadow-y");
-}
-
-function updateEntryTilt(event) {
-  if (!event.pointerType || event.pointerType === "touch") return;
-
-  const entry = event.target.closest?.("[data-entry-shell][data-search-text]");
-  if (!entry || !root.contains(entry)) return;
-
-  const divider = entry.querySelector(".entry-divider:not(.more-row)");
-  if (!divider) return;
-
-  const rect = divider.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-
-  const x = (event.clientX - rect.left) / rect.width - 0.5;
-  const y = (event.clientY - rect.top) / rect.height - 0.5;
-  const clampedX = Math.max(-0.5, Math.min(0.5, x));
-  const clampedY = Math.max(-0.5, Math.min(0.5, y));
-
-  entry.style.setProperty("--entry-tilt-x", `${(-clampedY * 7).toFixed(2)}deg`);
-  entry.style.setProperty("--entry-tilt-y", `${(clampedX * 8).toFixed(2)}deg`);
-  entry.style.setProperty("--entry-shadow-x", `${(clampedX * 10).toFixed(1)}px`);
-  entry.style.setProperty("--entry-shadow-y", `${(clampedY * 8 + 7).toFixed(1)}px`);
-}
-
 document.addEventListener("click", (event) => {
   spawnClickSound(event);
 
@@ -1321,14 +1277,6 @@ document.addEventListener("input", (event) => {
   if (!event.target.matches("[data-search]")) return;
   applyCollectionFilter(document);
   queueMarqueeRefresh();
-});
-
-document.addEventListener("pointermove", updateEntryTilt, { passive: true });
-
-document.addEventListener("pointerout", (event) => {
-  const entry = event.target.closest?.("[data-entry-shell][data-search-text]");
-  if (!entry || !root.contains(entry) || entry.contains(event.relatedTarget)) return;
-  resetEntryTilt(entry);
 });
 
 window.addEventListener("resize", () => {
