@@ -793,10 +793,10 @@ function randomBetween(min, max) {
 function spawnSignatureBubble(layer) {
   const bubble = document.createElement("span");
   bubble.className = "signature-bubble";
-  bubble.style.setProperty("--bubble-left", `${randomBetween(-6, 28).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-top", `${randomBetween(-2, 14).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-drift", `${randomBetween(-10, 13).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-lift", `${randomBetween(18, 28).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-left", `${randomBetween(-2, 12).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-top", `${randomBetween(2, 9).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-drift", `${randomBetween(-5, 6).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-lift", `${randomBetween(14, 22).toFixed(1)}px`);
   bubble.style.setProperty("--bubble-tilt", `${randomBetween(-8, 7).toFixed(2)}deg`);
   bubble.style.setProperty("--bubble-tail-tilt", `${randomBetween(-12, 16).toFixed(2)}deg`);
   const index = state.signatureBubbleSpawnCount % signatureBubbleMessages.length;

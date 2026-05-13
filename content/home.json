@@ -49,8 +49,9 @@
       "href": "https://github.com/gongahkia/goodman",
       "summary": "T&C Vetter Browser Extension",
       "detail": [
-        "Quite literally threw this together over a weekend because I was getting so frustrated with the absurd number of websites that intentionally obscure their terms and conditions pages behind auto-approvals and nested subpages.",
-        "GitHub repo here https://github.com/gongahkia/goodman if you're interested."
+        "The idea for Goodman arose from my frustration at the number of websites that intentionally obscured their terms and conditions pages behind pre-selected checkboxes and nested subpages.",
+        "Quite literally threw this together over a weekend because ",
+        "It's available for download at https://github.com/gongahkia/goodman."
       ]
     },
     {
