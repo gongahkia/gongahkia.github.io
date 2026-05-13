@@ -4,7 +4,7 @@
     "name": "Gabriel Ong",
     "alternateName": "王哲勉",
     "location": "Singapore",
-    "role": "Technical Product Manager in training",
+    "role": "Product-minded Software Developer specialising in Legal Technology",
     "portrait": "/asset/portrait/gong-2.png",
     "intro": "I like making things. I've been writing software for 6 years and thinking about product for 1."
   },
@@ -37,10 +37,9 @@
       "href": "https://github.com/gongahkia/hot-cross-buns",
       "summary": "FOSS Google Calendar & Tasks Wrapper for MacOS",
       "detail": [
-        "This was the first user-facing project that I thoroughly iterated on, both the systems (backend, fault tolerance, optimization) and the product (UX, frontend, user journey).",
-        "My main takeaway is that the actual development of software is really only about 35% of the initial effort, validation and user feedback are what really make or break the product's success and adoption.",
-        "I was probably also particularly passionate about polishing Hot Cross Buns up since I wanted to use it.",
-        "Anyway, check it out here at https://gabrielongzm.com/hot-cross-buns/."
+        "This was my first real user-facing project where I thoroughly iterated on both the systems (backend, fault tolerance, optimization) and product (UX, frontend, user journey).",
+        "My main takeaway from building it out was that the software creation really only took up about 35% of the initial effort, and validation + user feedback played a much bigger role in helping me understand how actual people were using Hot Cross Buns.",
+        "Check it out at https://gabrielongzm.com/hot-cross-buns/."
       ]
     },
     {

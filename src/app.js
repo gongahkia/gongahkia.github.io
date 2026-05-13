@@ -36,12 +36,26 @@ const clickSounds = [
   "tnk",
 ];
 
+const signatureBubblePortrait = new URL(
+  "../archived/personal-site-v11/asset/portrait/gong-2.png",
+  import.meta.url,
+).href;
+const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", ":("];
+const signatureBubbleInitialDelay = [1000, 2500];
+const signatureBubbleInterval = [2600, 4200];
+const signatureBubbleLifetime = 2600;
+
 const state = {
   site: null,
   details: new Map(),
   lastListRoute: "/",
   renderId: 0,
   signatureClockTimer: null,
+  signatureAffordanceDone: false,
+  signatureAffordanceController: null,
+  signatureBubbleStartTimer: null,
+  signatureBubbleNextTimer: null,
+  signatureBubbleSpawnCount: 0,
   marqueeResizeTimer: null,
 };
 
@@ -344,6 +358,7 @@ function renderHome() {
               </button>
             </h1>
             <span class="signature-hover-zone" aria-hidden="true"></span>
+            <span class="signature-bubbles" aria-hidden="true"></span>
             <div class="signature-reveal" role="group" aria-label="Contact links">
               <div class="signature-reveal-inner">
                 ${signatureMeta ? `<p class="signature-meta">${signatureMeta}</p>` : ""}
@@ -734,6 +749,146 @@ function spawnClickSound(event) {
   window.setTimeout(() => clickElement.remove(), 1000);
 }
 
+function isNearPageTop() {
+  return window.scrollY <= 12;
+}
+
+function isSignatureActive(menu) {
+  return menu.matches(":hover") || menu.contains(document.activeElement);
+}
+
+function isElementInViewport(element) {
+  const rect = element.getBoundingClientRect();
+  return (
+    rect.width > 0 &&
+    rect.height > 0 &&
+    rect.bottom >= 0 &&
+    rect.right >= 0 &&
+    rect.top <= window.innerHeight &&
+    rect.left <= window.innerWidth
+  );
+}
+
+function isSignatureAffordanceVisible(menu, layer) {
+  return isElementInViewport(menu) && isElementInViewport(layer);
+}
+
+function clearSignatureAffordance({ done = false, removeBubbles = true } = {}) {
+  window.clearTimeout(state.signatureBubbleStartTimer);
+  window.clearTimeout(state.signatureBubbleNextTimer);
+  state.signatureBubbleStartTimer = null;
+  state.signatureBubbleNextTimer = null;
+  state.signatureBubbleSpawnCount = 0;
+  state.signatureAffordanceController?.abort();
+  state.signatureAffordanceController = null;
+  if (removeBubbles) {
+    root
+      .querySelectorAll(".signature-bubble")
+      .forEach((bubble) => bubble.remove());
+  }
+
+  if (done) state.signatureAffordanceDone = true;
+}
+
+function randomBetween(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function spawnSignatureBubble(layer) {
+  const bubble = document.createElement("span");
+  const isPortrait = state.signatureBubbleSpawnCount > 0 && Math.random() < 0.2;
+  bubble.className = `signature-bubble${isPortrait ? " is-portrait" : ""}`;
+  bubble.style.setProperty("--bubble-left", `${randomBetween(-6, 28).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-top", `${randomBetween(-2, 14).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-drift", `${randomBetween(-10, 13).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-lift", `${randomBetween(18, 28).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-tilt", `${randomBetween(-8, 7).toFixed(2)}deg`);
+  bubble.style.setProperty("--bubble-tail-tilt", `${randomBetween(-12, 16).toFixed(2)}deg`);
+
+  if (isPortrait) {
+    const image = document.createElement("img");
+    image.src = signatureBubblePortrait;
+    image.alt = "";
+    image.decoding = "async";
+    bubble.append(image);
+  } else {
+    const index = state.signatureBubbleSpawnCount % signatureBubbleMessages.length;
+    bubble.textContent = signatureBubbleMessages[index];
+  }
+
+  layer.append(bubble);
+  state.signatureBubbleSpawnCount += 1;
+  window.setTimeout(() => bubble.remove(), signatureBubbleLifetime);
+}
+
+function scheduleSignatureBubble(menu, layer, signal) {
+  if (state.signatureBubbleSpawnCount >= 7) {
+    clearSignatureAffordance({ done: true, removeBubbles: false });
+    return;
+  }
+
+  state.signatureBubbleNextTimer = window.setTimeout(
+    () => {
+      if (
+        signal.aborted ||
+        state.signatureAffordanceDone ||
+        !isNearPageTop() ||
+        !isSignatureAffordanceVisible(menu, layer) ||
+        isSignatureActive(menu)
+      ) {
+        clearSignatureAffordance({ done: true });
+        return;
+      }
+
+      spawnSignatureBubble(layer);
+      scheduleSignatureBubble(menu, layer, signal);
+    },
+    randomBetween(signatureBubbleInterval[0], signatureBubbleInterval[1]),
+  );
+}
+
+function bindSignatureAffordance(route) {
+  clearSignatureAffordance();
+  if (route.view !== "home" || state.signatureAffordanceDone || !isNearPageTop()) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const menu = root.querySelector(".signature-menu");
+  const layer = root.querySelector(".signature-bubbles");
+  if (!menu || !layer) return;
+  if (!isSignatureAffordanceVisible(menu, layer)) return;
+
+  const controller = new AbortController();
+  const { signal } = controller;
+  state.signatureAffordanceController = controller;
+
+  const finish = () => clearSignatureAffordance({ done: true });
+  const finishIfNotVisible = () => {
+    if (!isNearPageTop() || !isSignatureAffordanceVisible(menu, layer)) finish();
+  };
+
+  menu.addEventListener("pointerenter", finish, { once: true, signal });
+  menu.addEventListener("pointerdown", finish, { once: true, signal });
+  menu.addEventListener("focusin", finish, { once: true, signal });
+  window.addEventListener("scroll", finishIfNotVisible, { passive: true, signal });
+  window.addEventListener("resize", finishIfNotVisible, { passive: true, signal });
+
+  state.signatureBubbleStartTimer = window.setTimeout(() => {
+    if (
+      signal.aborted ||
+      state.signatureAffordanceDone ||
+      !isNearPageTop() ||
+      !isSignatureAffordanceVisible(menu, layer) ||
+      isSignatureActive(menu)
+    ) {
+      finish();
+      return;
+    }
+
+    spawnSignatureBubble(layer);
+    scheduleSignatureBubble(menu, layer, signal);
+  }, randomBetween(signatureBubbleInitialDelay[0], signatureBubbleInitialDelay[1]));
+}
+
 function clearInfoRowFocus(container = root) {
   if (container.matches?.(".info-row")) container.classList.remove("is-focused");
   if (container.matches?.(".info-rows")) container.classList.remove("is-row-focused");
@@ -991,6 +1146,7 @@ async function render(pathname = location.pathname, options = {}) {
     queueMarqueeRefresh();
     bindSignatureClock();
     if (!options.keepScroll) window.scrollTo({ top: 0, behavior: "instant" });
+    bindSignatureAffordance(route);
     const expandOptions = options.expandFromHome;
     if (expandOptions && route.view === "list" && expandOptions.collection === route.collection) {
       requestAnimationFrame(() => {

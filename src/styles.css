@@ -304,6 +304,83 @@ button {
   pointer-events: none;
 }
 
+.signature-bubbles {
+  position: absolute;
+  z-index: 4;
+  top: -34px;
+  left: 76px;
+  width: min(190px, calc(100vw - 130px));
+  height: 58px;
+  pointer-events: none;
+}
+
+.signature-bubble {
+  position: absolute;
+  top: var(--bubble-top, 0);
+  left: var(--bubble-left, 0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  min-height: 25px;
+  padding: 6px 10px 7px;
+  border: 1px solid color-mix(in srgb, var(--heading) 12%, transparent);
+  border-radius: 16px 14px 15px 12px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--pill-bg) 95%, var(--surface) 5%),
+      color-mix(in srgb, var(--pill-bg) 82%, var(--surface) 18%)
+    );
+  box-shadow:
+    0 8px 18px -14px color-mix(in srgb, var(--heading) 48%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent) inset;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  font-variation-settings: "EXPO" -12;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  filter: blur(3px);
+  transform-origin: 12px calc(100% + 8px);
+  animation: signature-bubble-float 2.6s cubic-bezier(0.2, 0.7, 0.2, 1)
+    forwards;
+  will-change: transform, opacity, filter;
+}
+
+.signature-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 13px;
+  width: 12px;
+  height: 10px;
+  border-right: 1px solid color-mix(in srgb, var(--heading) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--heading) 12%, transparent);
+  border-bottom-right-radius: 10px;
+  background: color-mix(in srgb, var(--pill-bg) 90%, var(--surface) 10%);
+  transform: skewX(-18deg) rotate(var(--bubble-tail-tilt, 0deg));
+}
+
+.signature-bubble.is-portrait {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px;
+  border-radius: 13px 16px 12px 15px;
+}
+
+.signature-bubble.is-portrait img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.04);
+}
+
 .signature-menu:has(:is(.signature-trigger, .signature-reveal, .signature-hover-zone):hover)
   .signature-hover-zone,
 .signature-menu:focus-within .signature-hover-zone {
@@ -574,6 +651,7 @@ button {
 
 .entry-divider {
   position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -582,7 +660,32 @@ button {
   cursor: pointer;
   transition:
     filter 0.25s ease-out,
-    opacity 0.25s ease-out;
+    opacity 0.25s ease-out,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.25s ease-out;
+}
+
+.entry-divider::before {
+  content: "";
+  position: absolute;
+  inset: 5px -8px;
+  z-index: -1;
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--pill-bg) 72%, transparent),
+      color-mix(in srgb, var(--primary) 6%, transparent)
+    );
+  box-shadow:
+    0 8px 18px -18px color-mix(in srgb, var(--heading) 42%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--heading) 5%, transparent) inset;
+  opacity: 0;
+  transform: scaleX(0.985) rotate(var(--row-hover-tilt, -0.12deg));
+  transform-origin: left center;
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .entry-divider::after {
@@ -646,6 +749,7 @@ button {
   color: var(--secondary);
   font-size: 12px;
   line-height: 1.25;
+  transition: color 0.22s ease-out;
 }
 
 .row-copy .row-subtitle {
@@ -664,12 +768,18 @@ button {
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  transition:
+    color 0.22s ease-out,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .chevron {
   width: 15px;
   height: 15px;
   color: var(--secondary);
+  transition:
+    color 0.22s ease-out,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .thumb-slot,
@@ -866,6 +976,7 @@ button {
 
 .info-row {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(96px, 0.42fr) minmax(0, 1fr);
   gap: 20px;
@@ -875,8 +986,33 @@ button {
   line-height: 1.45;
   transition:
     filter 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.22s ease-out,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: filter, opacity;
+}
+
+.info-row::before {
+  content: "";
+  position: absolute;
+  inset: 5px -8px;
+  z-index: -1;
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--pill-bg) 70%, transparent),
+      color-mix(in srgb, var(--primary) 5%, transparent)
+    );
+  box-shadow:
+    0 8px 18px -18px color-mix(in srgb, var(--heading) 38%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--heading) 5%, transparent) inset;
+  opacity: 0;
+  transform: scaleX(0.985) rotate(-0.1deg);
+  transform-origin: left center;
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .info-row::after {
@@ -894,10 +1030,12 @@ button {
 .info-date {
   color: var(--secondary);
   font-variant-numeric: tabular-nums;
+  transition: color 0.22s ease-out;
 }
 
 .info-main {
   min-width: 0;
+  transition: color 0.22s ease-out;
 }
 
 .info-main small {
@@ -906,15 +1044,45 @@ button {
   color: var(--secondary);
   font-size: 12px;
   line-height: 1.35;
+  transition: color 0.22s ease-out;
 }
 
 .contrib-panel {
   display: flex;
+  isolation: isolate;
   flex-direction: column;
   gap: 12px;
   padding: 12px 0 4px;
   font-size: 13px;
   line-height: 1.45;
+  position: relative;
+  transition:
+    filter 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contrib-panel::before {
+  content: "";
+  position: absolute;
+  inset: 4px -8px -2px;
+  z-index: -1;
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--pill-bg) 70%, transparent),
+      color-mix(in srgb, var(--primary) 5%, transparent)
+    );
+  box-shadow:
+    0 8px 18px -18px color-mix(in srgb, var(--heading) 38%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--heading) 5%, transparent) inset;
+  opacity: 0;
+  transform: scaleX(0.985) rotate(0.1deg);
+  transform-origin: left center;
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .contrib-panel > a {
@@ -1348,65 +1516,97 @@ button {
 
 @media (hover: hover) {
   .intro,
-  .entry-divider,
-  .info-row,
-  .contrib-panel {
+  .home-sections > .section :is(.entry-divider, .info-row, .contrib-panel) {
     transition:
       filter 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.22s ease-out;
   }
 
   :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
+    .page-content:not(.is-list):has(
+      .home-sections > .section :is(.entry-shell, .contrib-panel, .info-row):hover,
+      .home-sections > .section .info-rows.is-row-focused
     )
-    :is(.intro, .entry-divider, .info-row, .contrib-panel) {
+    .intro,
+  :root:not(.hover-cold)
+    .home-sections:has(
+      > .section :is(.entry-shell, .contrib-panel, .info-row):hover,
+      > .section .info-rows.is-row-focused
+    )
+    > .section:not(:has(:is(.entry-shell, .contrib-panel, .info-row):hover)):not(
+      :has(.info-rows.is-row-focused)
+    )
+    :is(.entry-divider, .info-row, .contrib-panel) {
     filter: blur(var(--hover-blur));
     opacity: 0.4;
   }
 
   :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
+    .home-sections:has(
+      > .section :is(.entry-shell, .contrib-panel, .info-row):hover,
+      > .section .info-rows.is-row-focused
     )
-    .entry-shell:hover
-    .entry-divider,
-  :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
+    > .section:not(:has(:is(.entry-shell, .contrib-panel, .info-row):hover)):not(
+      :has(.info-rows.is-row-focused)
     )
-    .contrib-panel:hover,
-  :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
-    )
-    .info-row:hover,
-  :root:not(.hover-cold)
-    .page-content:has(.info-rows.is-row-focused):not(
-      :has(:is(.entry-shell, .contrib-panel, .info-row):hover)
-    )
-    .info-row.is-focused {
-    filter: none;
+    :is(.entry-divider, .info-row)::after {
+    opacity: 0.3;
+  }
+
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider,
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider,
+  :root:not(.hover-cold) .info-row:hover,
+  :root:not(.hover-cold) .info-row.is-focused,
+  :root:not(.hover-cold) .contrib-panel:hover,
+  :root:not(.hover-cold) .contrib-panel:focus-within {
+    color: var(--heading);
+    transform: translateX(2px);
+  }
+
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider::before,
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider::before,
+  :root:not(.hover-cold) .info-row:hover::before,
+  :root:not(.hover-cold) .info-row.is-focused::before,
+  :root:not(.hover-cold) .contrib-panel:hover::before,
+  :root:not(.hover-cold) .contrib-panel:focus-within::before {
+    opacity: 1;
+    transform: scaleX(1) rotate(var(--row-hover-tilt, -0.12deg));
+  }
+
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider::after,
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider::after,
+  :root:not(.hover-cold) .info-row:hover::after,
+  :root:not(.hover-cold) .info-row.is-focused::after {
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--heading) 20%, transparent),
+      var(--divider) 70%,
+      transparent
+    );
     opacity: 1;
   }
 
+  :root:not(.hover-cold) .entry-shell:hover :is(.row-subtitle, .row-date, .chevron),
+  :root:not(.hover-cold) .entry-shell:focus-within :is(.row-subtitle, .row-date, .chevron),
+  :root:not(.hover-cold) .info-row:hover :is(.info-date, small),
+  :root:not(.hover-cold) .info-row.is-focused :is(.info-date, small) {
+    color: color-mix(in srgb, var(--heading) 68%, var(--secondary));
+  }
+
   :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
-    )
-    .entry-divider::after,
+    .entry-shell:hover
+    .row-date:has(.chevron),
   :root:not(.hover-cold)
-    .page-content:has(
-      :is(.entry-shell, .contrib-panel, .info-row):hover,
-      .info-rows.is-row-focused
-    )
-    .info-row::after {
-    opacity: 0.3;
+    .entry-shell:focus-within
+    .row-date:has(.chevron) {
+    transform: translateX(3px);
+  }
+
+  :root:not(.hover-cold) .entry-shell:hover .chevron,
+  :root:not(.hover-cold) .entry-shell:focus-within .chevron {
+    transform: translateX(2px);
   }
 
   :root:not(.hover-cold) .entry-shell.has-stack:hover .image-stack-card {
@@ -1555,6 +1755,27 @@ button {
     opacity: 0;
     transform: translate3d(var(--click-drift, 0px), -26px, 0)
       rotate(var(--click-tilt, 0deg)) scale(1.02);
+  }
+}
+
+@keyframes signature-bubble-float {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translate3d(0, 7px, 0) rotate(calc(var(--bubble-tilt, 0deg) - 3deg))
+      scale(0.82);
+  }
+  15%,
+  72% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) rotate(var(--bubble-tilt, 0deg)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translate3d(var(--bubble-drift, 0), calc(var(--bubble-lift, 24px) * -1), 0)
+      rotate(calc(var(--bubble-tilt, 0deg) + 4deg)) scale(0.94);
   }
 }
 
