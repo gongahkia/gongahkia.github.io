@@ -1555,8 +1555,8 @@ button {
     opacity: 0.3;
   }
 
-  :root:not(.hover-cold) .entry-shell:hover .entry-divider,
-  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider,
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider:not(.more-row),
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider:not(.more-row),
   :root:not(.hover-cold) .info-row:hover,
   :root:not(.hover-cold) .info-row.is-focused,
   :root:not(.hover-cold) .contrib-panel:hover,
@@ -1565,8 +1565,8 @@ button {
     transform: translateX(2px);
   }
 
-  :root:not(.hover-cold) .entry-shell:hover .entry-divider::before,
-  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider::before,
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider:not(.more-row)::before,
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider:not(.more-row)::before,
   :root:not(.hover-cold) .info-row:hover::before,
   :root:not(.hover-cold) .info-row.is-focused::before,
   :root:not(.hover-cold) .contrib-panel:hover::before,
@@ -1575,8 +1575,8 @@ button {
     transform: scaleX(1) rotate(var(--row-hover-tilt, -0.12deg));
   }
 
-  :root:not(.hover-cold) .entry-shell:hover .entry-divider::after,
-  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider::after,
+  :root:not(.hover-cold) .entry-shell:hover .entry-divider:not(.more-row)::after,
+  :root:not(.hover-cold) .entry-shell:focus-within .entry-divider:not(.more-row)::after,
   :root:not(.hover-cold) .info-row:hover::after,
   :root:not(.hover-cold) .info-row.is-focused::after {
     background: linear-gradient(
@@ -1588,8 +1588,14 @@ button {
     opacity: 1;
   }
 
-  :root:not(.hover-cold) .entry-shell:hover :is(.row-subtitle, .row-date, .chevron),
-  :root:not(.hover-cold) .entry-shell:focus-within :is(.row-subtitle, .row-date, .chevron),
+  :root:not(.hover-cold)
+    .entry-shell:hover
+    .entry-divider:not(.more-row)
+    :is(.row-subtitle, .row-date, .chevron),
+  :root:not(.hover-cold)
+    .entry-shell:focus-within
+    .entry-divider:not(.more-row)
+    :is(.row-subtitle, .row-date, .chevron),
   :root:not(.hover-cold) .info-row:hover :is(.info-date, small),
   :root:not(.hover-cold) .info-row.is-focused :is(.info-date, small) {
     color: color-mix(in srgb, var(--heading) 68%, var(--secondary));
