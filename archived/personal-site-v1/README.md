@@ -36,12 +36,6 @@ personal-site
 └── tsconfig.json
 ```
 
-## screenshots
-
-![](screenshot/1.png)
-![](screenshot/2.png)
-![](screenshot/3.png)
-
 ## implementation log
 
 * [x] Handle movement of page to page, better signpost which page I'm currently on once clicked.

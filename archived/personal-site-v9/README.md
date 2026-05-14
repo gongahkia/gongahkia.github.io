@@ -13,10 +13,3 @@
 ### resources
 
 * visual reference from [dinama.dev's personal site](https://dinama.dev/)
-
-### screenshots
-
-![](screenshot/1.png)
-![](screenshot/2.png)
-![](screenshot/3.png)
-![](screenshot/4.png)

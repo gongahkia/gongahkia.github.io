@@ -14,10 +14,3 @@
 ### resources
 
 * visual reference from [Adam Alston](https://www.adamalston.com/)
-
-### screenshots
-
-![](screenshot/1.png)
-![](screenshot/2.png)
-![](screenshot/3.png)
-![](screenshot/4.png)

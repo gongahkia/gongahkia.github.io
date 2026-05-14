@@ -14,13 +14,6 @@
 
 * visual reference from [Library of Babel](https://libraryofbabel.info/)
 
-### screenshots
-
-![](screenshot/1.png)
-![](screenshot/2.png)
-![](screenshot/3.png)
-![](screenshot/4.png)
-
 ### usage
 
 ```console

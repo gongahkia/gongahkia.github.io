@@ -15,10 +15,3 @@
 
 * visual reference from [Hajime Hoshi](https://hajimehoshi.com/)
 * icons are from [simpleicons](https://simpleicons.org/?q=smile)
-
-### screenshots
-
-![](screenshot/1.png)
-![](screenshot/2.png)
-![](screenshot/3.png)
-![](screenshot/4.png)

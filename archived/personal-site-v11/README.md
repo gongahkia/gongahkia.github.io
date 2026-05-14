@@ -1,7 +1,6 @@
-# portfolio site version 10
+# portfolio site version 11
 
-* tui interface
-* requires text-based input from user
+* probably my most polished one to date
 
 ### technologies
 
