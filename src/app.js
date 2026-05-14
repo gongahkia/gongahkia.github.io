@@ -36,7 +36,7 @@ const clickSounds = [
   "tnk",
 ];
 
-const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", "ok", "i'll wait", "no hurry", "just lmk when you're here"];
+const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", "ok", "i'll wait", "no hurry", "just lmk when you're here", ":("];
 const signatureBubbleInitialDelay = [1000, 2500];
 const signatureBubbleInterval = [2600, 4200];
 const signatureBubbleLifetime = 2600;
@@ -808,7 +808,7 @@ function spawnSignatureBubble(layer) {
 }
 
 function scheduleSignatureBubble(menu, layer, signal) {
-  if (state.signatureBubbleSpawnCount >= 7) {
+  if (state.signatureBubbleSpawnCount >= signatureBubbleMessages.length) {
     clearSignatureAffordance({ done: true, removeBubbles: false });
     return;
   }
