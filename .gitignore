@@ -10,3 +10,5 @@ public/resume/
 .DS_Store
 *.log
 .playwright-cli/
+
+.obsidian
