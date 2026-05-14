@@ -36,7 +36,7 @@ const clickSounds = [
   "tnk",
 ];
 
-const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", ":("];
+const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", "ok", "i'll wait", ":("];
 const signatureBubbleInitialDelay = [1000, 2500];
 const signatureBubbleInterval = [2600, 4200];
 const signatureBubbleLifetime = 2600;
