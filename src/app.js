@@ -766,6 +766,16 @@ function isSignatureActive(menu) {
   return menu.matches(":hover") || menu.contains(document.activeElement);
 }
 
+function isSignatureExpanded(menu) {
+  if (isSignatureActive(menu)) return true;
+
+  const reveal = menu.querySelector(".signature-reveal");
+  if (!reveal) return false;
+
+  const style = getComputedStyle(reveal);
+  return style.visibility !== "hidden" && Number.parseFloat(style.opacity) > 0.2 && reveal.offsetHeight > 0;
+}
+
 function isElementInViewport(element) {
   const rect = element.getBoundingClientRect();
   return (
@@ -835,12 +845,12 @@ function signatureBubblePlacement(message, atOngEnd) {
 
   const left =
     message === "hi there"
-      ? [76, 82]
+      ? [19, 25]
       : message === "finally"
-        ? [80, 86]
+        ? [20, 26]
         : message === "phew"
-          ? [84, 90]
-          : [90, 96];
+          ? [26, 32]
+          : [34, 40];
 
   return {
     left,
@@ -953,7 +963,10 @@ function bindSignatureHoverGreeting(route) {
   const { signal } = controller;
   state.signatureHoverGreetingController = controller;
 
-  const stopSequence = () => clearSignatureHoverGreeting();
+  let sequenceStarted = false;
+  const stopSequence = () => {
+    if (!sequenceStarted) clearSignatureHoverGreeting();
+  };
   const beginSequence = () => {
     cancelSignatureIntroShake();
     if (
@@ -964,12 +977,13 @@ function bindSignatureHoverGreeting(route) {
       return;
     }
 
+    sequenceStarted = true;
     state.signatureHoverGreetingDone = true;
     spawnSignatureBubble(layer, randomItem(signatureHoverReactionMessages), { placement: "ong-end" });
 
     state.signatureHoverGreetingTimer = window.setTimeout(() => {
       state.signatureHoverGreetingTimer = null;
-      if (signal.aborted || !isSignatureActive(menu) || !isSignatureAffordanceVisible(menu, layer)) {
+      if (signal.aborted || !isSignatureExpanded(menu) || !isSignatureAffordanceVisible(menu, layer)) {
         clearSignatureHoverGreeting();
         return;
       }
