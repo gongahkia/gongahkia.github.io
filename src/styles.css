@@ -274,6 +274,12 @@ button {
   height: 40px;
 }
 
+.signature-gabriel--intro-shake {
+  animation: signature-intro-shake 0.78s cubic-bezier(0.34, 1.4, 0.64, 1)
+    var(--signature-shake-delay, 2.5s) both;
+  transform-origin: 52% 58%;
+}
+
 .signature-ong-frame {
   position: absolute;
   z-index: 1;
@@ -350,6 +356,10 @@ button {
   will-change: transform, opacity, filter;
 }
 
+.signature-bubble--ong-end {
+  transform-origin: 50% calc(100% + 8px);
+}
+
 .signature-bubble::after {
   content: "";
   position: absolute;
@@ -362,6 +372,10 @@ button {
   border-bottom-right-radius: 10px;
   background: color-mix(in srgb, var(--pill-bg) 90%, var(--surface) 10%);
   transform: skewX(-18deg) rotate(var(--bubble-tail-tilt, 0deg));
+}
+
+.signature-bubble--ong-end::after {
+  left: calc(50% - 6px);
 }
 
 .signature-menu:has(:is(.signature-trigger, .signature-reveal, .signature-hover-zone):hover)
@@ -1822,5 +1836,27 @@ button {
 @keyframes signature-fill {
   to {
     opacity: 1;
+  }
+}
+
+@keyframes signature-intro-shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  14% {
+    transform: translate3d(-1.5px, 0, 0) rotate(-1.4deg);
+  }
+  28% {
+    transform: translate3d(1.8px, 0, 0) rotate(1.3deg);
+  }
+  42% {
+    transform: translate3d(-1.2px, 0, 0) rotate(-0.9deg);
+  }
+  58% {
+    transform: translate3d(1px, 0, 0) rotate(0.7deg);
+  }
+  74% {
+    transform: translate3d(-0.6px, 0, 0) rotate(-0.35deg);
   }
 }

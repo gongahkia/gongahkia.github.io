@@ -37,9 +37,12 @@ const clickSounds = [
 ];
 
 const signatureBubbleMessages = ["hi", "click me", "i'm here", "um", "interact with me pls", "hellooo", "anyone there?", "ok", "i'll wait", "no hurry", "just lmk when you're here", ":("];
+const signatureHoverReactionMessages = ["finally", "phew", "oh"];
 const signatureBubbleInitialDelay = [1000, 2500];
 const signatureBubbleInterval = [2600, 4200];
 const signatureBubbleLifetime = 2600;
+const signatureHoverGreetingDelay = signatureBubbleLifetime + 180;
+const signatureIntroShakeDelay = [2500, 5000];
 
 const state = {
   site: null,
@@ -52,6 +55,10 @@ const state = {
   signatureBubbleStartTimer: null,
   signatureBubbleNextTimer: null,
   signatureBubbleSpawnCount: 0,
+  signatureIntroShakeDone: false,
+  signatureHoverGreetingDone: false,
+  signatureHoverGreetingController: null,
+  signatureHoverGreetingTimer: null,
   marqueeResizeTimer: null,
 };
 
@@ -235,10 +242,11 @@ function signatureWord(word, className = "signature") {
     </svg>`;
 }
 
-function signature() {
+function signature({ introShake = false, introShakeDelay = "2.5s" } = {}) {
+  const shakeStyle = introShake ? ` style="--signature-shake-delay:${introShakeDelay}"` : "";
   return `
     <span class="signature-wordmark" aria-hidden="true">
-      <span class="signature-gabriel">${signatureWord("Gabriel")}</span>
+      <span class="signature-gabriel ${introShake ? "signature-gabriel--intro-shake" : ""}"${shakeStyle}>${signatureWord("Gabriel")}</span>
       <span class="signature-ong-frame">${signatureWord("Ong", "signature signature-ong")}</span>
     </span>
     <span class="visually-hidden">Gabriel Ong</span>`;
@@ -343,6 +351,11 @@ async function loadDetail(item) {
 function renderHome() {
   const { home, collections, counts } = state.site;
   const signatureMeta = signatureMetaMarkup(home.profile);
+  const shouldShakeSignature = !state.signatureIntroShakeDone;
+  const signatureShakeDelay = shouldShakeSignature
+    ? `${Math.round(randomBetween(signatureIntroShakeDelay[0], signatureIntroShakeDelay[1]))}ms`
+    : "0ms";
+  state.signatureIntroShakeDone = true;
   const intro = `
     <div class="intro">
       <div class="stagger-in" style="--stagger:0">
@@ -350,7 +363,7 @@ function renderHome() {
           <div class="signature-menu">
             <h1 class="signature-title">
               <button class="signature-trigger" type="button" aria-label="Show contact links for Gabriel Ong">
-                ${signature()}
+                ${signature({ introShake: shouldShakeSignature, introShakeDelay: signatureShakeDelay })}
               </button>
             </h1>
             <span class="signature-hover-zone" aria-hidden="true"></span>
@@ -779,31 +792,81 @@ function clearSignatureAffordance({ done = false, removeBubbles = true } = {}) {
   state.signatureAffordanceController = null;
   if (removeBubbles) {
     root
-      .querySelectorAll(".signature-bubble")
+      .querySelectorAll(".signature-bubble:not(.signature-bubble--ong-end)")
       .forEach((bubble) => bubble.remove());
   }
 
   if (done) state.signatureAffordanceDone = true;
 }
 
+function cancelSignatureIntroShake() {
+  root.querySelectorAll(".signature-gabriel--intro-shake").forEach((signature) => {
+    signature.classList.remove("signature-gabriel--intro-shake");
+    signature.style.removeProperty("--signature-shake-delay");
+  });
+}
+
+function clearSignatureHoverGreeting({ done = false } = {}) {
+  window.clearTimeout(state.signatureHoverGreetingTimer);
+  state.signatureHoverGreetingTimer = null;
+  state.signatureHoverGreetingController?.abort();
+  state.signatureHoverGreetingController = null;
+  if (done) state.signatureHoverGreetingDone = true;
+}
+
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function spawnSignatureBubble(layer) {
+function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function signatureBubblePlacement(message, atOngEnd) {
+  if (!atOngEnd) {
+    return {
+      left: [-2, 12],
+      top: [2, 9],
+      drift: [-5, 6],
+      lift: [14, 22],
+      tilt: [-8, 7],
+    };
+  }
+
+  const left =
+    message === "hi there"
+      ? [76, 82]
+      : message === "finally"
+        ? [80, 86]
+        : message === "phew"
+          ? [84, 90]
+          : [90, 96];
+
+  return {
+    left,
+    top: [7, 12],
+    drift: [-2, 3],
+    lift: [12, 18],
+    tilt: [-4, 4],
+  };
+}
+
+function spawnSignatureBubble(layer, message = null, { placement = "idle" } = {}) {
+  const atOngEnd = placement === "ong-end";
+  const bubblePlacement = signatureBubblePlacement(message, atOngEnd);
   const bubble = document.createElement("span");
-  bubble.className = "signature-bubble";
-  bubble.style.setProperty("--bubble-left", `${randomBetween(-2, 12).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-top", `${randomBetween(2, 9).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-drift", `${randomBetween(-5, 6).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-lift", `${randomBetween(14, 22).toFixed(1)}px`);
-  bubble.style.setProperty("--bubble-tilt", `${randomBetween(-8, 7).toFixed(2)}deg`);
+  bubble.className = `signature-bubble${atOngEnd ? " signature-bubble--ong-end" : ""}`;
+  bubble.style.setProperty("--bubble-left", `${randomBetween(bubblePlacement.left[0], bubblePlacement.left[1]).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-top", `${randomBetween(bubblePlacement.top[0], bubblePlacement.top[1]).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-drift", `${randomBetween(bubblePlacement.drift[0], bubblePlacement.drift[1]).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-lift", `${randomBetween(bubblePlacement.lift[0], bubblePlacement.lift[1]).toFixed(1)}px`);
+  bubble.style.setProperty("--bubble-tilt", `${randomBetween(bubblePlacement.tilt[0], bubblePlacement.tilt[1]).toFixed(2)}deg`);
   bubble.style.setProperty("--bubble-tail-tilt", `${randomBetween(-12, 16).toFixed(2)}deg`);
   const index = state.signatureBubbleSpawnCount % signatureBubbleMessages.length;
-  bubble.textContent = signatureBubbleMessages[index];
+  bubble.textContent = message ?? signatureBubbleMessages[index];
 
   layer.append(bubble);
-  state.signatureBubbleSpawnCount += 1;
+  if (!message) state.signatureBubbleSpawnCount += 1;
   window.setTimeout(() => bubble.remove(), signatureBubbleLifetime);
 }
 
@@ -847,7 +910,10 @@ function bindSignatureAffordance(route) {
   const { signal } = controller;
   state.signatureAffordanceController = controller;
 
-  const finish = () => clearSignatureAffordance({ done: true });
+  const finish = () => {
+    cancelSignatureIntroShake();
+    clearSignatureAffordance({ done: true });
+  };
   const finishIfNotVisible = () => {
     if (!isNearPageTop() || !isSignatureAffordanceVisible(menu, layer)) finish();
   };
@@ -873,6 +939,52 @@ function bindSignatureAffordance(route) {
     spawnSignatureBubble(layer);
     scheduleSignatureBubble(menu, layer, signal);
   }, randomBetween(signatureBubbleInitialDelay[0], signatureBubbleInitialDelay[1]));
+}
+
+function bindSignatureHoverGreeting(route) {
+  clearSignatureHoverGreeting();
+  if (route.view !== "home" || state.signatureHoverGreetingDone) return;
+
+  const menu = root.querySelector(".signature-menu");
+  const layer = root.querySelector(".signature-bubbles");
+  if (!menu || !layer) return;
+
+  const controller = new AbortController();
+  const { signal } = controller;
+  state.signatureHoverGreetingController = controller;
+
+  const stopSequence = () => clearSignatureHoverGreeting();
+  const beginSequence = () => {
+    cancelSignatureIntroShake();
+    if (
+      signal.aborted ||
+      state.signatureHoverGreetingDone ||
+      !isSignatureAffordanceVisible(menu, layer)
+    ) {
+      return;
+    }
+
+    state.signatureHoverGreetingDone = true;
+    spawnSignatureBubble(layer, randomItem(signatureHoverReactionMessages), { placement: "ong-end" });
+
+    state.signatureHoverGreetingTimer = window.setTimeout(() => {
+      state.signatureHoverGreetingTimer = null;
+      if (signal.aborted || !isSignatureActive(menu) || !isSignatureAffordanceVisible(menu, layer)) {
+        clearSignatureHoverGreeting();
+        return;
+      }
+
+      spawnSignatureBubble(layer, "hi there", { placement: "ong-end" });
+      clearSignatureHoverGreeting();
+    }, signatureHoverGreetingDelay);
+  };
+
+  menu.addEventListener("pointerenter", beginSequence, { once: true, signal });
+  menu.addEventListener("pointerover", beginSequence, { once: true, signal });
+  menu.addEventListener("mouseover", beginSequence, { once: true, signal });
+  menu.addEventListener("focusin", beginSequence, { once: true, signal });
+  menu.addEventListener("click", beginSequence, { once: true, signal });
+  menu.addEventListener("pointerleave", stopSequence, { signal });
 }
 
 function clearInfoRowFocus(container = root) {
@@ -1133,6 +1245,7 @@ async function render(pathname = location.pathname, options = {}) {
     bindSignatureClock();
     if (!options.keepScroll) window.scrollTo({ top: 0, behavior: "instant" });
     bindSignatureAffordance(route);
+    bindSignatureHoverGreeting(route);
     const expandOptions = options.expandFromHome;
     if (expandOptions && route.view === "list" && expandOptions.collection === route.collection) {
       requestAnimationFrame(() => {
