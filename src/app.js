@@ -59,6 +59,8 @@ const state = {
   signatureHoverGreetingDone: false,
   signatureHoverGreetingController: null,
   signatureHoverGreetingTimer: null,
+  dynamicTocCleanup: null,
+  themeToggleLastSound: 0,
   marqueeResizeTimer: null,
 };
 
@@ -66,6 +68,8 @@ const contributionGridCache = new WeakMap();
 const marqueeScrollSpeed = 82;
 const marqueeTravelRatio = 0.72;
 const marqueeMinimumDuration = 1.35;
+let themeToggleAudioContext = null;
+let themeToggleAudioBuffer = null;
 
 const singaporeTimeFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Singapore",
@@ -252,6 +256,29 @@ function signature({ introShake = false, introShakeDelay = "2.5s" } = {}) {
     <span class="visually-hidden">Gabriel Ong</span>`;
 }
 
+function animatedThemeTogglerMarkup() {
+  return `
+    <button class="theme-toggle" data-theme-toggle type="button" aria-label="Toggle theme" aria-pressed="false">
+      <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <mask id="theme-toggle-mask">
+          <rect x="0" y="0" width="24" height="24" fill="white"></rect>
+          <circle class="theme-toggle-mask-cutout" cx="33" cy="0" r="9" fill="black"></circle>
+        </mask>
+        <circle class="theme-toggle-body" cx="12" cy="12" r="5" fill="currentColor" stroke="none" mask="url(#theme-toggle-mask)"></circle>
+        <g class="theme-toggle-rays">
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="5.64" y1="5.64" x2="4.22" y2="4.22"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          <line x1="5.64" y1="18.36" x2="4.22" y2="19.78"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        </g>
+      </svg>
+    </button>`;
+}
+
 function backButton(mode = "list") {
   return `
     <button class="back-button stagger-in" data-back data-mode="${mode}" aria-label="Go back" style="--stagger:0">
@@ -259,6 +286,34 @@ function backButton(mode = "list") {
         <path d="M11.25 4.5 6.75 9l4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>`;
+}
+
+function dynamicIslandTOCMarkup() {
+  return `
+    <div class="dynamic-toc-backdrop" data-toc-backdrop aria-hidden="true"></div>
+    <nav class="dynamic-toc" data-dynamic-toc aria-label="Table of contents" hidden>
+      <div class="dynamic-toc-island" data-toc-island>
+        <button class="dynamic-toc-closed" data-toc-open type="button" aria-expanded="false">
+          <span class="dynamic-toc-dot" aria-hidden="true"></span>
+          <span class="dynamic-toc-current" data-toc-current>Contents</span>
+          <svg class="dynamic-toc-progress" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="dynamic-toc-progress-track" cx="12" cy="12" r="10.75" fill="none" stroke-width="2.5"></circle>
+            <circle class="dynamic-toc-progress-value" data-toc-progress-circle cx="12" cy="12" r="10.75" fill="none" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" stroke-width="2.5"></circle>
+          </svg>
+        </button>
+        <div class="dynamic-toc-expanded" data-toc-expanded aria-hidden="true">
+          <div class="dynamic-toc-header">
+            <span>Table of contents</span>
+            <button class="dynamic-toc-close" data-toc-close type="button" aria-label="Close table of contents">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="dynamic-toc-scroll" data-toc-list></div>
+        </div>
+      </div>
+    </nav>`;
 }
 
 function layout(content, { list = false, routeFade = false, detail = false } = {}) {
@@ -330,6 +385,17 @@ function titleCase(value = "") {
     .join(" ");
 }
 
+function slugForHeading(value = "") {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function getCollectionItems(collection) {
   return state.site.collections[collection] ?? [];
 }
@@ -375,7 +441,10 @@ function renderHome() {
               </div>
             </div>
           </div>
-          <div class="updated">${escapeHtml(formatUpdatedLabel(home.updated))}</div>
+          <div class="updated" data-updated-theme tabindex="0">
+            <span>${escapeHtml(formatUpdatedLabel(home.updated))}</span>
+            ${animatedThemeTogglerMarkup()}
+          </div>
         </header>
       </div>
       <p class="intro-copy stagger-in" style="--stagger:1">${escapeHtml(home.profile.intro)}</p>
@@ -1206,7 +1275,191 @@ function renderDetail(detail) {
         </article>
       `,
       { routeFade: true, detail: true },
-    )}`;
+    )}
+    ${dynamicIslandTOCMarkup()}`;
+}
+
+function cleanupDynamicIslandTOC() {
+  state.dynamicTocCleanup?.();
+  state.dynamicTocCleanup = null;
+}
+
+function headingLevel(element) {
+  const depth = Number.parseInt(element.getAttribute("data-toc-depth") || "", 10);
+  if (Number.isFinite(depth)) return depth;
+  const tagLevel = element.tagName.match(/^H([1-6])$/i);
+  return tagLevel ? Number.parseInt(tagLevel[1], 10) : 2;
+}
+
+function collectTOCHeadings(selector) {
+  const seen = new Set();
+  const headings = [...document.querySelectorAll(selector)]
+    .filter((element) => !element.closest("[data-toc-ignore]"))
+    .map((element, index) => {
+      const text = (element.getAttribute("data-toc-title") || element.textContent || "Section").trim();
+      const baseId = element.id || slugForHeading(text) || `toc-heading-${index + 1}`;
+      let id = baseId;
+      let suffix = 2;
+
+      while (seen.has(id) || (document.getElementById(id) && document.getElementById(id) !== element)) {
+        id = `${baseId}-${suffix}`;
+        suffix += 1;
+      }
+
+      element.id = id;
+      seen.add(id);
+      return {
+        id,
+        text,
+        level: headingLevel(element),
+        element,
+      };
+    })
+    .filter((heading) => heading.text)
+    .sort((a, b) => (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+
+  return headings.filter((heading, index) => {
+    const previous = headings[index - 1];
+    return !previous || slugForHeading(previous.text) !== slugForHeading(heading.text);
+  });
+}
+
+function bindDynamicIslandTOC(route) {
+  cleanupDynamicIslandTOC();
+  if (route.view !== "detail") return;
+
+  const toc = root.querySelector("[data-dynamic-toc]");
+  const backdrop = root.querySelector("[data-toc-backdrop]");
+  const openButton = toc?.querySelector("[data-toc-open]");
+  const closeButton = toc?.querySelector("[data-toc-close]");
+  const expandedPanel = toc?.querySelector("[data-toc-expanded]");
+  const currentLabel = toc?.querySelector("[data-toc-current]");
+  const progressCircle = toc?.querySelector("[data-toc-progress-circle]");
+  const list = toc?.querySelector("[data-toc-list]");
+
+  if (!toc || !backdrop || !openButton || !closeButton || !expandedPanel || !currentLabel || !progressCircle || !list) return;
+
+  const selector = [
+    "article .detail-title",
+    "article .markdown-body h1",
+    "article .markdown-body h2",
+    "article .markdown-body h3",
+    "article .markdown-body h4",
+    "article [data-toc]",
+  ].join(", ");
+
+  let headings = [];
+  let activeId = null;
+  let isExpanded = false;
+  let scanTimer = 0;
+
+  const setExpanded = (expanded) => {
+    isExpanded = expanded;
+    toc.classList.toggle("is-expanded", isExpanded);
+    backdrop.classList.toggle("is-visible", isExpanded);
+    openButton.setAttribute("aria-expanded", String(isExpanded));
+    expandedPanel.setAttribute("aria-hidden", String(!isExpanded));
+  };
+
+  const renderItems = () => {
+    const minLevel = headings.length ? Math.min(...headings.map((heading) => heading.level)) : 1;
+    list.innerHTML = headings
+      .map((heading) => {
+        const indent = Math.max(0, heading.level - minLevel) * 14 + 12;
+        return `
+          <button class="dynamic-toc-item" data-toc-target="${escapeHtml(heading.id)}" style="--toc-indent:${indent}px" type="button">
+            <span>${escapeHtml(heading.text)}</span>
+            <i aria-hidden="true"></i>
+          </button>`;
+      })
+      .join("");
+  };
+
+  const updateActiveState = (nextActiveId) => {
+    if (activeId === nextActiveId) return;
+    activeId = nextActiveId;
+    const activeHeading = headings.find((heading) => heading.id === activeId);
+    currentLabel.textContent = activeHeading?.text || "Contents";
+    list.querySelectorAll("[data-toc-target]").forEach((button) => {
+      const isActive = button.getAttribute("data-toc-target") === activeId;
+      button.classList.toggle("is-active", isActive);
+      if (isActive) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+  };
+
+  const updateProgress = () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = total > 0 ? Math.min(100, Math.max(0, (window.scrollY / total) * 100)) : 0;
+    progressCircle.style.strokeDashoffset = String(100 - progress);
+  };
+
+  const handleScroll = () => {
+    let nextActiveId = headings[0]?.id ?? null;
+    for (const heading of headings) {
+      if (heading.element.getBoundingClientRect().top <= 120) nextActiveId = heading.id;
+      else break;
+    }
+    updateActiveState(nextActiveId);
+    updateProgress();
+  };
+
+  const scanHeadings = () => {
+    headings = collectTOCHeadings(selector);
+    if (!headings.length) return;
+    renderItems();
+    toc.hidden = false;
+    requestAnimationFrame(handleScroll);
+  };
+
+  const onOpenClick = () => {
+    if (!isExpanded) setExpanded(true);
+  };
+
+  const onCloseClick = (event) => {
+    event.stopPropagation();
+    setExpanded(false);
+  };
+
+  const onBackdropClick = () => setExpanded(false);
+
+  const onListClick = (event) => {
+    const button = event.target.closest("[data-toc-target]");
+    if (!button) return;
+    const heading = headings.find((item) => item.id === button.getAttribute("data-toc-target"));
+    if (!heading) return;
+
+    const yOffset = -80;
+    const y = heading.element.getBoundingClientRect().top + window.scrollY + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+    setExpanded(false);
+  };
+
+  const onKeyDown = (event) => {
+    if (event.key === "Escape") setExpanded(false);
+  };
+
+  openButton.addEventListener("click", onOpenClick);
+  closeButton.addEventListener("click", onCloseClick);
+  backdrop.addEventListener("click", onBackdropClick);
+  list.addEventListener("click", onListClick);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("resize", updateProgress, { passive: true });
+  document.addEventListener("keydown", onKeyDown);
+
+  scanTimer = window.setTimeout(scanHeadings, 100);
+
+  state.dynamicTocCleanup = () => {
+    window.clearTimeout(scanTimer);
+    openButton.removeEventListener("click", onOpenClick);
+    closeButton.removeEventListener("click", onCloseClick);
+    backdrop.removeEventListener("click", onBackdropClick);
+    list.removeEventListener("click", onListClick);
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", updateProgress);
+    document.removeEventListener("keydown", onKeyDown);
+    state.dynamicTocCleanup = null;
+  };
 }
 
 function renderNotFound() {
@@ -1226,6 +1479,7 @@ function renderNotFound() {
 
 async function render(pathname = location.pathname, options = {}) {
   const renderId = ++state.renderId;
+  cleanupDynamicIslandTOC();
   if (!state.site) {
     root.innerHTML = `<main class="page-shell" aria-busy="true"><div class="page-content"></div></main>`;
   }
@@ -1258,6 +1512,8 @@ async function render(pathname = location.pathname, options = {}) {
     queueMarqueeRefresh();
     bindSignatureClock();
     if (!options.keepScroll) window.scrollTo({ top: 0, behavior: "instant" });
+    syncThemeToggleState();
+    bindDynamicIslandTOC(route);
     bindSignatureAffordance(route);
     bindSignatureHoverGreeting(route);
     const expandOptions = options.expandFromHome;
@@ -1344,6 +1600,76 @@ function ensureMathJax() {
   document.head.appendChild(script);
 }
 
+function isDarkTheme() {
+  return document.documentElement.getAttribute("data-theme") === "dark";
+}
+
+function syncThemeToggleState() {
+  const dark = isDarkTheme();
+  document.documentElement.classList.toggle("dark", dark);
+  root.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(dark));
+  });
+}
+
+function themeToggleBuffer(audioContext) {
+  if (themeToggleAudioBuffer?.sampleRate === audioContext.sampleRate) return themeToggleAudioBuffer;
+
+  const rate = audioContext.sampleRate;
+  const length = Math.floor(rate * 0.006);
+  const buffer = audioContext.createBuffer(1, length, rate);
+  const channel = buffer.getChannelData(0);
+
+  for (let index = 0; index < length; index += 1) {
+    const progress = index / length;
+    const sine = Math.sin(2 * Math.PI * 3400 * progress);
+    const noise = Math.random() * 2 - 1;
+    channel[index] = (sine * 0.6 + noise * 0.4) * (1 - progress) ** 3;
+  }
+
+  themeToggleAudioBuffer = buffer;
+  return buffer;
+}
+
+function playThemeToggleSound() {
+  const now = performance.now();
+  if (now - state.themeToggleLastSound < 80) return;
+  state.themeToggleLastSound = now;
+
+  try {
+    const AudioConstructor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioConstructor) return;
+    themeToggleAudioContext = themeToggleAudioContext || new AudioConstructor();
+    if (themeToggleAudioContext.state === "suspended") themeToggleAudioContext.resume();
+
+    const source = themeToggleAudioContext.createBufferSource();
+    const gain = themeToggleAudioContext.createGain();
+    source.buffer = themeToggleBuffer(themeToggleAudioContext);
+    gain.gain.value = 0.08;
+    source.connect(gain);
+    gain.connect(themeToggleAudioContext.destination);
+    source.start();
+  } catch {
+    // Theme changes should never depend on audio support.
+  }
+}
+
+function toggleTheme() {
+  const nextTheme = isDarkTheme() ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", nextTheme);
+  document.documentElement.classList.toggle("dark", nextTheme === "dark");
+  localStorage.setItem("theme", nextTheme);
+  syncThemeToggleState();
+  playThemeToggleSound();
+}
+
+function closeUpdatedThemeControls() {
+  const updatedTheme = root.querySelector("[data-updated-theme].is-theme-open");
+  if (!updatedTheme) return;
+  updatedTheme.classList.remove("is-theme-open");
+  if (updatedTheme.contains(document.activeElement)) document.activeElement.blur();
+}
+
 function bindSignatureClock() {
   window.clearInterval(state.signatureClockTimer);
   state.signatureClockTimer = null;
@@ -1360,6 +1686,26 @@ function bindSignatureClock() {
 
 document.addEventListener("click", (event) => {
   spawnClickSound(event);
+
+  const themeToggle = event.target.closest("[data-theme-toggle]");
+  if (themeToggle) {
+    event.preventDefault();
+    themeToggle.closest("[data-updated-theme]")?.classList.add("is-theme-open");
+    toggleTheme();
+    return;
+  }
+
+  const updatedTheme = event.target.closest("[data-updated-theme]");
+  if (updatedTheme) {
+    event.preventDefault();
+    const shouldOpen = !updatedTheme.classList.contains("is-theme-open");
+    updatedTheme.classList.toggle("is-theme-open", shouldOpen);
+    if (shouldOpen) updatedTheme.focus({ preventScroll: true });
+    else if (updatedTheme.contains(document.activeElement)) document.activeElement.blur();
+    return;
+  }
+
+  closeUpdatedThemeControls();
 
   const back = event.target.closest("[data-back]");
   if (back) {
@@ -1404,6 +1750,19 @@ document.addEventListener("input", (event) => {
   if (!event.target.matches("[data-search]")) return;
   applyCollectionFilter(document);
   queueMarqueeRefresh();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeUpdatedThemeControls();
+    return;
+  }
+
+  if (!event.target.matches?.("[data-updated-theme]")) return;
+  if (event.key !== "Enter" && event.key !== " ") return;
+
+  event.preventDefault();
+  event.target.classList.toggle("is-theme-open");
 });
 
 window.addEventListener("resize", () => {
