@@ -459,7 +459,7 @@ button {
   position: relative;
   align-items: center;
   justify-self: end;
-  gap: 4px;
+  gap: 0;
   min-height: 32px;
   padding-top: 1px;
   color: var(--secondary);
@@ -468,6 +468,7 @@ button {
   white-space: nowrap;
   transition:
     color 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    gap 0.34s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.22s ease,
     opacity 0.22s ease;
 }
@@ -482,6 +483,7 @@ button {
 .updated:focus-within,
 .updated.is-theme-open {
   color: var(--heading);
+  gap: 4px;
 }
 
 .updated:hover > span,
@@ -492,10 +494,11 @@ button {
 
 .theme-toggle {
   display: inline-grid;
-  width: 30px;
+  width: 0;
+  min-width: 0;
   height: 30px;
   place-items: center;
-  margin-right: -8px;
+  margin-right: 0;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -503,6 +506,8 @@ button {
   cursor: pointer;
   opacity: 0;
   outline: none;
+  overflow: hidden;
+  padding: 0;
   pointer-events: none;
   transform: translateX(7px) scale(0.86);
   transform-origin: center;
@@ -517,6 +522,9 @@ button {
 .updated:hover .theme-toggle,
 .updated:focus-within .theme-toggle,
 .updated.is-theme-open .theme-toggle {
+  width: 30px;
+  margin-right: -8px;
+  overflow: visible;
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0) scale(1);
@@ -2024,7 +2032,18 @@ button {
   }
 
   .theme-toggle {
+    width: 0;
+    min-width: 0;
+    margin-right: 0;
+    overflow: hidden;
+  }
+
+  .updated:hover .theme-toggle,
+  .updated:focus-within .theme-toggle,
+  .updated.is-theme-open .theme-toggle {
+    width: 30px;
     margin-right: -7px;
+    overflow: visible;
   }
 
   .row-date {
