@@ -1670,6 +1670,15 @@ function closeUpdatedThemeControls() {
   if (updatedTheme.contains(document.activeElement)) document.activeElement.blur();
 }
 
+function didPointerLeaveRegion(event, region) {
+  const nextTarget = event.relatedTarget;
+  return !nextTarget || !(nextTarget instanceof Node) || !region.contains(nextTarget);
+}
+
+function blurFocusedRegion(region) {
+  if (region.contains(document.activeElement)) document.activeElement.blur();
+}
+
 function bindSignatureClock() {
   window.clearInterval(state.signatureClockTimer);
   state.signatureClockTimer = null;
@@ -1744,6 +1753,19 @@ document.addEventListener("click", (event) => {
   if (url.origin !== location.origin || !isAppPath(url.pathname)) return;
   event.preventDefault();
   navigate(url.pathname + url.search + url.hash);
+});
+
+document.addEventListener("pointerout", (event) => {
+  const updatedTheme = event.target.closest?.("[data-updated-theme]");
+  if (updatedTheme && didPointerLeaveRegion(event, updatedTheme)) {
+    closeUpdatedThemeControls();
+    return;
+  }
+
+  const signatureMenu = event.target.closest?.(".signature-menu");
+  if (signatureMenu && didPointerLeaveRegion(event, signatureMenu)) {
+    blurFocusedRegion(signatureMenu);
+  }
 });
 
 document.addEventListener("input", (event) => {
