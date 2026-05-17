@@ -1397,14 +1397,6 @@ button {
   scale: 0.96;
 }
 
-.dynamic-toc-dot {
-  width: 7px;
-  height: 7px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: currentColor;
-}
-
 .dynamic-toc-current {
   min-width: 0;
   flex: 1 1 auto;
@@ -1537,20 +1529,6 @@ button {
   transition: translate 0.26s ease;
 }
 
-.dynamic-toc-item i {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  margin-left: 10px;
-  border-radius: 999px;
-  background: var(--heading);
-  opacity: 0;
-  scale: 0;
-  transition:
-    opacity 0.24s ease,
-    scale 0.24s ease;
-}
-
 .dynamic-toc-item:hover,
 .dynamic-toc-item:focus-visible {
   background: color-mix(in srgb, var(--heading) 5%, transparent);
@@ -1567,11 +1545,6 @@ button {
   background: color-mix(in srgb, var(--heading) 9%, transparent);
   color: var(--heading);
   font-weight: 620;
-}
-
-.dynamic-toc-item.is-active i {
-  opacity: 1;
-  scale: 1;
 }
 
 .detail-content {

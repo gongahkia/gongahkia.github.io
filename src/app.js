@@ -294,7 +294,6 @@ function dynamicIslandTOCMarkup() {
     <nav class="dynamic-toc" data-dynamic-toc aria-label="Table of contents" hidden>
       <div class="dynamic-toc-island" data-toc-island>
         <button class="dynamic-toc-closed" data-toc-open type="button" aria-expanded="false">
-          <span class="dynamic-toc-dot" aria-hidden="true"></span>
           <span class="dynamic-toc-current" data-toc-current>Contents</span>
           <svg class="dynamic-toc-progress" viewBox="0 0 24 24" aria-hidden="true">
             <circle class="dynamic-toc-progress-track" cx="12" cy="12" r="10.75" fill="none" stroke-width="2.5"></circle>
@@ -1369,7 +1368,6 @@ function bindDynamicIslandTOC(route) {
         return `
           <button class="dynamic-toc-item" data-toc-target="${escapeHtml(heading.id)}" style="--toc-indent:${indent}px" type="button">
             <span>${escapeHtml(heading.text)}</span>
-            <i aria-hidden="true"></i>
           </button>`;
       })
       .join("");
