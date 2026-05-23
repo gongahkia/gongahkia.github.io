@@ -3,11 +3,22 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "headline": "{{ title }}",
-    "description": "{{ summary }}",
+    "@type": "SoftwareSourceCode",
+    "@id": {{ (canonical_url ~ "#software")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "name": {{ title|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ summary|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    {% if href %}"codeRepository": {{ href|tojson }},{% endif %}
     "author": {
       "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
       "name": "Gabriel Ong",
       "url": "https://gabrielongzm.com"
     }

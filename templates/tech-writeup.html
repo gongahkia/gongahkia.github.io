@@ -3,10 +3,21 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "{{ title }}",
+    "@type": "TechArticle",
+    "@id": {{ (canonical_url ~ "#article")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    "keywords": {{ tech_stack|tojson }},
     "author": {
       "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
       "name": "Gabriel Ong",
       "url": "https://gabrielongzm.com"
     }
