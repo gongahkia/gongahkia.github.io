@@ -50,10 +50,25 @@ font reference
 <body>
   <div id="click-container"></div>
 
-  <input type="button" id="dark-mode">
-  <label for="dark-mode" id="">
-    <img id="infinityButton" src="asset/roller.png" height="24" viewbox="0 -960 960 960" width="24"/>
-  </label>
+  <button type="button" id="theme-toggle" class="theme-toggle" data-asset-base="asset/" aria-label="Toggle theme" aria-pressed="false">
+    <svg class="theme-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+      <mask id="theme-toggle-mask">
+        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+        <circle class="theme-toggle-cutout" cx="33" cy="0" r="9" fill="black" />
+      </mask>
+      <circle class="theme-toggle-body" cx="12" cy="12" r="5" fill="currentColor" stroke="none" mask="url(#theme-toggle-mask)" />
+      <g class="theme-toggle-rays">
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="5.64" y1="5.64" x2="4.22" y2="4.22" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        <line x1="5.64" y1="18.36" x2="4.22" y2="19.78" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      </g>
+    </svg>
+  </button>
 
 <!-- start of actual website -->
 
@@ -458,7 +473,6 @@ font reference
 
 </body>
 </html>
-
 
 
 

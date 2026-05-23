@@ -2,10 +2,13 @@
 
 // --- actual running code ---
 
-const themeLabel = document.querySelector('label[for="dark-mode"]');
+const themeToggle = document.getElementById('theme-toggle');
 let isDarkMode = false;
+let themeAudioContext = null;
+let themeAudioBuffer = null;
+let lastThemeSound = 0;
 
-themeLabel?.addEventListener("click", pressTheButton);
+themeToggle?.addEventListener("click", pressTheButton);
 
 function parseStoredRgb(color) {
     const match = color?.match(/\d+/g);
@@ -24,6 +27,12 @@ function isDarkBackground(color) {
 function applyThemeState(nextMode, bgColor) {
     isDarkMode = nextMode;
     document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", isDarkMode);
+    document.documentElement.style.colorScheme = isDarkMode ? "dark" : "light";
+    themeToggle?.setAttribute("aria-pressed", String(isDarkMode));
+    if (themeToggle) {
+        themeToggle.title = isDarkMode ? "Switch to light theme" : "Switch to dark theme";
+    }
     if (bgColor) {
         document.body.style.backgroundColor = bgColor;
     } else {
@@ -33,11 +42,63 @@ function applyThemeState(nextMode, bgColor) {
 
 function pressTheButton(event) {
     event?.preventDefault();
+    playThemeToggleSound();
+    themeToggle?.classList.add("is-tapping");
+    window.setTimeout(() => themeToggle?.classList.remove("is-tapping"), 140);
     const nextMode = !isDarkMode;
     const newColor = nextMode ? generateDarkColor() : generateLightColor();
     applyThemeState(nextMode, newColor);
     localStorage.setItem('theme_isDarkMode', isDarkMode);
     localStorage.setItem('theme_bgColor', newColor);
+}
+
+function getThemeAudioContext() {
+    const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextConstructor) return null;
+    if (!themeAudioContext) {
+        themeAudioContext = new AudioContextConstructor();
+    }
+    if (themeAudioContext.state === "suspended") {
+        themeAudioContext.resume();
+    }
+    return themeAudioContext;
+}
+
+function ensureThemeAudioBuffer(audioContext) {
+    if (themeAudioBuffer && themeAudioBuffer.sampleRate === audioContext.sampleRate) {
+        return themeAudioBuffer;
+    }
+    const rate = audioContext.sampleRate;
+    const length = Math.floor(rate * 0.006);
+    const buffer = audioContext.createBuffer(1, length, rate);
+    const channel = buffer.getChannelData(0);
+    for (let i = 0; i < length; i += 1) {
+        const t = i / length;
+        const sine = Math.sin(2 * Math.PI * 3400 * t);
+        const noise = Math.random() * 2 - 1;
+        channel[i] = (sine * 0.6 + noise * 0.4) * (1 - t) ** 3;
+    }
+    themeAudioBuffer = buffer;
+    return buffer;
+}
+
+function playThemeToggleSound() {
+    const now = performance.now();
+    if (now - lastThemeSound < 80) return;
+    lastThemeSound = now;
+    try {
+        const audioContext = getThemeAudioContext();
+        if (!audioContext) return;
+        const source = audioContext.createBufferSource();
+        const gain = audioContext.createGain();
+        source.buffer = ensureThemeAudioBuffer(audioContext);
+        gain.gain.value = 0.08;
+        source.connect(gain);
+        gain.connect(audioContext.destination);
+        source.start();
+    } catch (_) {
+        // Theme audio is optional.
+    }
 }
 
 function generateDarkColor() {
@@ -81,7 +142,8 @@ assignLinkHighlightTilt();
 // ----- execution code for current time -----
 
 const currentYear = new Date().getFullYear();
-document.querySelector("#current-year").innerText = currentYear;
+const currentYearElement = document.querySelector("#current-year");
+if (currentYearElement) currentYearElement.innerText = currentYear;
 
 // ----- click animation -----
 
@@ -119,8 +181,7 @@ let currentFilter = 'none';
     const btn = document.createElement('button');
     btn.id = 'filter-toggle';
     btn.title = 'Visual filter: none';
-    const roller = document.getElementById('infinityButton');
-    const assetBase = roller ? roller.src.replace('roller.png', '') : 'asset/';
+    const assetBase = themeToggle?.dataset.assetBase || 'asset/';
     btn.innerHTML = '<img id="filterButton" src="' + assetBase + 'vhs.png" width="24" height="24"/>';
     btn.addEventListener('click', function() {
         const idx = FILTERS.indexOf(currentFilter);
@@ -128,9 +189,8 @@ let currentFilter = 'none';
         applyFilter(currentFilter);
         localStorage.setItem('filter_mode', currentFilter);
     });
-    const darkLabel = document.querySelector('label[for="dark-mode"]');
-    if (darkLabel && darkLabel.parentNode) {
-        darkLabel.after(btn);
+    if (themeToggle && themeToggle.parentNode) {
+        themeToggle.after(btn);
     }
     restoreFilter();
 })();
