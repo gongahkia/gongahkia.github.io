@@ -12,33 +12,33 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
-# AI scrapers - block
+# known AI and answer bots - allow
 User-agent: GPTBot
-Disallow: /
+Allow: /
 User-agent: ChatGPT-User
-Disallow: /
+Allow: /
 User-agent: CCBot
-Disallow: /
+Allow: /
 User-agent: Google-Extended
-Disallow: /
+Allow: /
 User-agent: Bytespider
-Disallow: /
+Allow: /
 User-agent: ClaudeBot
-Disallow: /
+Allow: /
 User-agent: Applebot-Extended
-Disallow: /
+Allow: /
 User-agent: anthropic-ai
-Disallow: /
+Allow: /
 User-agent: Cohere-ai
-Disallow: /
+Allow: /
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
 User-agent: FacebookBot
-Disallow: /
+Allow: /
 User-agent: Omgilibot
-Disallow: /
+Allow: /
 User-agent: Diffbot
-Disallow: /
+Allow: /
 
 # default - block unknown bots
 User-agent: *
