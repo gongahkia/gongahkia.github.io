@@ -1,4 +1,28 @@
 {% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": {{ (canonical_url ~ "#article")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
 {% block extra_scripts %}
   <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
