@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "hot-cross-buns",
+    "title": "hot cross buns",
+    "date": "May 2026",
+    "href": "https://github.com/gongahkia/hot-cross-buns",
+    "summary": "FOSS Google Calendar & Tasks Wrapper for MacOS",
+    "detail": [
+      "This was my first real user-facing project where I thoroughly iterated on both the systems (backend, fault tolerance, optimization) and product (UX, frontend, user journey).",
+      "My main takeaway from building it out was that the software creation really only took up about 35% of the initial effort, and validation + user feedback played a much bigger role in helping me understand how actual people were using Hot Cross Buns.",
+      "Check it out at https://gabrielongzm.com/hot-cross-buns/."
+    ]
+  },
+  {
+    "slug": "goodman",
+    "title": "goodman",
+    "date": "April 2026",
+    "href": "https://github.com/gongahkia/goodman",
+    "summary": "T&C Vetter Browser Extension",
+    "detail": [
+      "The idea for Goodman arose from my frustration at the number of websites that intentionally obscured their terms and conditions pages behind pre-selected checkboxes and nested subpages.",
+      "It's available for download at https://github.com/gongahkia/goodman."
+    ]
+  },
+  {
+    "slug": "sea-kayak",
+    "title": "sea kayak",
+    "date": "2025",
+    "href": "https://github.com/gongahkia/sea-kayak",
+    "summary": "Singapore's Daily Legal Updates Web App",
+    "detail": [
+      "Sea Kayak arose from a very real need of mine, where I'd started to wish for a quick and portable way to microdose bite-sized Singaporean legal updates on a daily basis.",
+      "Over the process of refining Sea Kayak, I realised I wasn't the only person who felt this way. Building for others also incentivised me to prettify Sea Kayak's frontend from its more utilitarian first-pass.",
+      "It's now gotten to a place that I'm happy and proud of. Find it at https://sea-kayak.vercel.app/ if it sounds like something you'd be keen to check out."
+    ]
+  },
+  {
+    "slug": "junas",
+    "title": "junas",
+    "date": "2025",
+    "href": "https://github.com/gongahkia/junas",
+    "summary": "Junior Associate Legal Agent",
+    "detail": [
+      "Building Junas forced me to hit the ground running with agent harnesses and guardrails, but more importantly taught me how to scope (and cut) product features based on real user impact and needs.",
+      "Implementing more features just because engineering is fun and the tech itself is cool can be tempting, but when that leads to building 'a solution looking for a problem', its likely you're building something noone would actually use.",
+      "Junas now lives at https://github.com/gongahkia/junas for those interested."
+    ]
+  },
+  {
+    "slug": "skill-hunter",
+    "title": "skill hunter",
+    "date": "2024",
+    "href": "https://github.com/gongahkia/skill-hunter",
+    "summary": "SSO Legislation Browser Extension",
+    "detail": [
+      "Skill Hunter was my first substantial project (built for people other than just myself) that also catapulted me into the wonderful world of browser extension scripting.",
+      "More significantly, building and deploying Skill Hunter showed me that more often than not, the products with the highest adoption metrics are just small tools that solve a specific problem well with minimal installation friction. Not every software problem has to be solved with a full-blown app.",
+      "If reading SSO Legislation sometimes feels overwhelming, consider checking out https://github.com/gongahkia/skill-hunter."
+    ]
+  },
+  {
+    "slug": "yuho",
+    "title": "yuho",
+    "date": "2024",
+    "href": "https://github.com/gongahkia/yuho",
+    "summary": "Domain-specific language for Singapore Criminal Law",
+    "detail": [
+      "I've always been interested in the thinking behind rules-as-code in applied systems, and this idea of creating a DSL that could encode Singapore statutes just so happened to come at a time when I was also actively learning about handwriting interpreters (and to a lesser extent, esolangs).",
+      "Yuho was the convergence of all these factors intersecting at the perfect time.",
+      "It's not much of a product in the traditional sense (if anything its closer to a proof-of-concept), but it's one of my proudest and most thoroughly-researched pet projects by far. You can find it here at https://github.com/gongahkia/yuho.",
+      "(Edit on 1 May 2026: I have since written and published a paper about Yuho on Zenodo hre https://zenodo.org/records/19935537. Take a look if you like reading about language frameworks!)"
+    ]
+  }
+]

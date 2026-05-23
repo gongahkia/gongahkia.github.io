@@ -94,11 +94,13 @@ const currentYear = new Date().getFullYear();
 
 setInterval(
     () => {
-        document.querySelector("#time").innerText = formatter.format(new Date());
+        const timeElement = document.querySelector("#time");
+        if (timeElement) timeElement.innerText = formatter.format(new Date());
     }
 , 1000)
 
-document.querySelector("#current-year").innerText = currentYear;
+const currentYearElement = document.querySelector("#current-year");
+if (currentYearElement) currentYearElement.innerText = currentYear;
 
 // ----- click animation -----
 
@@ -127,7 +129,7 @@ document.addEventListener('click', function(event) {
 
 async function loadContributions() {
     try {
-        const resp = await fetch('asset/contributions.json', { cache: 'no-store' });
+        const resp = await fetch('/asset/contributions.json', { cache: 'no-store' });
         if (!resp.ok) return;
         const data = await resp.json();
         renderContribCalendar(data);

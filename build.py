@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -23,6 +24,7 @@ except ImportError:
 ROOT = Path(__file__).parent.resolve()
 BASE_URL = "https://gabrielongzm.com"
 DEFAULT_OUTPUT_DIR = ROOT / "dist"
+WORK_SOURCE = ROOT / "content" / "work.json"
 
 ROOT_STATIC_FILES = [
     "index.html",
@@ -664,6 +666,64 @@ def generate_sitemap(urls: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def build_work(output_dir: Path) -> list[dict]:
+    """Build work detail pages from the v12 work writeups."""
+    output_pages_dir = output_dir / "work"
+    output_pages_dir.mkdir(parents=True, exist_ok=True)
+
+    if not WORK_SOURCE.exists():
+        print("warn: content/work.json not found, skipping work writeups")
+        return []
+
+    works = json.loads(WORK_SOURCE.read_text(encoding="utf-8"))
+    if not isinstance(works, list):
+        raise ValueError("content/work.json must contain a list of work entries")
+
+    detail_template = env.get_template("work-detail.html")
+    urls = []
+
+    for work in works:
+        slug = str(work.get("slug", "")).strip()
+        title = str(work.get("title", slug)).strip()
+        summary = str(work.get("summary", "")).strip()
+        date = str(work.get("date", "")).strip()
+        href = str(work.get("href", "")).strip()
+        detail = work.get("detail", [])
+        if not slug or not title:
+            raise ValueError("each work entry must include slug and title")
+        if not isinstance(detail, list):
+            raise ValueError(f"work entry {slug} detail must be a list")
+
+        content = md_to_html("\n\n".join(str(paragraph) for paragraph in detail))
+        output_filename = f"{slug}.html"
+        rendered = detail_template.render(
+            title=title,
+            summary=summary,
+            date=date,
+            href=href,
+            content=content,
+            meta_description=f"Work: {title} - {summary} - Gabriel Ong",
+            og_title=f"{title} | Gabriel Ong",
+            og_type="article",
+            page_title=f"{title} | Gabriel Ong",
+            base_path="..",
+            section_path="..",
+        )
+
+        (output_pages_dir / output_filename).write_text(rendered, encoding="utf-8")
+        print(f"  work: {slug} -> dist/work/{output_filename}")
+        urls.append(
+            {
+                "loc": f"{BASE_URL}/work/{output_filename}",
+                "priority": "0.7",
+                "changefreq": "monthly",
+                "source_path": WORK_SOURCE,
+            }
+        )
+
+    return urls
+
+
 def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
     """Build paper detail pages and index into the output directory."""
     sources_dir = ROOT / "papers" / "sources"
@@ -813,19 +873,22 @@ def build_site(output_dir: Path) -> list[str]:
         }
     ]
 
-    print("\n[1/4] building wiki...")
+    print("\n[1/5] building work writeups...")
+    all_urls.extend(build_work(output_dir))
+
+    print("\n[2/5] building wiki...")
     all_urls.extend(build_wiki(output_dir))
 
-    print("\n[2/4] building blog...")
+    print("\n[3/5] building blog...")
     blog_urls, errors = build_blog(output_dir)
     all_urls.extend(blog_urls)
 
-    print("\n[3/4] building papers...")
+    print("\n[4/5] building papers...")
     paper_urls, paper_errors = build_papers(output_dir)
     all_urls.extend(paper_urls)
     errors.extend(paper_errors)
 
-    print("\n[4/4] generating sitemap...")
+    print("\n[5/5] generating sitemap...")
     (output_dir / "sitemap.xml").write_text(generate_sitemap(all_urls), encoding="utf-8")
     print(f"  sitemap: {len(all_urls)} URLs")
 

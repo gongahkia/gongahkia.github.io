@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "headline": "{{ title }}",
+    "description": "{{ summary }}",
+    "author": {
+      "@type": "Person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+      <section class="writeup-details">
+        <h2>{{ title }}</h2>
+        <dl>
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
+          <dt>Summary</dt>
+          <dd>{{ summary }}</dd>
+          {% if href %}<dt>Repository</dt>
+          <dd><a href="{{ href }}">{{ href }}</a></dd>{% endif %}
+        </dl>
+      </section>
+      <section class="writeup-content">
+        {{ content }}
+      </section>
+{% endblock %}
