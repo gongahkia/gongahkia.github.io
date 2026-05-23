@@ -25,6 +25,8 @@ ROOT = Path(__file__).parent.resolve()
 BASE_URL = "https://gabrielongzm.com"
 DEFAULT_OUTPUT_DIR = ROOT / "dist"
 WORK_SOURCE = ROOT / "content" / "work.json"
+PERSON_ID = f"{BASE_URL}/#person"
+DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
 
 ROOT_STATIC_FILES = [
     "index.html",
