@@ -25,17 +25,18 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "22"
-          cache: npm
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
-        run: npm ci
+        run: python -m pip install -r requirements.txt
 
       - name: Build site artifact
-        run: npm run build
+        run: make build
 
       - name: Verify build output
         run: |
@@ -44,6 +45,9 @@ jobs:
           test -f dist/CNAME
           test -f dist/robots.txt
           test -f dist/sitemap.xml
+          test -f dist/blog/index.html
+          test -f dist/personal-wiki/index.html
+          test -f dist/papers/index.html
           grep -q '<urlset' dist/sitemap.xml
           ls -la dist | sed -n '1,40p'
 

@@ -1,11 +1,9 @@
-node_modules/
 dist/
 output/
-
-public/content/
-public/assets/
-public/asset/
-public/resume/
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
 
 .DS_Store
 *.log

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+output/
+
+public/content/
+public/assets/
+public/asset/
+public/resume/
+
+.DS_Store
+*.log
+.playwright-cli/
+
+.obsidian

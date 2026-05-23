@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ title }} by {{ author }}",
+    "author": {
+      "@type": "Person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+      <section class="book-details">
+        <h2>{{ title }}</h2>
+        <dl>
+          <dt>Author</dt>
+          <dd>{{ author }}</dd>
+          <dt>ISBN</dt>
+          <dd>{{ isbn }}</dd>
+          <dt>Category</dt>
+          <dd>{{ category }}</dd>
+          <dt>Rating</dt>
+          <dd>{{ rating }}/5</dd>
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
+        </dl>
+      </section>
+      <section class="review-content">
+        {{ content }}
+      </section>
+{% endblock %}

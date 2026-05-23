@@ -1,25 +1,15 @@
-![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/pages.yml/badge.svg)
-![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/fetch-contributions.yml/badge.svg)
-![](https://github.com/gongahkia/gongahkia.github.io/actions/workflows/wiki-release.yml/badge.svg)
+# portfolio site version 11
 
-# `Site, Notes, Blog`
+* probably my most polished one to date
 
-Monorepo for my personal [site](./), [blog](./blog/) and [wiki](./personal-wiki/).
+### technologies
 
-## Wiki Notes
-
-<a href="https://github.com/gongahkia/gongahkia.github.io/releases/tag/notes-2026-04-19"><b>Download</b></a> my notes as a ZIP file.   
-
-If you like them, consider [**sponsoring**](https://github.com/sponsors/gongahkia) this repository.  
-
-## Usage
-
-```console
-$ make help
-```
-
-## Github actions
-
-* [`fetch-contributions.yml`](./.github/workflows/fetch-contributions.yml): Update GitHub contributions calendar on personal site daily
-* [`wiki-release.yml`](./.github/workflows/wiki-release.yml): ZIPs all Markdown wiki notes on changes
-* [`pages.yml`](./.github/workflows/pages.yml): Builds `dist/` and deploys the site through GitHub Pages Actions
+![JavaScript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
+![HTML](https://img.shields.io/badge/-HTML-000?&logo=html5)
+![CSS](https://img.shields.io/badge/-CSS-000?&logo=css3)
+![Python](https://img.shields.io/badge/-Python-000?&logo=python)
+![Jinja](https://img.shields.io/badge/-Jinja-000?&logo=jinja)
+![Markdown](https://img.shields.io/badge/-Markdown-000?&logo=markdown)
+![YAML](https://img.shields.io/badge/-YAML-000?&logo=yaml)
+![MathJax](https://img.shields.io/badge/-MathJax-000?&logo=mathjax)
+![Make](https://img.shields.io/badge/-Make-000?&logo=gnu)

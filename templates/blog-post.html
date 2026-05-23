@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ title }}",
+    "author": {
+      "@type": "Person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+      <section class="blog-details">
+        <h2>{{ title }}</h2>
+        <dl>
+          <dt>Date</dt>
+          <dd>{{ date }}</dd>
+        </dl>
+      </section>
+      <section class="blog-content">
+        {{ content }}
+      </section>
+{% endblock %}

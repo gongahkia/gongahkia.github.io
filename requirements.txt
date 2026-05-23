@@ -1,0 +1,4 @@
+Jinja2>=3.1
+Markdown>=3.6
+PyYAML>=6.0
+pymdown-extensions>=10.0

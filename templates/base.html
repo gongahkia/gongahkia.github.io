@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="{{ meta_description }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Gabriel Ong">
+  <meta name="robots" content="index, follow">
+  {% block canonical %}{% endblock %}
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ meta_description }}">
+  <meta property="og:type" content="{{ og_type|default('article') }}">
+  {% block og_extras %}
+  <meta property="og:image" content="https://gabrielongzm.com/asset/portrait/gong-2.png">
+  {% endblock %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ meta_description }}">
+  {% block structured_data %}{% endblock %}
+  <link rel="stylesheet" href="{{ base_path }}/style.css">
+  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
+  {% block extra_preloads %}{% endblock %}
+  <style>.thin-space:after{content:"\2006"}</style>
+  {% block extra_styles %}{% endblock %}
+  <script src="{{ section_path }}/script.js" defer></script>
+  <title>GABRIEL ONG</title>
+  <link rel="shortcut icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
+</head>
+<body>
+  <div id="click-container"></div>
+  <input type="button" id="dark-mode">
+  <label for="dark-mode">
+    <img id="infinityButton" src="{{ section_path }}/asset/roller.png" height="24" width="24"/>
+  </label>
+  <main>
+    <article class="overallArticleTags">
+      {% block content %}{% endblock %}
+    </article>
+    <footer>
+      <p>&copy; 2023-<span id="current-year"></span> Gabriel Ong. All rights reserved.</p>
+    </footer>
+  </main>
+  <div class="wrapper"></div>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
