@@ -1,4 +1,4 @@
-.PHONY: blog book film project paper wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
+.PHONY: work blog book film project paper wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -12,6 +12,7 @@ endif
 help:
 	@echo "Available commands:"
 	@echo "  make build          - Build the full deployable site into dist/ (preserves Markdown sources)"
+	@echo "  make work           - Create a new work writeup in works/ (interactive)"
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make film           - Create a new film review (interactive)"
@@ -29,6 +30,53 @@ help:
 # Unified build: wiki + blog index + sitemap
 build:
 	@python3 build.py --output dist
+
+# Create a new work writeup (markdown with frontmatter)
+work:
+	@echo "Creating new work writeup..."
+	@mkdir -p works; \
+	current_date=$$(date +"%B %Y"); \
+	printf "Enter date (default: $$current_date): "; \
+	read date; \
+	date=$${date:-$$current_date}; \
+	printf "Enter work title (required): "; \
+	read title; \
+	while [ -z "$$title" ]; do \
+		echo "Work title is required."; \
+		printf "Enter work title (required): "; \
+		read title; \
+	done; \
+	slug=$$(echo "$$title" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$$//'); \
+	while [ -z "$$slug" ]; do \
+		echo "Work title must contain at least one letter or number."; \
+		printf "Enter work title (required): "; \
+		read title; \
+		slug=$$(echo "$$title" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$$//'); \
+	done; \
+	printf "Enter summary (required): "; \
+	read summary; \
+	while [ -z "$$summary" ]; do \
+		echo "Summary is required."; \
+		printf "Enter summary (required): "; \
+		read summary; \
+	done; \
+	printf "Enter repository or project URL (optional): "; \
+	read href; \
+	printf "Enter display order (optional): "; \
+	read order; \
+	filepath=works/"$$slug".md; \
+	if [ -e "$$filepath" ]; then \
+		echo "Refusing to overwrite existing $$filepath"; \
+		exit 1; \
+	fi; \
+	if [ -n "$$order" ]; then \
+		order_line="order: $$order\n"; \
+	else \
+		order_line=""; \
+	fi; \
+	printf -- "---\nslug: $$slug\ntitle: \"$$title\"\ndate: \"$$date\"\nsummary: \"$$summary\"\nhref: \"$$href\"\n$${order_line}---\n\nAdd work writeup content here.\n" > "$$filepath"; \
+	echo "Created $$filepath"; \
+	echo "Run 'make build' after editing to rebuild work pages"
 
 # Create a new blog post (markdown with frontmatter)
 blog:
