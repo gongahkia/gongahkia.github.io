@@ -131,38 +131,6 @@
     }
 }
 
-.name-mark {
-    position: relative;
-    display: inline-block;
-}
-
-.name-scribble {
-    position: absolute;
-    left: calc(var(--unit-size) / 5);
-    bottom: calc(var(--unit-size) / 10);
-    width: calc(5 * var(--unit-size));
-    height: calc(1.2 * var(--unit-size));
-    overflow: visible;
-    pointer-events: none;
-}
-
-.name-scribble path {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.25;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    opacity: 0.9;
-    vector-effect: non-scaling-stroke;
-    animation: nameScribbleDraw 1.55s cubic-bezier(0.43, 0.13, 0.23, 0.96) 0.3s forwards;
-}
-
-.name-scribble path + path {
-    animation-delay: 0.48s;
-}
-
 /* define anchor tag decoration */
 @layer text-decoration {
     a {
@@ -558,19 +526,8 @@ footer {
         transition: none;
     }
 
-    .name-scribble path {
-        animation: none;
-        stroke-dashoffset: 0;
-    }
-
     .click-animation {
         animation-duration: 0.85s;
-    }
-}
-
-@keyframes nameScribbleDraw {
-    to {
-        stroke-dashoffset: 0;
     }
 }
 
