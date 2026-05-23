@@ -30,6 +30,7 @@ ROOT_STATIC_FILES = [
     "index.html",
     "style.css",
     "script.js",
+    "toc.js",
     "robots.txt",
     "CNAME",
 ]
@@ -312,6 +313,7 @@ def render_wiki_note(template, title: str, content: str, output_path: Path) -> s
         page_title=f"{title} | Gabriel Ong Wiki",
         base_path="../..",
         section_path="..",
+        toc_enabled=True,
     )
     output_path.write_text(rendered, encoding="utf-8")
 
@@ -480,6 +482,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             content=md_to_html(content),
             base_path="../..",
             section_path="..",
+            toc_enabled=True,
             meta_description=meta_description,
             og_title=og_title,
             og_type="article",
@@ -708,6 +711,7 @@ def build_work(output_dir: Path) -> list[dict]:
             page_title=f"{title} | Gabriel Ong",
             base_path="..",
             section_path="..",
+            toc_enabled=True,
         )
 
         (output_pages_dir / output_filename).write_text(rendered, encoding="utf-8")
@@ -785,6 +789,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             page_title=f"{title} | Gabriel Ong",
             base_path="../..",
             section_path="..",
+            toc_enabled=True,
         )
 
         output_path = output_pages_dir / output_filename

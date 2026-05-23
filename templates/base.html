@@ -23,10 +23,13 @@
   <style>.thin-space:after{content:"\2006"}</style>
   {% block extra_styles %}{% endblock %}
   <script src="{{ section_path }}/script.js" defer></script>
+  {% if toc_enabled|default(false) %}
+  <script src="{{ base_path }}/toc.js" defer></script>
+  {% endif %}
   <title>GABRIEL ONG</title>
   <link rel="shortcut icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
 </head>
-<body>
+<body{% if toc_enabled|default(false) %} data-toc-enabled="true"{% endif %}>
   <div id="click-container"></div>
   <button type="button" id="theme-toggle" class="theme-toggle" data-asset-base="{{ section_path }}/asset/" aria-label="Toggle theme" aria-pressed="false">
     <svg class="theme-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
