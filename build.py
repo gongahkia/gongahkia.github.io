@@ -201,6 +201,33 @@ def validate_frontmatter(meta: dict, filepath: Path) -> list[str]:
     return errors
 
 
+def parse_date_to_iso(date_value: object) -> str:
+    """Normalize known content date formats to ISO-like strings for metadata."""
+    value = str(date_value or "").strip()
+    if not value:
+        return ""
+    if " to " in value:
+        value = value.split(" to ", 1)[0].strip()
+    if value.lower() == "present":
+        return ""
+
+    for fmt in ("%d %b %Y", "%d %B %Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(value, fmt).date().isoformat()
+        except ValueError:
+            pass
+
+    for fmt in ("%b %Y", "%B %Y"):
+        try:
+            return datetime.strptime(value, fmt).strftime("%Y-%m")
+        except ValueError:
+            pass
+
+    if re.fullmatch(r"\d{4}", value):
+        return value
+    return value
+
+
 class BlogPostParser(HTMLParser):
     """Parse existing HTML blog posts to extract metadata for indexing and migration."""
 
@@ -303,7 +330,14 @@ def parse_html_wiki_note(filepath: Path) -> dict:
     }
 
 
-def render_wiki_note(template, title: str, content: str, output_path: Path) -> str:
+def render_wiki_note(
+    template,
+    title: str,
+    content: str,
+    output_path: Path,
+    canonical_url: str,
+    source_path: Path,
+) -> str:
     rendered = template.render(
         title=title,
         content=content,
@@ -313,6 +347,12 @@ def render_wiki_note(template, title: str, content: str, output_path: Path) -> s
         og_title=f"{title} | Gabriel Ong Wiki",
         og_type="article",
         page_title=f"{title} | Gabriel Ong Wiki",
+        document_title="PERSONAL WIKI",
+        canonical_url=canonical_url,
+        date_published=parse_date_to_iso("2 Feb 2026"),
+        date_modified=git_lastmod(source_path),
+        person_id=PERSON_ID,
+        default_image_url=DEFAULT_IMAGE_URL,
         base_path="../..",
         section_path="..",
         toc_enabled=True,
@@ -354,7 +394,8 @@ def build_wiki(output_dir: Path) -> list[dict]:
         html_content = md_to_html(body)
         output_filename = md_file.stem.lower() + ".html"
         output_path = output_pages_dir / output_filename
-        rendered = render_wiki_note(template, title, html_content, output_path)
+        canonical_url = f"{BASE_URL}/personal-wiki/pages/{output_filename}"
+        rendered = render_wiki_note(template, title, html_content, output_path, canonical_url, md_file)
         category = str(meta.get("category", "General")).strip().lower() or "general"
         if category not in ("general", "tech"):
             category = "general"
@@ -404,6 +445,8 @@ def build_wiki(output_dir: Path) -> list[dict]:
         og_title="Personal Wiki | Gabriel Ong",
         og_type="website",
         page_title="Personal Wiki | Gabriel Ong",
+        document_title="PERSONAL WIKI",
+        canonical_url=f"{BASE_URL}/personal-wiki/",
         base_path="..",
         section_path=".",
     )
@@ -415,7 +458,7 @@ def build_wiki(output_dir: Path) -> list[dict]:
             "loc": f"{BASE_URL}/personal-wiki/",
             "priority": "0.8",
             "changefreq": "weekly",
-            "source_path": ROOT / "templates" / "wiki-index.html",
+            "source_path": [ROOT / "templates" / "wiki-index.html", *(note["source_path"] for note in notes_info)],
         }
     ]
     urls.extend(
@@ -480,6 +523,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
                 f"Film Review: {title} ({meta.get('year', '')}) dir. {meta.get('director', '')} - Gabriel Ong"
             )
 
+        canonical_url = f"{BASE_URL}/blog/posts/{output_filename}"
         rendered = template.render(
             content=md_to_html(content),
             base_path="../..",
@@ -489,6 +533,12 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             og_title=og_title,
             og_type="article",
             page_title=f"{title} | Gabriel Ong",
+            document_title="BLOG",
+            canonical_url=canonical_url,
+            date_published=parse_date_to_iso(date),
+            date_modified=git_lastmod(md_file),
+            person_id=PERSON_ID,
+            default_image_url=DEFAULT_IMAGE_URL,
             **meta,
         )
 
@@ -605,6 +655,8 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
         og_title="Gabriel's Blog",
         og_type="website",
         page_title="Blog | Gabriel Ong",
+        document_title="BLOG",
+        canonical_url=f"{BASE_URL}/blog/",
         base_path="..",
         section_path=".",
     )
@@ -621,7 +673,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             "loc": f"{BASE_URL}/blog/",
             "priority": "0.8",
             "changefreq": "weekly",
-            "source_path": ROOT / "templates" / "blog-index.html",
+            "source_path": [ROOT / "templates" / "blog-index.html", *(post["source_path"] for post in all_posts)],
         }
     ]
     urls.extend(
@@ -636,22 +688,44 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
     return urls, validation_errors
 
 
-def git_lastmod(source_path: Path | None) -> str:
-    """Get last modified date from git history for a source path."""
-    if source_path and source_path.exists():
+def git_lastmod(source_path: Path | list[Path] | tuple[Path, ...] | None) -> str:
+    """Get the latest meaningful modified date for one or more source paths."""
+    if source_path is None:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if isinstance(source_path, (list, tuple, set)):
+        source_paths = list(source_path)
+    else:
+        source_paths = [source_path]
+
+    latest: datetime | None = None
+    for path in source_paths:
+        if not path or not path.exists():
+            continue
+
+        path_latest = None
         try:
             result = subprocess.run(
-                ["git", "log", "-1", "--format=%aI", "--", str(source_path)],
+                ["git", "log", "-1", "--format=%aI", "--", str(path)],
                 capture_output=True,
                 text=True,
                 cwd=ROOT,
                 check=False,
             )
             if result.stdout.strip():
-                return result.stdout.strip()[:10]
+                path_latest = datetime.fromisoformat(result.stdout.strip().replace("Z", "+00:00"))
         except Exception:
-            pass
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            path_latest = None
+
+        if path_latest is None:
+            path_latest = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
+
+        if latest is None or path_latest > latest:
+            latest = path_latest
+
+    if latest is None:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return latest.date().isoformat()
 
 
 def generate_sitemap(urls: list[dict]) -> str:
@@ -701,6 +775,7 @@ def build_work(output_dir: Path) -> list[dict]:
 
         content = md_to_html("\n\n".join(str(paragraph) for paragraph in detail))
         output_filename = f"{slug}.html"
+        canonical_url = f"{BASE_URL}/work/{output_filename}"
         rendered = detail_template.render(
             title=title,
             summary=summary,
@@ -711,6 +786,12 @@ def build_work(output_dir: Path) -> list[dict]:
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
             page_title=f"{title} | Gabriel Ong",
+            document_title="GABRIEL ONG",
+            canonical_url=canonical_url,
+            date_published=parse_date_to_iso(date),
+            date_modified=git_lastmod(WORK_SOURCE),
+            person_id=PERSON_ID,
+            default_image_url=DEFAULT_IMAGE_URL,
             base_path="..",
             section_path="..",
             toc_enabled=True,
@@ -720,7 +801,7 @@ def build_work(output_dir: Path) -> list[dict]:
         print(f"  work: {slug} -> dist/work/{output_filename}")
         urls.append(
             {
-                "loc": f"{BASE_URL}/work/{output_filename}",
+                "loc": canonical_url,
                 "priority": "0.7",
                 "changefreq": "monthly",
                 "source_path": WORK_SOURCE,
@@ -769,6 +850,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
         license_ = str(meta.get("license", ""))
         github = str(meta.get("github", ""))
         output_filename = md_file.stem.lower() + ".html"
+        canonical_url = f"{BASE_URL}/papers/pages/{output_filename}"
 
         rendered = detail_template.render(
             title=title,
@@ -789,6 +871,12 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
             page_title=f"{title} | Gabriel Ong",
+            document_title="PAPERS",
+            canonical_url=canonical_url,
+            date_published=parse_date_to_iso(date),
+            date_modified=git_lastmod(md_file),
+            person_id=PERSON_ID,
+            default_image_url=DEFAULT_IMAGE_URL,
             base_path="../..",
             section_path="..",
             toc_enabled=True,
@@ -814,6 +902,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             "github": github,
             "filename": output_filename,
             "source_path": md_file,
+            "canonical_url": canonical_url,
         })
 
     def parse_date(date_value: str) -> datetime:
@@ -833,6 +922,8 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
         og_title="Papers | Gabriel Ong",
         og_type="website",
         page_title="Papers | Gabriel Ong",
+        document_title="PAPERS",
+        canonical_url=f"{BASE_URL}/papers/",
         base_path="..",
         section_path=".",
     )
@@ -849,12 +940,12 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             "loc": f"{BASE_URL}/papers/",
             "priority": "0.8",
             "changefreq": "weekly",
-            "source_path": ROOT / "templates" / "papers-index.html",
+            "source_path": [ROOT / "templates" / "papers-index.html", *(paper["source_path"] for paper in papers_info)],
         }
     ]
     urls.extend(
         {
-            "loc": f"{BASE_URL}/papers/pages/{paper['filename']}",
+            "loc": paper["canonical_url"],
             "priority": "0.7",
             "changefreq": "monthly",
             "source_path": paper["source_path"],
