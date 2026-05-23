@@ -34,8 +34,10 @@ function applyThemeState(nextMode, bgColor) {
         themeToggle.title = isDarkMode ? "Switch to light theme" : "Switch to dark theme";
     }
     if (bgColor) {
+        document.documentElement.style.setProperty("--active-background-color", bgColor);
         document.body.style.backgroundColor = bgColor;
     } else {
+        document.documentElement.style.removeProperty("--active-background-color");
         document.body.style.removeProperty("background-color");
     }
 }
