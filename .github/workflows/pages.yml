@@ -48,6 +48,7 @@ jobs:
           test -f dist/blog/index.html
           test -f dist/personal-wiki/index.html
           test -f dist/papers/index.html
+          test -f dist/work/hot-cross-buns.html
           grep -q '<urlset' dist/sitemap.xml
           ls -la dist | sed -n '1,40p'
 
