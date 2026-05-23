@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-import json
+import html
 import re
 import shutil
 import subprocess
@@ -24,7 +24,7 @@ except ImportError:
 ROOT = Path(__file__).parent.resolve()
 BASE_URL = "https://gabrielongzm.com"
 DEFAULT_OUTPUT_DIR = ROOT / "dist"
-WORK_SOURCE = ROOT / "content" / "work.json"
+WORKS_SOURCE_DIR = ROOT / "works"
 PERSON_ID = f"{BASE_URL}/#person"
 DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
 
@@ -745,35 +745,144 @@ def generate_sitemap(urls: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_work(output_dir: Path) -> list[dict]:
-    """Build work detail pages from the v12 work writeups."""
+WORK_SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def parse_work_markdown(md_file: Path) -> tuple[dict | None, list[str]]:
+    raw = md_file.read_text(encoding="utf-8")
+    meta, content = parse_frontmatter(raw)
+    errors = []
+
+    if "__yaml_error__" in meta:
+        return None, [f"{md_file}: invalid YAML in frontmatter: {meta['__yaml_error__']}"]
+    if "__fm_error__" in meta:
+        return None, [f"{md_file}: {meta['__fm_error__']}"]
+
+    slug = str(meta.get("slug") or md_file.stem).strip().lower()
+    if not WORK_SLUG_RE.fullmatch(slug):
+        errors.append(f"{md_file}: slug must use lowercase letters, numbers, and hyphens")
+
+    for field in ("title", "date", "summary"):
+        if not str(meta.get(field, "")).strip():
+            errors.append(f"{md_file}: missing required field '{field}'")
+
+    order_raw = meta.get("order", 9999)
+    try:
+        order = int(order_raw)
+    except (TypeError, ValueError):
+        errors.append(f"{md_file}: order must be an integer")
+        order = 9999
+
+    if errors:
+        return None, errors
+
+    return (
+        {
+            "slug": slug,
+            "title": str(meta["title"]).strip(),
+            "date": str(meta["date"]).strip(),
+            "summary": str(meta["summary"]).strip(),
+            "href": str(meta.get("href", "")).strip(),
+            "order": order,
+            "content": content.strip(),
+            "source_path": md_file,
+        },
+        [],
+    )
+
+
+def load_work_entries() -> tuple[list[dict], list[str]]:
+    if not WORKS_SOURCE_DIR.exists():
+        print("warn: works/ not found, skipping work writeups")
+        return [], []
+
+    md_files = [path for path in sorted(WORKS_SOURCE_DIR.glob("*.md")) if not path.name.startswith(".")]
+    print(f"work: found {len(md_files)} markdown writeups")
+
+    works = []
+    validation_errors = []
+    seen_slugs = set()
+
+    for md_file in md_files:
+        work, errors = parse_work_markdown(md_file)
+        validation_errors.extend(errors)
+        if errors or work is None:
+            continue
+
+        if work["slug"] in seen_slugs:
+            validation_errors.append(f"{md_file}: duplicate work slug '{work['slug']}'")
+            continue
+
+        seen_slugs.add(work["slug"])
+        works.append(work)
+
+    works.sort(key=lambda item: (item["order"], item["slug"]))
+    return works, validation_errors
+
+
+def render_home_works_section(works: list[dict]) -> str:
+    work_items = []
+    for work in works:
+        slug = html.escape(work["slug"], quote=True)
+        summary = html.escape(work["summary"], quote=True)
+        work_items.append(
+            f"""          <div class="grid-item-1">
+            <h3><a href="/work/{slug}.html">{slug}</a></h3>
+            <p>{summary}</p>
+          </div>"""
+        )
+
+    return f"""      <section class="works">
+        <h2>Works</h2>
+          <div class="grid-container">
+
+{chr(10).join(work_items)}
+
+        </div>
+        <div class="grid-item-3">
+          <h3><a href="https://github.com/gongahkia" id="contrib-title">GitHub contributions (past year)</a></h3>
+          <div id="github-contrib-calendar" class="contrib-wrapper" aria-label="GitHub contributions calendar" role="img"></div>
+          <div id="contrib-legend-container"></div>
+        </div>
+      </section>"""
+
+
+def inject_home_works(output_dir: Path, works: list[dict]) -> None:
+    if not works:
+        return
+
+    index_path = output_dir / "index.html"
+    source = index_path.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"(\s*<!-- works \(update as needed\) -->\n\n)(.*?)(\n\s*<!-- skills \(update as needed\) -->)",
+        re.DOTALL,
+    )
+    replacement = rf"\1{render_home_works_section(works)}\3"
+    updated, count = pattern.subn(replacement, source, count=1)
+    if count != 1:
+        raise ValueError("could not locate homepage works section for generated work grid")
+
+    index_path.write_text(updated, encoding="utf-8")
+
+
+def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
+    """Build work detail pages from works/*.md."""
     output_pages_dir = output_dir / "work"
     output_pages_dir.mkdir(parents=True, exist_ok=True)
 
-    if not WORK_SOURCE.exists():
-        print("warn: content/work.json not found, skipping work writeups")
-        return []
-
-    works = json.loads(WORK_SOURCE.read_text(encoding="utf-8"))
-    if not isinstance(works, list):
-        raise ValueError("content/work.json must contain a list of work entries")
+    works, validation_errors = load_work_entries()
 
     detail_template = env.get_template("work-detail.html")
     urls = []
 
     for work in works:
-        slug = str(work.get("slug", "")).strip()
-        title = str(work.get("title", slug)).strip()
-        summary = str(work.get("summary", "")).strip()
-        date = str(work.get("date", "")).strip()
-        href = str(work.get("href", "")).strip()
-        detail = work.get("detail", [])
-        if not slug or not title:
-            raise ValueError("each work entry must include slug and title")
-        if not isinstance(detail, list):
-            raise ValueError(f"work entry {slug} detail must be a list")
-
-        content = md_to_html("\n\n".join(str(paragraph) for paragraph in detail))
+        slug = work["slug"]
+        title = work["title"]
+        summary = work["summary"]
+        date = work["date"]
+        href = work["href"]
+        source_path = work["source_path"]
+        content = md_to_html(work["content"])
         output_filename = f"{slug}.html"
         canonical_url = f"{BASE_URL}/work/{output_filename}"
         rendered = detail_template.render(
@@ -789,7 +898,7 @@ def build_work(output_dir: Path) -> list[dict]:
             document_title="GABRIEL ONG",
             canonical_url=canonical_url,
             date_published=parse_date_to_iso(date),
-            date_modified=git_lastmod(WORK_SOURCE),
+            date_modified=git_lastmod(source_path),
             person_id=PERSON_ID,
             default_image_url=DEFAULT_IMAGE_URL,
             base_path="..",
@@ -804,11 +913,16 @@ def build_work(output_dir: Path) -> list[dict]:
                 "loc": canonical_url,
                 "priority": "0.7",
                 "changefreq": "monthly",
-                "source_path": WORK_SOURCE,
+                "source_path": source_path,
             }
         )
 
-    return urls
+    if validation_errors:
+        print("\nwork frontmatter validation errors:")
+        for error in validation_errors:
+            print(f"  {error}")
+
+    return urls, validation_errors, works
 
 
 def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
@@ -962,24 +1076,27 @@ def build_site(output_dir: Path) -> list[str]:
     ensure_clean_output_dir(output_dir)
     copy_static_site(output_dir)
 
+    print("\n[1/5] building work writeups...")
+    work_urls, errors, works = build_work(output_dir)
+    inject_home_works(output_dir, works)
+
     all_urls = [
         {
             "loc": BASE_URL + "/",
             "priority": "1.0",
             "changefreq": "weekly",
-            "source_path": ROOT / "index.html",
+            "source_path": [ROOT / "index.html", *(work["source_path"] for work in works)],
         }
     ]
-
-    print("\n[1/5] building work writeups...")
-    all_urls.extend(build_work(output_dir))
+    all_urls.extend(work_urls)
 
     print("\n[2/5] building wiki...")
     all_urls.extend(build_wiki(output_dir))
 
     print("\n[3/5] building blog...")
-    blog_urls, errors = build_blog(output_dir)
+    blog_urls, blog_errors = build_blog(output_dir)
     all_urls.extend(blog_urls)
+    errors.extend(blog_errors)
 
     print("\n[4/5] building papers...")
     paper_urls, paper_errors = build_papers(output_dir)
