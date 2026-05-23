@@ -709,3 +709,214 @@ html[data-filter="vhs"] #filter-overlay {
     html[data-filter="vhs"] #filter-overlay::before { animation: none; }
     html[data-filter="vhs"] #filter-overlay::after { animation: none; top: -100%; }
 }
+
+/* --- written-page dynamic island table of contents --- */
+
+.toc-island {
+    position: fixed;
+    right: 0;
+    bottom: var(--unit-size);
+    left: 0;
+    z-index: 9997;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.toc-island-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+    background: color-mix(in oklab, var(--background-color) 78%, transparent);
+    border: none;
+    backdrop-filter: blur(1px);
+    pointer-events: auto;
+}
+
+.toc-island-backdrop[hidden],
+.toc-island-menu[hidden] {
+    display: none;
+}
+
+.toc-island-pill,
+.toc-island-menu {
+    position: relative;
+    z-index: 1;
+    background: var(--background-color);
+    border: var(--thin-border-width) solid var(--foreground-color);
+    border-radius: calc(var(--unit-size) / 4);
+    color: var(--foreground-color);
+    pointer-events: auto;
+}
+
+.toc-island-pill {
+    display: flex;
+    align-items: center;
+    width: min(280px, calc(100vw - 2 * var(--unit-size)));
+    height: calc(var(--unit-size) * 2);
+    padding: 0 calc(var(--unit-size) * 2 / 3);
+    gap: calc(var(--unit-size) / 2);
+    cursor: pointer;
+    font: inherit;
+    transition: opacity 0.18s ease, transform 0.18s ease, background-color 0.1s ease, color 0.1s ease;
+}
+
+.toc-island-pill:hover {
+    transform: translateY(-2px);
+}
+
+.toc-island.is-expanded .toc-island-pill {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+    pointer-events: none;
+}
+
+.toc-island-marker {
+    width: calc(var(--unit-size) / 3);
+    height: calc(var(--unit-size) / 3);
+    flex: 0 0 auto;
+    background: var(--foreground-color);
+    border-radius: 1px;
+}
+
+.toc-island-active {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.toc-island-progress {
+    flex: 0 0 auto;
+    transform: rotate(-90deg);
+}
+
+.toc-island-progress-track {
+    stroke: color-mix(in oklab, var(--foreground-color) 20%, transparent);
+}
+
+.toc-island-progress-value {
+    stroke: var(--foreground-color);
+    transition: stroke-dashoffset 0.12s ease-out;
+}
+
+.toc-island-menu {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    display: flex;
+    width: min(360px, calc(100vw - 2 * var(--unit-size)));
+    max-height: min(420px, calc(100vh - 3 * var(--unit-size)));
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateX(-50%);
+}
+
+.toc-island-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: var(--thin-border-width) solid var(--thin-border-color);
+    padding: calc(var(--unit-size) / 2) calc(var(--unit-size) * 2 / 3);
+    font-weight: bold;
+}
+
+.toc-island-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--unit-size);
+    height: var(--unit-size);
+    padding: 0;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--foreground-color);
+}
+
+.toc-island-list {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: calc(var(--unit-size) / 4) 0;
+}
+
+.toc-island-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: calc(var(--unit-size) * 1.5);
+    padding: calc(var(--unit-size) / 4) calc(var(--unit-size) / 2) calc(var(--unit-size) / 4) calc(var(--unit-size) / 2 + var(--toc-indent, 0px));
+    gap: calc(var(--unit-size) / 2);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-bottom: var(--thin-border-width) solid color-mix(in oklab, var(--thin-border-color) 35%, transparent);
+    color: color-mix(in oklab, var(--foreground-color) 62%, transparent);
+    font: inherit;
+    text-align: left;
+    transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.toc-island-item:hover,
+.toc-island-item:focus-visible {
+    background: color-mix(in oklab, var(--foreground-color) 7%, transparent);
+    color: var(--foreground-color);
+    outline: none;
+}
+
+.toc-island-item.is-active {
+    background: color-mix(in oklab, var(--foreground-color) 11%, transparent);
+    color: var(--foreground-color);
+    font-weight: bold;
+}
+
+.toc-island-item span:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.toc-island-item-bullet {
+    width: calc(var(--unit-size) / 4);
+    height: calc(var(--unit-size) / 4);
+    flex: 0 0 auto;
+    border: var(--thin-border-width) solid var(--foreground-color);
+    opacity: 0;
+}
+
+.toc-island-item.is-active .toc-island-item-bullet {
+    background: var(--foreground-color);
+    opacity: 1;
+}
+
+@media only screen and (max-width: 600px) {
+    .toc-island {
+        bottom: calc(var(--unit-size) / 2);
+    }
+
+    .toc-island-pill,
+    .toc-island-menu {
+        width: calc(100vw - var(--unit-size));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toc-island-pill,
+    .toc-island-progress-value,
+    .toc-island-item {
+        transition: none;
+    }
+}
+
+@media print {
+    .toc-island {
+        display: none;
+    }
+}
