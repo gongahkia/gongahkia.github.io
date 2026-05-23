@@ -477,7 +477,7 @@
         display: inline-flex;
         justify-content: center;
         outline: none;
-        padding: 6px;
+        padding: 10px;
         position: absolute;
         top: calc((var(--unit-size) - var(--thick-border-width)) / 4 - var(--unit-size) / 2 + var(--unit-size) / 6); /* place icon above the article top border with symmetric spacing */
         right: max(calc((100vw - 4 * var(--column-size) - 3 * var(--unit-size) ) / 2), var(--unit-size));
