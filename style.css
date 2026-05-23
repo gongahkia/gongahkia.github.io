@@ -175,12 +175,14 @@
         --color-black: #101010;
         --background-color: color-mix(in oklab, var(--color-black) 0%, var(--color-white));
         --foreground-color: color-mix(in oklab, var(--color-black) 80%, var(--color-white));
+        --toc-surface-color: color-mix(in oklab, var(--active-background-color, var(--background-color)) 96%, var(--color-black));
         --thin-border-color: var(--foreground-color);
         --click-text-color: #363636;
     }
     :root[data-theme="dark"] {
         --background-color: color-mix(in oklab, var(--color-black) 100%, var(--color-white));
         --foreground-color: color-mix(in oklab, var(--color-black) 20%, var(--color-white));
+        --toc-surface-color: color-mix(in oklab, var(--active-background-color, var(--background-color)) 94%, var(--color-white));
         --thin-border-color: color-mix(in oklab, var(--foreground-color), transparent 50%);
         --click-text-color: #cccccc;
     }
@@ -521,7 +523,7 @@
     }
     :root[data-theme="dark"] .theme-toggle-icon,
     :root.dark .theme-toggle-icon {
-        transform: translateY(-3px) rotate(270deg);
+        transform: translateY(-6px) rotate(270deg);
     }
     :root[data-theme="dark"] .theme-toggle-body,
     :root.dark .theme-toggle-body {
@@ -745,7 +747,7 @@ html[data-filter="vhs"] #filter-overlay {
 .toc-island-menu {
     position: relative;
     z-index: 1;
-    background: var(--active-background-color, var(--background-color));
+    background: var(--toc-surface-color);
     border: var(--thin-border-width) solid var(--foreground-color);
     border-radius: calc(var(--unit-size) / 4);
     color: var(--foreground-color);
@@ -865,13 +867,13 @@ html[data-filter="vhs"] #filter-overlay {
 
 .toc-island-item:hover,
 .toc-island-item:focus-visible {
-    background: color-mix(in oklab, var(--foreground-color) 7%, var(--active-background-color, var(--background-color)));
+    background: color-mix(in oklab, var(--foreground-color) 7%, var(--toc-surface-color));
     color: var(--foreground-color);
     outline: none;
 }
 
 .toc-island-item.is-active {
-    background: color-mix(in oklab, var(--foreground-color) 11%, var(--active-background-color, var(--background-color)));
+    background: color-mix(in oklab, var(--foreground-color) 11%, var(--toc-surface-color));
     color: var(--foreground-color);
     font-weight: bold;
 }
