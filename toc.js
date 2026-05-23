@@ -30,7 +30,7 @@
     ].join(", ");
 
     const headings = collectHeadings(headingSelector);
-    if (headings.length < 2) return;
+    if (headings.length < 1) return;
 
     const island = buildIsland(headings);
     document.body.appendChild(island.root);
