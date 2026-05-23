@@ -853,15 +853,11 @@ def inject_home_works(output_dir: Path, works: list[dict]) -> None:
 
     index_path = output_dir / "index.html"
     source = index_path.read_text(encoding="utf-8")
-    pattern = re.compile(
-        r"(\s*<!-- works \(update as needed\) -->\n\n)(.*?)(\n\s*<!-- skills \(update as needed\) -->)",
-        re.DOTALL,
-    )
-    replacement = rf"\1{render_home_works_section(works)}\3"
-    updated, count = pattern.subn(replacement, source, count=1)
-    if count != 1:
-        raise ValueError("could not locate homepage works section for generated work grid")
+    marker = "    <!-- build:works -->"
+    if marker not in source:
+        raise ValueError("could not locate homepage works marker for generated work grid")
 
+    updated = source.replace(marker, render_home_works_section(works), 1)
     index_path.write_text(updated, encoding="utf-8")
 
 
