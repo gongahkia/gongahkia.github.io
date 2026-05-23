@@ -3,12 +3,34 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "{{ title }} by {{ author }}",
+    "@type": "Review",
+    "@id": {{ (canonical_url ~ "#review")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "headline": {{ (title ~ " by " ~ author)|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
     "author": {
       "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
       "name": "Gabriel Ong",
       "url": "https://gabrielongzm.com"
+    },
+    "itemReviewed": {
+      "@type": "Book",
+      "name": {{ title|tojson }},
+      "author": {{ author|tojson }},
+      "isbn": {{ isbn|tojson }}
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": {{ rating|tojson }},
+      "bestRating": "5",
+      "worstRating": "0"
     }
   }
   </script>

@@ -6,16 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Gabriel Ong">
   <meta name="robots" content="index, follow">
+  {% set resolved_url = canonical_url|default('') %}
+  {% if resolved_url %}
+  <link rel="canonical" href="{{ resolved_url }}">
+  {% endif %}
   {% block canonical %}{% endblock %}
   <meta property="og:title" content="{{ og_title }}">
   <meta property="og:description" content="{{ meta_description }}">
   <meta property="og:type" content="{{ og_type|default('article') }}">
+  <meta property="og:site_name" content="Gabriel Ong">
+  {% if resolved_url %}
+  <meta property="og:url" content="{{ resolved_url }}">
+  {% endif %}
   {% block og_extras %}
   <meta property="og:image" content="https://gabrielongzm.com/asset/portrait/gong-2.png">
   {% endblock %}
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ og_title }}">
   <meta name="twitter:description" content="{{ meta_description }}">
+  <meta name="twitter:image" content="https://gabrielongzm.com/asset/portrait/gong-2.png">
+  <meta name="twitter:creator" content="@gongahkia">
   {% block structured_data %}{% endblock %}
   <link rel="stylesheet" href="{{ base_path }}/style.css">
   <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
@@ -26,7 +36,7 @@
   {% if toc_enabled|default(false) %}
   <script src="{{ base_path }}/toc.js" defer></script>
   {% endif %}
-  <title>GABRIEL ONG</title>
+  <title>{{ document_title|default("GABRIEL ONG") }}</title>
   <link rel="shortcut icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
 </head>
 <body{% if toc_enabled|default(false) %} data-toc-enabled="true"{% endif %}>

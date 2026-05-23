@@ -1,6 +1,27 @@
 {% extends "base.html" %}
-{% block canonical %}
-  <link rel="canonical" href="https://gabrielongzm.com/blog/">
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": {{ (canonical_url ~ "#collection")|tojson }},
+    "url": {{ canonical_url|tojson }},
+    "name": "Gabriel's Blog",
+    "description": {{ meta_description|tojson }},
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": "https://gabrielongzm.com/#website",
+      "url": "https://gabrielongzm.com",
+      "name": "Gabriel Ong"
+    },
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
 {% endblock %}
 {% block content %}
       <section class="introductionPortion">

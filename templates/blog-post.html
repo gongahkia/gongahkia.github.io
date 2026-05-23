@@ -4,9 +4,20 @@
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "{{ title }}",
+    "@id": {{ (canonical_url ~ "#article")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    "image": "https://gabrielongzm.com/asset/portrait/gong-2.png",
     "author": {
       "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
       "name": "Gabriel Ong",
       "url": "https://gabrielongzm.com"
     }
