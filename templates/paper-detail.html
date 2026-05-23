@@ -11,10 +11,26 @@
   {
     "@context": "https://schema.org",
     "@type": "{{ ld_type }}",
-    "headline": "{{ title }}",
+    "@id": {{ (canonical_url ~ "#paper")|tojson }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url|tojson }}
+    },
+    "url": {{ canonical_url|tojson }},
+    "name": {{ title|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    {% if doi %}"identifier": {{ doi|tojson }},{% endif %}
+    {% if doi %}"sameAs": {{ ("https://doi.org/" ~ doi)|tojson }},{% elif arxiv %}"sameAs": {{ arxiv|tojson }},{% endif %}
+    {% if github %}"codeRepository": {{ github|tojson }},{% endif %}
+    {% if license %}"license": {{ license|tojson }},{% endif %}
+    {% if version %}"version": {{ version|tojson }},{% endif %}
     "author": {
       "@type": "Person",
-      "name": "Gabriel Ong",
+      "@id": "https://gabrielongzm.com/#person",
+      "name": {{ authors|tojson }},
       "url": "https://gabrielongzm.com"
     }
   }
