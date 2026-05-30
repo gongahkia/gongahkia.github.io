@@ -205,6 +205,30 @@
         background-color: var(--interactive-highlight-color);
         color: var(--foreground-color);
     }
+    html.selection-overlay-enabled ::selection {
+        background-color: transparent;
+    }
+    html.selection-overlay-enabled ::-moz-selection {
+        background-color: transparent;
+    }
+}
+
+/* custom text selection highlight */
+#selection-highlight-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9996;
+    pointer-events: none;
+    overflow: hidden;
+    contain: layout style paint;
+}
+
+.selection-highlight-piece {
+    position: absolute;
+    border-radius: 0.18em;
+    background: var(--interactive-highlight-color);
+    transform: translate(var(--selection-highlight-offset-x, 0), var(--selection-highlight-offset-y, 0)) rotate(var(--selection-highlight-tilt, 0deg));
+    transform-origin: center;
 }
 
 /* define layout with flexbox for dynamic sizing and alignment */
