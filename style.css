@@ -149,7 +149,7 @@
         top: -0.04em;
         bottom: -0.04em;
         border-radius: 0.18em;
-        background: color-mix(in oklab, var(--foreground-color) 18%, transparent);
+        background: var(--interactive-highlight-color);
         transform: rotate(var(--link-highlight-tilt, 0deg)) scaleX(0);
         transform-origin: right center;
         transition: transform 0.28s ease;
@@ -179,6 +179,7 @@
         --toc-surface-color: color-mix(in oklab, var(--active-background-color, var(--background-color)) 96%, var(--color-black));
         --thin-border-color: var(--foreground-color);
         --click-text-color: #363636;
+        --interactive-highlight-color: color-mix(in oklab, var(--foreground-color) 18%, transparent);
     }
     :root[data-theme="dark"] {
         --background-color: color-mix(in oklab, var(--color-black) 100%, var(--color-white));
@@ -195,6 +196,14 @@
     * {
         color: var(--foreground-color);
         transition: color 0.1s ease;
+    }
+    ::selection {
+        background-color: var(--interactive-highlight-color);
+        color: var(--foreground-color);
+    }
+    ::-moz-selection {
+        background-color: var(--interactive-highlight-color);
+        color: var(--foreground-color);
     }
 }
 
