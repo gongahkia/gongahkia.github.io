@@ -15,9 +15,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate contributions JSON
-        run: node .github/scripts/fetch-contributions.mjs
+        run: |
+          node -e "const https=require('https');
+          const query=JSON.stringify({query:'query { user(login: \"gongahkia\") { contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } } } } }'});
+          const req=https.request({hostname:'api.github.com',path:'/graphql',method:'POST',headers:{'User-Agent':'actions','Content-Type':'application/json','Authorization':'Bearer '+process.env.GITHUB_TOKEN}},res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{try{const js=JSON.parse(d); if(js.errors){console.error(js.errors); process.exit(1);} if(!js.data||!js.data.user){console.error('No user data found'); process.exit(1);} const weeks=js.data.user.contributionsCollection.contributionCalendar.weeks.map(w=>({days:w.contributionDays.map(cd=>({date:cd.date,count:cd.contributionCount}))})); const max=Math.max(0,...weeks.flatMap(w=>w.days.map(x=>x.count))); require('fs').mkdirSync('asset',{recursive:true}); require('fs').writeFileSync('asset/contributions.json', JSON.stringify({weeks,max}));}catch(e){console.error(e); console.error(d); process.exit(1);}});}); req.on('error',e=>{console.error(e); process.exit(1);}); req.write(query); req.end();"
         env:
-          GITHUB_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit changes
         run: |

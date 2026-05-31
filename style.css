@@ -308,16 +308,6 @@
         height: 12px;
         border: 1px solid var(--thin-border-color);
         background-color: color-mix(in oklab, var(--foreground-color) 10%, transparent);
-        cursor: default;
-    }
-    .contrib-grid.has-active .contrib-day {
-        filter: blur(0.7px);
-        opacity: 0.35;
-    }
-    .contrib-grid.has-active .contrib-day.is-active {
-        filter: none;
-        opacity: 1;
-        transform: scale(1.12);
     }
     .intensity-0 { background-color: transparent; }
     .intensity-1 { background-color: color-mix(in oklab, var(--foreground-color) 15%, transparent); }
@@ -327,28 +317,22 @@
     .contrib-legend {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
         gap: 6px;
         margin-top: calc(var(--unit-size) / 2);
         font-size: 14px;
-        line-height: 1.4;
     }
     .legend-swatch { width: 12px; height: 12px; border: 1px solid var(--thin-border-color); }
-    .contrib-hover-details {
-        flex: 1 1 18rem;
-        margin-left: auto;
-        min-height: 1.4em;
-        min-width: 0;
-        color: color-mix(in oklab, var(--foreground-color) 80%, transparent);
-        opacity: 0;
-        overflow: hidden;
-        text-align: right;
-        text-overflow: ellipsis;
-        transition: opacity 140ms ease;
+    .contrib-tooltip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--background-color);
+        color: var(--foreground-color);
+        border: 1px solid var(--thin-border-color);
+        padding: 4px 6px;
+        font-size: 14px;
         white-space: nowrap;
-    }
-    .contrib-hover-details.is-visible {
-        opacity: 1;
+        transform: translate(-50%, -120%);
+        z-index: 1000;
     }
     h2 {
         padding-left: calc((100% - 3 * var(--unit-size)) / 4 + var(--unit-size))
