@@ -149,11 +149,11 @@ function renderContribCalendar(data) {
 
     const weeks = data.weeks; // [{days:[{date,count}]}, ...]
     const max = data.max || 20;
-    const defaultMetricText = 'Hover a day for details';
     let metricOutput = null;
     const showMetric = day => {
         if (!metricOutput) return;
-        metricOutput.textContent = day ? formatContributionMetrics(day) : defaultMetricText;
+        metricOutput.textContent = day ? formatContributionMetrics(day) : '';
+        metricOutput.classList.toggle('is-visible', Boolean(day));
     };
 
     // Calculate total contributions
@@ -172,6 +172,22 @@ function renderContribCalendar(data) {
 
     const grid = document.createElement('div');
     grid.className = 'contrib-grid';
+    let activeCell = null;
+    const setActiveCell = (cell, day) => {
+        if (activeCell && activeCell !== cell) {
+            activeCell.classList.remove('is-active');
+        }
+        if (day) {
+            activeCell = cell;
+            cell.classList.add('is-active');
+            grid.classList.add('has-active');
+        } else {
+            cell.classList.remove('is-active');
+            if (activeCell === cell) activeCell = null;
+            if (!activeCell) grid.classList.remove('has-active');
+        }
+        showMetric(day);
+    };
 
     weeks.forEach(week => {
         const col = document.createElement('div');
@@ -186,13 +202,12 @@ function renderContribCalendar(data) {
                 const metricText = formatContributionMetrics(d);
                 cell.dataset.date = d.date;
                 cell.dataset.count = d.count;
-                cell.title = metricText;
                 cell.setAttribute('aria-label', metricText);
                 cell.tabIndex = 0;
-                cell.addEventListener('mouseenter', () => showMetric(d));
-                cell.addEventListener('focus', () => showMetric(d));
-                cell.addEventListener('mouseleave', () => showMetric(null));
-                cell.addEventListener('blur', () => showMetric(null));
+                cell.addEventListener('mouseenter', () => setActiveCell(cell, d));
+                cell.addEventListener('focus', () => setActiveCell(cell, d));
+                cell.addEventListener('mouseleave', () => setActiveCell(cell, null));
+                cell.addEventListener('blur', () => setActiveCell(cell, null));
             }
             col.appendChild(cell);
         }
@@ -211,7 +226,6 @@ function renderContribCalendar(data) {
         metricOutput = document.createElement('span');
         metricOutput.className = 'contrib-hover-details';
         metricOutput.setAttribute('aria-live', 'polite');
-        metricOutput.textContent = defaultMetricText;
         legend.appendChild(metricOutput);
         legendContainer.appendChild(legend);
     }

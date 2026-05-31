@@ -308,7 +308,17 @@
         height: 12px;
         border: 1px solid var(--thin-border-color);
         background-color: color-mix(in oklab, var(--foreground-color) 10%, transparent);
-        cursor: crosshair;
+        cursor: default;
+        transition: filter 140ms ease, opacity 140ms ease, transform 140ms ease;
+    }
+    .contrib-grid.has-active .contrib-day {
+        filter: blur(0.7px);
+        opacity: 0.35;
+    }
+    .contrib-grid.has-active .contrib-day.is-active {
+        filter: none;
+        opacity: 1;
+        transform: scale(1.12);
     }
     .contrib-day:hover,
     .contrib-day:focus-visible {
@@ -331,14 +341,20 @@
     }
     .legend-swatch { width: 12px; height: 12px; border: 1px solid var(--thin-border-color); }
     .contrib-hover-details {
-        border-left: 1px solid var(--thin-border-color);
         flex: 1 1 18rem;
-        margin-left: 8px;
+        margin-left: auto;
         min-height: 1.4em;
         min-width: 0;
-        padding-left: 12px;
         color: color-mix(in oklab, var(--foreground-color) 80%, transparent);
-        overflow-wrap: anywhere;
+        opacity: 0;
+        overflow: hidden;
+        text-align: right;
+        text-overflow: ellipsis;
+        transition: opacity 140ms ease;
+        white-space: nowrap;
+    }
+    .contrib-hover-details.is-visible {
+        opacity: 1;
     }
     h2 {
         padding-left: calc((100% - 3 * var(--unit-size)) / 4 + var(--unit-size))
