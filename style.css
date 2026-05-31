@@ -309,7 +309,6 @@
         border: 1px solid var(--thin-border-color);
         background-color: color-mix(in oklab, var(--foreground-color) 10%, transparent);
         cursor: default;
-        transition: filter 140ms ease, opacity 140ms ease, transform 140ms ease;
     }
     .contrib-grid.has-active .contrib-day {
         filter: blur(0.7px);
@@ -319,11 +318,6 @@
         filter: none;
         opacity: 1;
         transform: scale(1.12);
-    }
-    .contrib-day:hover,
-    .contrib-day:focus-visible {
-        outline: 1px solid var(--foreground-color);
-        outline-offset: 1px;
     }
     .intensity-0 { background-color: transparent; }
     .intensity-1 { background-color: color-mix(in oklab, var(--foreground-color) 15%, transparent); }
