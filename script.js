@@ -149,6 +149,12 @@ function renderContribCalendar(data) {
 
     const weeks = data.weeks; // [{days:[{date,count}]}, ...]
     const max = data.max || 20;
+    const defaultMetricText = 'Hover a day for details';
+    let metricOutput = null;
+    const showMetric = day => {
+        if (!metricOutput) return;
+        metricOutput.textContent = day ? formatContributionMetrics(day) : defaultMetricText;
+    };
 
     // Calculate total contributions
     let totalContributions = 0;
@@ -176,6 +182,18 @@ function renderContribCalendar(data) {
             cell.className = 'contrib-day';
             const intensity = d ? intensityLevel(d.count, max) : 0;
             cell.classList.add(`intensity-${intensity}`);
+            if (d) {
+                const metricText = formatContributionMetrics(d);
+                cell.dataset.date = d.date;
+                cell.dataset.count = d.count;
+                cell.title = metricText;
+                cell.setAttribute('aria-label', metricText);
+                cell.tabIndex = 0;
+                cell.addEventListener('mouseenter', () => showMetric(d));
+                cell.addEventListener('focus', () => showMetric(d));
+                cell.addEventListener('mouseleave', () => showMetric(null));
+                cell.addEventListener('blur', () => showMetric(null));
+            }
             col.appendChild(cell);
         }
         grid.appendChild(col);
@@ -186,11 +204,55 @@ function renderContribCalendar(data) {
     // Render legend in separate container
     const legendContainer = document.getElementById('contrib-legend-container');
     if (legendContainer) {
+        legendContainer.innerHTML = '';
         const legend = document.createElement('div');
         legend.className = 'contrib-legend';
         legend.innerHTML = 'Less ' + [0,1,2,3,4].map(i => `<span class="legend-swatch intensity-${i}"></span>`).join(' ') + ' More';
+        metricOutput = document.createElement('span');
+        metricOutput.className = 'contrib-hover-details';
+        metricOutput.setAttribute('aria-live', 'polite');
+        metricOutput.textContent = defaultMetricText;
+        legend.appendChild(metricOutput);
         legendContainer.appendChild(legend);
     }
+}
+
+function formatContributionMetrics(day) {
+    const count = Number(day?.count || 0);
+    const total = `${count.toLocaleString()} ${pluralize(count, 'contribution')}`;
+    const breakdown = [
+        metricPart(day, 'commits', 'commit'),
+        metricPart(day, 'pullRequests', 'PR'),
+        metricPart(day, 'issues', 'issue'),
+        metricPart(day, 'reviews', 'review')
+    ].filter(Boolean);
+
+    const detail = breakdown.length ? `: ${breakdown.join(', ')}` : '';
+    return `${total} on ${formatContributionDate(day?.date)}${detail}`;
+}
+
+function metricPart(day, key, label) {
+    if (!Object.prototype.hasOwnProperty.call(day || {}, key)) return '';
+    const value = Number(day[key] || 0);
+    if (value <= 0) return '';
+    return `${value.toLocaleString()} ${pluralize(value, label)}`;
+}
+
+function pluralize(count, label) {
+    if (label === 'PR') return count === 1 ? 'PR' : 'PRs';
+    return `${label}${count === 1 ? '' : 's'}`;
+}
+
+function formatContributionDate(dateText) {
+    if (!dateText) return 'unknown date';
+    const parts = dateText.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(Number.isNaN)) return dateText;
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return new Intl.DateTimeFormat('en', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    }).format(date);
 }
 
 function intensityLevel(count, max) {

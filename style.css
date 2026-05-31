@@ -308,6 +308,12 @@
         height: 12px;
         border: 1px solid var(--thin-border-color);
         background-color: color-mix(in oklab, var(--foreground-color) 10%, transparent);
+        cursor: crosshair;
+    }
+    .contrib-day:hover,
+    .contrib-day:focus-visible {
+        outline: 1px solid var(--foreground-color);
+        outline-offset: 1px;
     }
     .intensity-0 { background-color: transparent; }
     .intensity-1 { background-color: color-mix(in oklab, var(--foreground-color) 15%, transparent); }
@@ -317,22 +323,22 @@
     .contrib-legend {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 6px;
         margin-top: calc(var(--unit-size) / 2);
         font-size: 14px;
+        line-height: 1.4;
     }
     .legend-swatch { width: 12px; height: 12px; border: 1px solid var(--thin-border-color); }
-    .contrib-tooltip {
-        position: absolute;
-        pointer-events: none;
-        background: var(--background-color);
-        color: var(--foreground-color);
-        border: 1px solid var(--thin-border-color);
-        padding: 4px 6px;
-        font-size: 14px;
-        white-space: nowrap;
-        transform: translate(-50%, -120%);
-        z-index: 1000;
+    .contrib-hover-details {
+        border-left: 1px solid var(--thin-border-color);
+        flex: 1 1 18rem;
+        margin-left: 8px;
+        min-height: 1.4em;
+        min-width: 0;
+        padding-left: 12px;
+        color: color-mix(in oklab, var(--foreground-color) 80%, transparent);
+        overflow-wrap: anywhere;
     }
     h2 {
         padding-left: calc((100% - 3 * var(--unit-size)) / 4 + var(--unit-size))
