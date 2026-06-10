@@ -494,6 +494,7 @@
         overflow: hidden;
         white-space: pre;
         font-family: 'SuisseIntlMono', monospace;
+        font-weight: 700;
         font-size: clamp(3px, 1.15vw, 6px);
         line-height: 1;
         letter-spacing: 0;

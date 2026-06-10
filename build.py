@@ -316,7 +316,7 @@ def flatten_image(image: Image.Image) -> Image.Image:
 def image_to_braille(image: Image.Image) -> str:
     gray = ImageOps.grayscale(image)
     gray = ImageOps.autocontrast(gray, cutoff=1)
-    gray = ImageEnhance.Contrast(gray).enhance(1.3)
+    gray = ImageEnhance.Contrast(gray).enhance(1.6)
     edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
 
     cols = ASCII_IMAGE_COLUMNS
@@ -337,11 +337,11 @@ def image_to_braille(image: Image.Image) -> str:
                 for x in range(2):
                     px = col * 2 + x
                     py = row * 4 + y
-                    darkness = 255 - gray_pixels[px, py]
-                    detail = edge_pixels[px, py]
-                    signal = min(255, int(darkness * 0.88 + detail * 0.62))
-                    threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 16)
-                    if signal > threshold and signal > 28:
+                    darkness = max(0, 255 - gray_pixels[px, py] - 28)
+                    detail = max(0, edge_pixels[px, py] - 18)
+                    signal = min(255, int(darkness * 1.15 + detail * 0.9))
+                    threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 14)
+                    if signal > threshold and (darkness > 10 or detail > 35):
                         mask |= BRAILLE_DOT_BITS[(x, y)]
             chars.append(chr(0x2800 + mask))
         lines.append("".join(chars).rstrip(BRAILLE_BLANK))
