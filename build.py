@@ -425,9 +425,9 @@ def markdown_image_sources() -> list[tuple[Path, list[tuple[str, str | None]]]]:
     return images
 
 
-def validate_markdown_images() -> list[str]:
+def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None]]]]) -> list[str]:
     errors = []
-    for source_path, attrs in markdown_image_sources():
+    for source_path, attrs in images:
         attrs_dict = {key.lower(): value for key, value in attrs if key}
         src = (attrs_dict.get("src") or "").strip()
         if not src:
@@ -1359,13 +1359,14 @@ def build_site(output_dir: Path) -> list[str]:
     print(f"output: {output_dir}")
 
     print("\n[0/5] checking markdown images...")
-    image_errors = validate_markdown_images()
+    markdown_images = markdown_image_sources()
+    image_errors = validate_markdown_images(markdown_images)
     if image_errors:
         print("\nimage validation errors:")
         for error in image_errors:
             print(f"  {error}")
         return image_errors
-    print(f"  images: checked {len(markdown_image_sources())} markdown image(s)")
+    print(f"  images: checked {len(markdown_images)} markdown image(s)")
 
     ensure_clean_output_dir(output_dir)
     copy_static_site(output_dir)
