@@ -96,14 +96,6 @@ Common carpentry terminology.
 
 ![](https://cdn.shopify.com/s/files/1/0616/1711/1178/files/BiscuitJoining21e.jpg?v=1738768950)
 
-### Dovetail joint
-
-![](https://technologystudent.com/joints_flsh/mortjoin27.png)
-
-### Box and Finger joint
-
-![](https://technologystudent.com/joints_flsh/mortjoin26.png)
-
 ## More on
 
 * [*A Woodworkers guide to Woodwork*](http://www.woodworkbasics.com/) by woodworkbasics.com
