@@ -485,11 +485,12 @@
     }
     .ascii-figure {
         align-items: flex-start;
-        justify-content: flex-start;
+        justify-content: center;
         overflow: hidden;
     }
     .ascii-art {
         display: block;
+        margin-inline: auto;
         max-width: 100%;
         overflow: hidden;
         white-space: pre;
@@ -500,11 +501,6 @@
         letter-spacing: 0;
         text-rendering: geometricPrecision;
         font-variant-ligatures: none;
-    }
-    .ascii-art-fallback {
-        white-space: normal;
-        font-size: calc(var(--unit-size) * 2 / 3);
-        line-height: var(--unit-size);
     }
 }
 

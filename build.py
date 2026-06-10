@@ -9,6 +9,7 @@ import html
 import io
 import re
 import shutil
+import statistics
 import subprocess
 import sys
 import urllib.error
@@ -33,7 +34,9 @@ DEFAULT_OUTPUT_DIR = ROOT / "dist"
 WORKS_SOURCE_DIR = ROOT / "works"
 PERSON_ID = f"{BASE_URL}/#person"
 DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
-ASCII_CACHE_DIR = ROOT / ".cache" / "ascii-images"
+IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
+ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
+ASCII_ALGORITHM_VERSION = "braille-fg-v2"
 ASCII_IMAGE_COLUMNS = 104
 MAX_IMAGE_BYTES = 12 * 1024 * 1024
 BRAILLE_BLANK = chr(0x2800)
@@ -53,7 +56,12 @@ BAYER_4 = (
     (3, 11, 1, 9),
     (15, 7, 13, 5),
 )
-ASCII_IMAGE_WARNINGS: list[str] = []
+IMAGE_MARKDOWN_DIRS = [
+    ROOT / "works",
+    ROOT / "blog" / "posts",
+    ROOT / "personal-wiki" / "notes",
+    ROOT / "papers" / "sources",
+]
 
 ROOT_STATIC_FILES = [
     "index.html",
@@ -206,6 +214,20 @@ class MarkdownImageAsciiParser(HTMLParser):
         return "".join(self.parts)
 
 
+class MarkdownImageCollector(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.images: list[list[tuple[str, str | None]]] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.images.append(attrs)
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.images.append(attrs)
+
+
 def md_to_html(md_content: str, source_path: Path | None = None) -> str:
     """Convert markdown content to HTML."""
     md = markdown.Markdown(
@@ -230,6 +252,14 @@ def md_to_html(md_content: str, source_path: Path | None = None) -> str:
     return ASCII_FIGURE_PARAGRAPH_RE.sub(r"\1", parser.html())
 
 
+def collect_markdown_images(md_content: str) -> list[list[tuple[str, str | None]]]:
+    rendered = markdown.Markdown(extensions=["fenced_code", "tables", "nl2br"]).convert(md_content)
+    parser = MarkdownImageCollector()
+    parser.feed(rendered)
+    parser.close()
+    return parser.images
+
+
 def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -> str:
     attrs_dict = {key.lower(): value for key, value in attrs if key}
     src = (attrs_dict.get("src") or "").strip()
@@ -237,30 +267,43 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
     title = (attrs_dict.get("title") or "").strip()
     label = alt or title or "image"
 
+    if not src:
+        raise ValueError(f"{source_path}: missing image source")
     try:
-        if not src:
-            raise ValueError("missing image source")
         art = image_src_to_braille(src, source_path)
-        css_class = "ascii-art"
     except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-        warning_label = f"{source_path}: {src or '<missing>'}: {exc}"
-        ASCII_IMAGE_WARNINGS.append(warning_label)
-        art = f"[image unavailable: {label}]"
-        css_class = "ascii-art ascii-art-fallback"
+        raise RuntimeError(f"{source_path}: {src}: {exc}") from exc
 
     return (
         f'<figure class="ascii-figure" data-image-source="{html.escape(src, quote=True)}">'
-        f'<pre class="{css_class}" role="img" aria-label="{html.escape(label, quote=True)}">'
+        f'<pre class="ascii-art" role="img" aria-label="{html.escape(label, quote=True)}">'
         f"{html.escape(art)}</pre></figure>"
     )
 
 
 def image_src_to_braille(src: str, source_path: Path) -> str:
     data = read_image_bytes(src, source_path)
+    cache_key = hashlib.sha256(
+        b"\0".join(
+            [
+                ASCII_ALGORITHM_VERSION.encode("utf-8"),
+                str(ASCII_IMAGE_COLUMNS).encode("utf-8"),
+                hashlib.sha256(data).digest(),
+            ]
+        )
+    ).hexdigest()
+    cache_path = ASCII_ART_CACHE_DIR / f"{cache_key}.txt"
+    if cache_path.is_file():
+        return cache_path.read_text(encoding="utf-8")
+
     with Image.open(io.BytesIO(data)) as image:
         image = ImageOps.exif_transpose(image)
         image = flatten_image(image)
-        return image_to_braille(image)
+        art = image_to_braille(image)
+
+    ASCII_ART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(art, encoding="utf-8")
+    return art
 
 
 def read_image_bytes(src: str, source_path: Path) -> bytes:
@@ -287,11 +330,11 @@ def read_image_bytes(src: str, source_path: Path) -> bytes:
 
 def read_remote_image(src: str) -> bytes:
     cache_key = hashlib.sha256(src.encode("utf-8")).hexdigest()
-    cache_path = ASCII_CACHE_DIR / f"{cache_key}.img"
+    cache_path = IMAGE_CACHE_DIR / f"{cache_key}.img"
     if cache_path.is_file():
         return cache_path.read_bytes()
 
-    ASCII_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    IMAGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     request = urllib.request.Request(
         src,
         headers={"User-Agent": "Mozilla/5.0 (compatible; gabrielongzm-site-builder/1.0)"},
@@ -314,20 +357,19 @@ def flatten_image(image: Image.Image) -> Image.Image:
 
 
 def image_to_braille(image: Image.Image) -> str:
-    gray = ImageOps.grayscale(image)
-    gray = ImageOps.autocontrast(gray, cutoff=1)
-    gray = ImageEnhance.Contrast(gray).enhance(1.6)
-    edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
-
     cols = ASCII_IMAGE_COLUMNS
+    gray = ImageOps.grayscale(image)
     aspect = gray.height / max(gray.width, 1)
     rows = max(1, round(aspect * cols * 0.55))
     target_size = (cols * 2, rows * 4)
-    gray = gray.resize(target_size, Image.Resampling.LANCZOS)
-    edge = edge.resize(target_size, Image.Resampling.LANCZOS)
-
+    gray = ImageEnhance.Contrast(gray.resize(target_size, Image.Resampling.LANCZOS)).enhance(1.25)
+    edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
+    background_level, background_noise = estimate_background(gray)
+    delta_floor = min(34, max(10, round(background_noise * 2.5)))
+    edge_floor = min(52, max(18, round(background_noise * 1.5)))
     gray_pixels = gray.load()
     edge_pixels = edge.load()
+
     lines = []
     for row in range(rows):
         chars = []
@@ -337,16 +379,65 @@ def image_to_braille(image: Image.Image) -> str:
                 for x in range(2):
                     px = col * 2 + x
                     py = row * 4 + y
-                    darkness = max(0, 255 - gray_pixels[px, py] - 28)
-                    detail = max(0, edge_pixels[px, py] - 18)
-                    signal = min(255, int(darkness * 1.15 + detail * 0.9))
+                    value = gray_pixels[px, py]
+                    delta = max(0, abs(value - background_level) - delta_floor)
+                    if background_level >= 128:
+                        foreground = max(0, background_level - value - delta_floor)
+                    else:
+                        foreground = max(0, value - background_level - delta_floor)
+                    detail = max(0, edge_pixels[px, py] - edge_floor)
+                    signal = min(255, int(max(foreground, delta * 0.7) * 1.35 + detail * 0.9))
                     threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 14)
-                    if signal > threshold and (darkness > 10 or detail > 35):
+                    if signal > threshold and (foreground > 8 or delta > 18 or detail > 34):
                         mask |= BRAILLE_DOT_BITS[(x, y)]
             chars.append(chr(0x2800 + mask))
         lines.append("".join(chars).rstrip(BRAILLE_BLANK))
 
     return "\n".join(lines).strip("\n") or BRAILLE_BLANK
+
+
+def estimate_background(gray: Image.Image) -> tuple[int, float]:
+    width, height = gray.size
+    pixels = gray.load()
+    samples = []
+    for x in range(width):
+        samples.append(pixels[x, 0])
+        samples.append(pixels[x, height - 1])
+    for y in range(height):
+        samples.append(pixels[0, y])
+        samples.append(pixels[width - 1, y])
+    level = round(statistics.median(samples))
+    noise = statistics.median(abs(value - level) for value in samples)
+    return level, noise
+
+
+def markdown_image_sources() -> list[tuple[Path, list[tuple[str, str | None]]]]:
+    images = []
+    for directory in IMAGE_MARKDOWN_DIRS:
+        if not directory.exists():
+            continue
+        for md_file in sorted(directory.glob("*.md")):
+            if md_file.name.startswith("."):
+                continue
+            _, content = parse_frontmatter(md_file.read_text(encoding="utf-8"))
+            for attrs in collect_markdown_images(content):
+                images.append((md_file, attrs))
+    return images
+
+
+def validate_markdown_images() -> list[str]:
+    errors = []
+    for source_path, attrs in markdown_image_sources():
+        attrs_dict = {key.lower(): value for key, value in attrs if key}
+        src = (attrs_dict.get("src") or "").strip()
+        if not src:
+            errors.append(f"{source_path}: missing image source")
+            continue
+        try:
+            image_src_to_braille(src, source_path)
+        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+            errors.append(f"{source_path}: {src}: {exc}")
+    return errors
 
 
 def parse_frontmatter(text: str) -> tuple[dict, str]:
@@ -1264,9 +1355,17 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
 
 
 def build_site(output_dir: Path) -> list[str]:
-    ASCII_IMAGE_WARNINGS.clear()
     print("=== building gabrielongzm.com ===\n")
     print(f"output: {output_dir}")
+
+    print("\n[0/5] checking markdown images...")
+    image_errors = validate_markdown_images()
+    if image_errors:
+        print("\nimage validation errors:")
+        for error in image_errors:
+            print(f"  {error}")
+        return image_errors
+    print(f"  images: checked {len(markdown_image_sources())} markdown image(s)")
 
     ensure_clean_output_dir(output_dir)
     copy_static_site(output_dir)
@@ -1298,13 +1397,6 @@ def build_site(output_dir: Path) -> list[str]:
     all_urls.extend(paper_urls)
     errors.extend(paper_errors)
 
-    if ASCII_IMAGE_WARNINGS:
-        print(f"\nWARN: {len(ASCII_IMAGE_WARNINGS)} image(s) could not be rendered as ASCII")
-        for warning in ASCII_IMAGE_WARNINGS[:10]:
-            print(f"  ascii-image: {warning}")
-        if len(ASCII_IMAGE_WARNINGS) > 10:
-            print(f"  ascii-image: ... {len(ASCII_IMAGE_WARNINGS) - 10} more")
-
     print("\n[5/5] generating sitemap...")
     (output_dir / "sitemap.xml").write_text(generate_sitemap(all_urls), encoding="utf-8")
     print(f"  sitemap: {len(all_urls)} URLs")
@@ -1328,7 +1420,7 @@ def main() -> None:
     output_dir = resolve_output_dir(args.output)
     errors = build_site(output_dir)
     if errors:
-        print(f"\nWARN: {len(errors)} frontmatter validation error(s)")
+        print(f"\nerror: {len(errors)} build validation error(s)")
         sys.exit(1)
 
 
