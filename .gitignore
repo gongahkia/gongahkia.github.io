@@ -8,5 +8,6 @@ __pycache__/
 .DS_Store
 *.log
 .playwright-cli/
+.cache/
 
 .obsidian

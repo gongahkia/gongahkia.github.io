@@ -4,11 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
+import io
 import re
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -17,6 +22,7 @@ try:
     import markdown
     import yaml
     from jinja2 import Environment, FileSystemLoader
+    from PIL import Image, ImageEnhance, ImageFilter, ImageOps, UnidentifiedImageError
 except ImportError:
     print("error: missing deps. run: pip install -r requirements.txt")
     sys.exit(1)
@@ -27,6 +33,27 @@ DEFAULT_OUTPUT_DIR = ROOT / "dist"
 WORKS_SOURCE_DIR = ROOT / "works"
 PERSON_ID = f"{BASE_URL}/#person"
 DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
+ASCII_CACHE_DIR = ROOT / ".cache" / "ascii-images"
+ASCII_IMAGE_COLUMNS = 72
+MAX_IMAGE_BYTES = 12 * 1024 * 1024
+BRAILLE_BLANK = chr(0x2800)
+BRAILLE_DOT_BITS = {
+    (0, 0): 0x01,
+    (0, 1): 0x02,
+    (0, 2): 0x04,
+    (0, 3): 0x40,
+    (1, 0): 0x08,
+    (1, 1): 0x10,
+    (1, 2): 0x20,
+    (1, 3): 0x80,
+}
+BAYER_4 = (
+    (0, 8, 2, 10),
+    (12, 4, 14, 6),
+    (3, 11, 1, 9),
+    (15, 7, 13, 5),
+)
+ASCII_IMAGE_WARNINGS: list[str] = []
 
 ROOT_STATIC_FILES = [
     "index.html",
@@ -134,7 +161,51 @@ def process_wikilinks(md_content: str, notes_dir: Path) -> str:
     return re.sub(r"\[\[([^\]]+)\]\]", replace_link, md_content)
 
 
-def md_to_html(md_content: str) -> str:
+class MarkdownImageAsciiParser(HTMLParser):
+    def __init__(self, source_path: Path) -> None:
+        super().__init__(convert_charrefs=False)
+        self.source_path = source_path
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.parts.append(render_ascii_image(attrs, self.source_path))
+            return
+        self.parts.append(self.get_starttag_text() or "")
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.parts.append(render_ascii_image(attrs, self.source_path))
+            return
+        self.parts.append(self.get_starttag_text() or "")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() != "img":
+            self.parts.append(f"</{tag}>")
+
+    def handle_data(self, data: str) -> None:
+        self.parts.append(data)
+
+    def handle_entityref(self, name: str) -> None:
+        self.parts.append(f"&{name};")
+
+    def handle_charref(self, name: str) -> None:
+        self.parts.append(f"&#{name};")
+
+    def handle_comment(self, data: str) -> None:
+        self.parts.append(f"<!--{data}-->")
+
+    def handle_decl(self, decl: str) -> None:
+        self.parts.append(f"<!{decl}>")
+
+    def handle_pi(self, data: str) -> None:
+        self.parts.append(f"<?{data}>")
+
+    def html(self) -> str:
+        return "".join(self.parts)
+
+
+def md_to_html(md_content: str, source_path: Path | None = None) -> str:
     """Convert markdown content to HTML."""
     md = markdown.Markdown(
         extensions=[
@@ -148,7 +219,133 @@ def md_to_html(md_content: str) -> str:
             "pymdownx.arithmatex": {"generic": True},
         },
     )
-    return md.convert(md_content)
+    rendered = md.convert(md_content)
+    if not source_path:
+        return rendered
+
+    parser = MarkdownImageAsciiParser(source_path)
+    parser.feed(rendered)
+    parser.close()
+    return parser.html()
+
+
+def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -> str:
+    attrs_dict = {key.lower(): value for key, value in attrs if key}
+    src = (attrs_dict.get("src") or "").strip()
+    alt = (attrs_dict.get("alt") or "").strip()
+    title = (attrs_dict.get("title") or "").strip()
+    label = alt or title or "image"
+
+    try:
+        if not src:
+            raise ValueError("missing image source")
+        art = image_src_to_braille(src, source_path)
+        css_class = "ascii-art"
+    except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+        warning_label = f"{source_path}: {src or '<missing>'}: {exc}"
+        ASCII_IMAGE_WARNINGS.append(warning_label)
+        art = f"[image unavailable: {label}]"
+        css_class = "ascii-art ascii-art-fallback"
+
+    return (
+        f'<figure class="ascii-figure" data-image-source="{html.escape(src, quote=True)}">'
+        f'<pre class="{css_class}" role="img" aria-label="{html.escape(label, quote=True)}">'
+        f"{html.escape(art)}</pre></figure>"
+    )
+
+
+def image_src_to_braille(src: str, source_path: Path) -> str:
+    data = read_image_bytes(src, source_path)
+    with Image.open(io.BytesIO(data)) as image:
+        image = ImageOps.exif_transpose(image)
+        image = flatten_image(image)
+        return image_to_braille(image)
+
+
+def read_image_bytes(src: str, source_path: Path) -> bytes:
+    parsed = urllib.parse.urlsplit(src)
+    if parsed.scheme in ("http", "https"):
+        return read_remote_image(src)
+    if parsed.scheme and parsed.scheme != "file":
+        raise ValueError(f"unsupported image scheme '{parsed.scheme}'")
+
+    path_text = urllib.parse.unquote(parsed.path)
+    if parsed.scheme == "file" or path_text.startswith("/"):
+        image_path = (ROOT / path_text.lstrip("/")).resolve()
+    else:
+        image_path = (source_path.parent / path_text).resolve()
+
+    try:
+        image_path.relative_to(ROOT)
+    except ValueError as exc:
+        raise ValueError("image path escapes repository root") from exc
+    if not image_path.is_file():
+        raise FileNotFoundError(image_path)
+    return image_path.read_bytes()
+
+
+def read_remote_image(src: str) -> bytes:
+    cache_key = hashlib.sha256(src.encode("utf-8")).hexdigest()
+    cache_path = ASCII_CACHE_DIR / f"{cache_key}.img"
+    if cache_path.is_file():
+        return cache_path.read_bytes()
+
+    ASCII_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    request = urllib.request.Request(
+        src,
+        headers={"User-Agent": "Mozilla/5.0 (compatible; gabrielongzm-site-builder/1.0)"},
+    )
+    with urllib.request.urlopen(request, timeout=10) as response:
+        data = response.read(MAX_IMAGE_BYTES + 1)
+    if len(data) > MAX_IMAGE_BYTES:
+        raise ValueError("image exceeds 12MB limit")
+    cache_path.write_bytes(data)
+    return data
+
+
+def flatten_image(image: Image.Image) -> Image.Image:
+    if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
+        rgba = image.convert("RGBA")
+        background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+        background.alpha_composite(rgba)
+        return background.convert("RGB")
+    return image.convert("RGB")
+
+
+def image_to_braille(image: Image.Image) -> str:
+    gray = ImageOps.grayscale(image)
+    gray = ImageOps.autocontrast(gray, cutoff=1)
+    gray = ImageEnhance.Contrast(gray).enhance(1.3)
+    edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
+
+    cols = ASCII_IMAGE_COLUMNS
+    aspect = gray.height / max(gray.width, 1)
+    rows = max(1, round(aspect * cols * 0.55))
+    target_size = (cols * 2, rows * 4)
+    gray = gray.resize(target_size, Image.Resampling.LANCZOS)
+    edge = edge.resize(target_size, Image.Resampling.LANCZOS)
+
+    gray_pixels = gray.load()
+    edge_pixels = edge.load()
+    lines = []
+    for row in range(rows):
+        chars = []
+        for col in range(cols):
+            mask = 0
+            for y in range(4):
+                for x in range(2):
+                    px = col * 2 + x
+                    py = row * 4 + y
+                    darkness = 255 - gray_pixels[px, py]
+                    detail = edge_pixels[px, py]
+                    signal = min(255, int(darkness * 0.88 + detail * 0.62))
+                    threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 16)
+                    if signal > threshold:
+                        mask |= BRAILLE_DOT_BITS[(x, y)]
+            chars.append(chr(0x2800 + mask))
+        lines.append("".join(chars).rstrip(BRAILLE_BLANK))
+
+    return "\n".join(lines).strip("\n") or BRAILLE_BLANK
 
 
 def parse_frontmatter(text: str) -> tuple[dict, str]:
@@ -391,7 +588,7 @@ def build_wiki(output_dir: Path) -> list[dict]:
         meta, content_after_fm = parse_frontmatter(raw_markdown)
         title, body = split_md_title(content_after_fm)
         body = process_wikilinks(body, notes_dir)
-        html_content = md_to_html(body)
+        html_content = md_to_html(body, md_file)
         output_filename = md_file.stem.lower() + ".html"
         output_path = output_pages_dir / output_filename
         canonical_url = f"{BASE_URL}/personal-wiki/pages/{output_filename}"
@@ -525,7 +722,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
 
         canonical_url = f"{BASE_URL}/blog/posts/{output_filename}"
         rendered = template.render(
-            content=md_to_html(content),
+            content=md_to_html(content, md_file),
             base_path="../..",
             section_path="..",
             toc_enabled=True,
@@ -878,7 +1075,7 @@ def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
         date = work["date"]
         href = work["href"]
         source_path = work["source_path"]
-        content = md_to_html(work["content"])
+        content = md_to_html(work["content"], source_path)
         output_filename = f"{slug}.html"
         canonical_url = f"{BASE_URL}/work/{output_filename}"
         rendered = detail_template.render(
@@ -976,7 +1173,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             version=version,
             license=license_,
             github=github,
-            content=md_to_html(content),
+            content=md_to_html(content, md_file),
             meta_description=f"Paper: {title} - Gabriel Ong",
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
@@ -1066,6 +1263,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
 
 
 def build_site(output_dir: Path) -> list[str]:
+    ASCII_IMAGE_WARNINGS.clear()
     print("=== building gabrielongzm.com ===\n")
     print(f"output: {output_dir}")
 
@@ -1098,6 +1296,13 @@ def build_site(output_dir: Path) -> list[str]:
     paper_urls, paper_errors = build_papers(output_dir)
     all_urls.extend(paper_urls)
     errors.extend(paper_errors)
+
+    if ASCII_IMAGE_WARNINGS:
+        print(f"\nWARN: {len(ASCII_IMAGE_WARNINGS)} image(s) could not be rendered as ASCII")
+        for warning in ASCII_IMAGE_WARNINGS[:10]:
+            print(f"  ascii-image: {warning}")
+        if len(ASCII_IMAGE_WARNINGS) > 10:
+            print(f"  ascii-image: ... {len(ASCII_IMAGE_WARNINGS) - 10} more")
 
     print("\n[5/5] generating sitemap...")
     (output_dir / "sitemap.xml").write_text(generate_sitemap(all_urls), encoding="utf-8")

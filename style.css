@@ -483,6 +483,28 @@
         max-width: 100%;
         height: auto;
     }
+    .ascii-figure {
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+    .ascii-art {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: pre;
+        font-family: 'SuisseIntlMono', monospace;
+        font-size: clamp(3px, 1.15vw, 6px);
+        line-height: 1;
+        letter-spacing: 0;
+        text-rendering: geometricPrecision;
+        font-variant-ligatures: none;
+    }
+    .ascii-art-fallback {
+        white-space: normal;
+        font-size: calc(var(--unit-size) * 2 / 3);
+        line-height: var(--unit-size);
+    }
 }
 
 /* defines styles when toggling dark mode */
