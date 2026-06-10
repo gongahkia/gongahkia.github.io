@@ -122,6 +122,7 @@ def copy_static_site(output_dir: Path) -> None:
 
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
+ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"ascii-figure\".*?</figure>\s*)</p>", re.S)
 
 
 def extract_md_title(md_content: str) -> str:
@@ -226,7 +227,7 @@ def md_to_html(md_content: str, source_path: Path | None = None) -> str:
     parser = MarkdownImageAsciiParser(source_path)
     parser.feed(rendered)
     parser.close()
-    return parser.html()
+    return ASCII_FIGURE_PARAGRAPH_RE.sub(r"\1", parser.html())
 
 
 def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -> str:
@@ -340,7 +341,7 @@ def image_to_braille(image: Image.Image) -> str:
                     detail = edge_pixels[px, py]
                     signal = min(255, int(darkness * 0.88 + detail * 0.62))
                     threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 16)
-                    if signal > threshold:
+                    if signal > threshold and signal > 28:
                         mask |= BRAILLE_DOT_BITS[(x, y)]
             chars.append(chr(0x2800 + mask))
         lines.append("".join(chars).rstrip(BRAILLE_BLANK))
