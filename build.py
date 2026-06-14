@@ -801,6 +801,16 @@ def parse_html_wiki_note(filepath: Path) -> dict:
     }
 
 
+def browser_title(title: str) -> str:
+    """Format detail-page browser titles in the site's compact all-caps style."""
+    return str(title).strip().upper()
+
+
+def paper_browser_title(title: str) -> str:
+    """Use the compact paper name before the subtitle delimiter."""
+    return browser_title(str(title).split(":", 1)[0])
+
+
 def render_wiki_note(
     template,
     title: str,
@@ -819,7 +829,7 @@ def render_wiki_note(
         meta_description=f"Wiki Note: {title} - Gabriel Ong",
         og_title=f"{title} | Gabriel Ong Wiki",
         og_type="article",
-        page_title=f"{title} | Gabriel Ong Wiki",
+        page_title=browser_title(title),
         document_title="PERSONAL WIKI",
         canonical_url=canonical_url,
         date_published=parse_date_to_iso("2 Feb 2026"),
@@ -1019,7 +1029,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             meta_description=meta_description,
             og_title=og_title,
             og_type="article",
-            page_title=f"{title} | Gabriel Ong",
+            page_title=browser_title(title),
             document_title="BLOG",
             canonical_url=canonical_url,
             date_published=parse_date_to_iso(date),
@@ -1378,7 +1388,7 @@ def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
             meta_description=f"Work: {title} - {summary} - Gabriel Ong",
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
-            page_title=f"{title} | Gabriel Ong",
+            page_title=browser_title(title),
             document_title="GABRIEL ONG",
             canonical_url=canonical_url,
             date_published=parse_date_to_iso(date),
@@ -1470,7 +1480,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             meta_description=f"Paper: {title} - Gabriel Ong",
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
-            page_title=f"{title} | Gabriel Ong",
+            page_title=paper_browser_title(title),
             document_title="PAPERS",
             canonical_url=canonical_url,
             date_published=parse_date_to_iso(date),
