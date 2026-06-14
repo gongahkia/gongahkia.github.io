@@ -513,6 +513,33 @@
     :root[data-theme="dark"] .ascii-art {
         color: var(--color-white);
     }
+    .ascii-figure--anim {
+        flex-direction: column;
+    }
+    .ascii-anim {
+        position: relative;
+        overflow: hidden;
+        max-width: 100%;
+        margin-inline: auto;
+        font-size: clamp(4px, 1.3vw, 7px);
+        line-height: 1;
+        height: calc(var(--ascii-rows, 1) * 1em);
+    }
+    .ascii-anim__frames {
+        margin: 0;
+        font-size: 1em;
+        will-change: transform;
+        animation: ascii-roll var(--ascii-duration, 1s) steps(var(--ascii-steps, 1)) var(--ascii-iterations, infinite);
+    }
+    @keyframes ascii-roll {
+        from { transform: translateY(0); }
+        to { transform: translateY(-100%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .ascii-anim__frames {
+            animation: none;
+        }
+    }
 }
 
 /* defines styles when toggling dark mode */

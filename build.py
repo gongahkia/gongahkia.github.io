@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import html
 import io
+import json
 import re
 import shutil
 import statistics
@@ -36,8 +37,11 @@ PERSON_ID = f"{BASE_URL}/#person"
 DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fg-v2"
+ASCII_ALGORITHM_VERSION = "braille-fg-v3-anim"
 ASCII_IMAGE_COLUMNS = 104
+ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
+MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
+DEFAULT_FRAME_MS = 100  # fallback when a frame omits its duration (matches browser behaviour)
 MAX_IMAGE_BYTES = 12 * 1024 * 1024
 BRAILLE_BLANK = chr(0x2800)
 BRAILLE_DOT_BITS = {
@@ -130,7 +134,7 @@ def copy_static_site(output_dir: Path) -> None:
 
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
-ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"ascii-figure\".*?</figure>\s*)</p>", re.S)
+ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"ascii-figure[^\"]*\".*?</figure>\s*)</p>", re.S)
 
 
 def extract_md_title(md_content: str) -> str:
@@ -270,10 +274,14 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
     if not src:
         raise ValueError(f"{source_path}: missing image source")
     try:
-        art = image_src_to_braille(src, source_path)
+        result = image_src_to_frames(src, source_path)
     except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
         raise RuntimeError(f"{source_path}: {src}: {exc}") from exc
 
+    if result.get("animated"):
+        return render_ascii_animation(result, src, label)
+
+    art = result["frames"][0]
     return (
         f'<figure class="ascii-figure" data-image-source="{html.escape(src, quote=True)}">'
         f'<pre class="ascii-art" role="img" aria-label="{html.escape(label, quote=True)}">'
@@ -281,29 +289,124 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
     )
 
 
-def image_src_to_braille(src: str, source_path: Path) -> str:
+def render_ascii_animation(result: dict, src: str, label: str) -> str:
+    """Render an animated source as a vertically-stacked braille sheet cycled in pure CSS."""
+    frames = result["frames"]
+    rows = result["rows"]
+    steps = len(frames)
+    # Sprite-style playback divides the cycle evenly across frames; keep a sane floor so
+    # GIFs that declare near-zero per-frame delays don't render as an unreadable blur.
+    total_ms = max(int(result.get("total_ms") or 0), steps * 40)
+    loop = int(result.get("loop") or 0)
+    iterations = "infinite" if loop <= 0 else str(loop)
+    sheet = html.escape("\n".join(frames))
+    style = (
+        f"--ascii-rows:{rows};--ascii-duration:{total_ms}ms;"
+        f"--ascii-steps:{steps};--ascii-iterations:{iterations};"
+    )
+    return (
+        f'<figure class="ascii-figure ascii-figure--anim" '
+        f'data-image-source="{html.escape(src, quote=True)}">'
+        f'<div class="ascii-anim" role="img" aria-label="{html.escape(label, quote=True)}" '
+        f'style="{style}">'
+        f'<pre class="ascii-art ascii-anim__frames">{sheet}</pre>'
+        f"</div></figure>"
+    )
+
+
+def subsample_indices(n_frames: int, max_frames: int) -> list[int]:
+    """Pick up to max_frames evenly spaced frame indices, always spanning first to last."""
+    if n_frames <= max_frames:
+        return list(range(n_frames))
+    return sorted({round(i * (n_frames - 1) / (max_frames - 1)) for i in range(max_frames)})
+
+
+def normalize_frame_ms(value: object) -> int:
+    try:
+        ms = int(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        ms = 0
+    # GIFs frequently declare 0/10ms ("as fast as possible"); browsers clamp these to ~100ms.
+    return ms if ms > 10 else DEFAULT_FRAME_MS
+
+
+def render_image_frames(data: bytes) -> dict:
+    with Image.open(io.BytesIO(data)) as image:
+        n_frames = int(getattr(image, "n_frames", 1) or 1)
+        animated = bool(getattr(image, "is_animated", False)) and n_frames > 1
+        if not animated:
+            frame = ImageOps.exif_transpose(image)
+            frame = flatten_image(frame)
+            return {"animated": False, "frames": [image_to_braille(frame, ASCII_IMAGE_COLUMNS)]}
+
+        keep = subsample_indices(n_frames, MAX_ANIMATION_FRAMES)
+        keep_set = set(keep)
+        image.seek(0)
+        loop = int(image.info.get("loop", 0) or 0)
+        source_durations: list[int] = []
+        rendered: dict[int, str] = {}
+        # Seek every frame in order so Pillow accumulates disposal correctly, even though we
+        # only braille the kept subset.
+        for index in range(n_frames):
+            image.seek(index)
+            source_durations.append(normalize_frame_ms(image.info.get("duration")))
+            if index in keep_set:
+                rendered[index] = image_to_braille(
+                    flatten_image(image), ANIMATED_IMAGE_COLUMNS, keep_all_rows=True
+                )
+
+        frames = [rendered[index] for index in keep]
+        effective_ms = []
+        for position, index in enumerate(keep):
+            end = keep[position + 1] if position + 1 < len(keep) else n_frames
+            effective_ms.append(sum(source_durations[index:end]))
+
+        rows = max((frame.count("\n") + 1) for frame in frames)
+        frames = [pad_braille_rows(frame, rows) for frame in frames]
+        return {
+            "animated": True,
+            "frames": frames,
+            "rows": rows,
+            "total_ms": sum(effective_ms),
+            "loop": loop,
+            "source_frame_count": n_frames,
+        }
+
+
+def pad_braille_rows(art: str, rows: int) -> str:
+    """Ensure a frame has exactly `rows` lines so stacked frames stay vertically aligned."""
+    lines = art.split("\n")
+    if len(lines) < rows:
+        lines.extend([BRAILLE_BLANK] * (rows - len(lines)))
+    elif len(lines) > rows:
+        lines = lines[:rows]
+    return "\n".join(lines)
+
+
+def image_src_to_frames(src: str, source_path: Path) -> dict:
     data = read_image_bytes(src, source_path)
     cache_key = hashlib.sha256(
         b"\0".join(
             [
                 ASCII_ALGORITHM_VERSION.encode("utf-8"),
                 str(ASCII_IMAGE_COLUMNS).encode("utf-8"),
+                str(ANIMATED_IMAGE_COLUMNS).encode("utf-8"),
+                str(MAX_ANIMATION_FRAMES).encode("utf-8"),
                 hashlib.sha256(data).digest(),
             ]
         )
     ).hexdigest()
-    cache_path = ASCII_ART_CACHE_DIR / f"{cache_key}.txt"
+    cache_path = ASCII_ART_CACHE_DIR / f"{cache_key}.json"
     if cache_path.is_file():
-        return cache_path.read_text(encoding="utf-8")
+        try:
+            return json.loads(cache_path.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            pass
 
-    with Image.open(io.BytesIO(data)) as image:
-        image = ImageOps.exif_transpose(image)
-        image = flatten_image(image)
-        art = image_to_braille(image)
-
+    result = render_image_frames(data)
     ASCII_ART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(art, encoding="utf-8")
-    return art
+    cache_path.write_text(json.dumps(result), encoding="utf-8")
+    return result
 
 
 def read_image_bytes(src: str, source_path: Path) -> bytes:
@@ -356,8 +459,7 @@ def flatten_image(image: Image.Image) -> Image.Image:
     return image.convert("RGB")
 
 
-def image_to_braille(image: Image.Image) -> str:
-    cols = ASCII_IMAGE_COLUMNS
+def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
     gray = ImageOps.grayscale(image)
     aspect = gray.height / max(gray.width, 1)
     rows = max(1, round(aspect * cols * 0.55))
@@ -393,6 +495,9 @@ def image_to_braille(image: Image.Image) -> str:
             chars.append(chr(0x2800 + mask))
         lines.append("".join(chars).rstrip(BRAILLE_BLANK))
 
+    if keep_all_rows:
+        # Preserve the exact row count so animation frames stack to a fixed height.
+        return "\n".join(lines)
     return "\n".join(lines).strip("\n") or BRAILLE_BLANK
 
 
@@ -434,9 +539,19 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
             errors.append(f"{source_path}: missing image source")
             continue
         try:
-            image_src_to_braille(src, source_path)
+            result = image_src_to_frames(src, source_path)
         except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
             errors.append(f"{source_path}: {src}: {exc}")
+            continue
+        if result.get("animated"):
+            frames = result["frames"]
+            total_source = result.get("source_frame_count", len(frames))
+            kb = len("\n".join(frames).encode("utf-8")) / 1024
+            note = "" if len(frames) == total_source else f" (subsampled from {total_source})"
+            print(
+                f"  image: {source_path.name}: animated {len(frames)} frame(s){note}, "
+                f"{result['rows']} rows, {result['total_ms'] / 1000:.1f}s loop, ~{kb:.0f}KB"
+            )
     return errors
 
 
