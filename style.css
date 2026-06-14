@@ -508,13 +508,13 @@
     .mermaid-rendered {
         font-family: inherit;
         white-space: normal;
-        text-align: center;
+        text-align: left;
     }
     .mermaid svg {
         display: block;
         max-width: 100%;
         height: auto;
-        margin-inline: auto;
+        margin-inline: 0 auto;
     }
     .ascii-figure {
         align-items: flex-start;
