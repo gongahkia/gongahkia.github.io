@@ -190,6 +190,9 @@
         color: var(--foreground-color);
         transition: color 0.1s ease;
     }
+    a {
+        transition: color 0.1s ease, background-size 0.28s ease;
+    }
     ::selection {
         background-color: var(--interactive-highlight-color);
         color: var(--foreground-color);
