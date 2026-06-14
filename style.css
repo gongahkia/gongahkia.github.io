@@ -153,6 +153,29 @@
         background-position: 0 0;
         background-size: 100% 100%;
     }
+    a.line-highlight-active {
+        background-image: none;
+        z-index: 1;
+    }
+    .link-highlight-overlay-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .link-highlight-segment {
+        position: absolute;
+        background: var(--interactive-highlight-color);
+        border-radius: 0.18em;
+        transform: scaleX(0);
+        transform-origin: left center;
+        animation: link-highlight-segment-in var(--line-highlight-duration, 180ms) ease forwards;
+    }
+    @keyframes link-highlight-segment-in {
+        to {
+            transform: scaleX(1);
+        }
+    }
 }
 
 /* define button decoration */
@@ -587,6 +610,11 @@ footer {
 @media (prefers-reduced-motion: reduce) {
     a {
         transition: none;
+    }
+
+    .link-highlight-segment {
+        animation-delay: 0ms !important;
+        animation-duration: 1ms !important;
     }
 
     .click-animation {

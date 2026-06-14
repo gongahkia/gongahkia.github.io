@@ -74,6 +74,116 @@ function restoreTheme() { // apply saved theme from localStorage
 restoreTheme();
 window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); });
 
+(() => {
+    const LINE_HIGHLIGHT_STEP_MS = 180;
+    const LINE_HIGHLIGHT_PAD_X = 2;
+    const LINE_HIGHLIGHT_PAD_Y = 1;
+    const LINE_GROUP_TOLERANCE = 3;
+    let activeHighlight = null;
+    let overlayLayer = null;
+
+    function prefersReducedMotion() {
+        return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    }
+
+    function getOverlayLayer() {
+        if (overlayLayer?.isConnected) return overlayLayer;
+        overlayLayer = document.createElement("div");
+        overlayLayer.className = "link-highlight-overlay-layer";
+        overlayLayer.setAttribute("aria-hidden", "true");
+        document.body.appendChild(overlayLayer);
+        return overlayLayer;
+    }
+
+    function clearSequentialLinkHighlight(link = activeHighlight?.link) {
+        if (activeHighlight?.layer) activeHighlight.layer.replaceChildren();
+        link?.classList.remove("line-highlight-active");
+        activeHighlight = null;
+    }
+
+    function groupedLineRects(link) {
+        const range = document.createRange();
+        range.selectNodeContents(link);
+        const rects = Array.from(range.getClientRects()).filter((rect) => rect.width > 0.5 && rect.height > 0.5);
+        range.detach();
+
+        const groups = [];
+        rects
+            .sort((a, b) => (a.top - b.top) || (a.left - b.left))
+            .forEach((rect) => {
+                const centerY = rect.top + rect.height / 2;
+                let group = groups.find((candidate) => Math.abs(candidate.centerY - centerY) <= LINE_GROUP_TOLERANCE);
+                if (!group) {
+                    group = {
+                        top: rect.top,
+                        right: rect.right,
+                        bottom: rect.bottom,
+                        left: rect.left,
+                        centerY,
+                    };
+                    groups.push(group);
+                    return;
+                }
+                group.top = Math.min(group.top, rect.top);
+                group.right = Math.max(group.right, rect.right);
+                group.bottom = Math.max(group.bottom, rect.bottom);
+                group.left = Math.min(group.left, rect.left);
+                group.centerY = (group.top + group.bottom) / 2;
+            });
+
+        return groups
+            .sort((a, b) => (a.top - b.top) || (a.left - b.left))
+            .map((group) => ({
+                left: group.left,
+                top: group.top,
+                width: group.right - group.left,
+                height: group.bottom - group.top,
+            }));
+    }
+
+    function renderSequentialLinkHighlight(link) {
+        if (!link.isConnected || !link.textContent.trim()) return;
+        const lineRects = groupedLineRects(link);
+        if (!lineRects.length) return;
+
+        clearSequentialLinkHighlight();
+        const layer = getOverlayLayer();
+        const reducedMotion = prefersReducedMotion();
+        link.classList.add("line-highlight-active");
+
+        lineRects.forEach((rect, index) => {
+            const segment = document.createElement("span");
+            segment.className = "link-highlight-segment";
+            segment.style.left = `${rect.left - LINE_HIGHLIGHT_PAD_X}px`;
+            segment.style.top = `${rect.top - LINE_HIGHLIGHT_PAD_Y}px`;
+            segment.style.width = `${rect.width + LINE_HIGHLIGHT_PAD_X * 2}px`;
+            segment.style.height = `${rect.height + LINE_HIGHLIGHT_PAD_Y * 2}px`;
+            segment.style.animationDelay = reducedMotion ? "0ms" : `${index * LINE_HIGHLIGHT_STEP_MS}ms`;
+            segment.style.setProperty("--line-highlight-duration", reducedMotion ? "1ms" : `${LINE_HIGHLIGHT_STEP_MS}ms`);
+            layer.appendChild(segment);
+        });
+
+        activeHighlight = { link, layer };
+    }
+
+    document.querySelectorAll("a").forEach((link) => {
+        if (!link.textContent.trim()) return;
+        link.addEventListener("pointerenter", () => renderSequentialLinkHighlight(link));
+        link.addEventListener("pointerleave", () => {
+            if (document.activeElement !== link) clearSequentialLinkHighlight(link);
+        });
+        link.addEventListener("focus", () => renderSequentialLinkHighlight(link));
+        link.addEventListener("blur", () => {
+            if (!link.matches(":hover")) clearSequentialLinkHighlight(link);
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (activeHighlight?.link) renderSequentialLinkHighlight(activeHighlight.link);
+    });
+    window.addEventListener("scroll", () => clearSequentialLinkHighlight(), { passive: true });
+})();
+
 // ----- execution code for current time -----
 
 const currentYear = new Date().getFullYear();
