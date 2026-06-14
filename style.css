@@ -10,15 +10,6 @@
 }
 
 @font-face {
-    font-family: 'SuisseIntl';
-    font-style: normal;
-    font-weight: 600;
-    font-stretch: normal;
-    font-display: swap;
-    src: url(https://res.hajimehoshi.com/fonts/SuisseIntl-SemiBold-WebXL.woff2) format('woff2');
-}
-
-@font-face {
     font-family: 'SuisseIntlCond';
     font-style: normal;
     font-weight: 700;
