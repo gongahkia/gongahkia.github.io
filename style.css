@@ -301,6 +301,23 @@
         overflow-x: auto;
         overflow-y: hidden;
     }
+    section > table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-collapse: collapse;
+    }
+    section > table th,
+    section > table td {
+        vertical-align: top;
+        text-align: left;
+        padding-right: var(--unit-size);
+    }
+    section > table th:last-child,
+    section > table td:last-child {
+        padding-right: 0;
+    }
     .contrib-grid {
         display: grid;
         grid-auto-flow: column;
