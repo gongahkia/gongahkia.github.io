@@ -237,6 +237,10 @@ def html_uses_mathjax(rendered_html: str) -> bool:
     return "arithmatex" in rendered_html
 
 
+def html_uses_mermaid(rendered_html: str) -> bool:
+    return 'class="mermaid"' in rendered_html
+
+
 class MarkdownImageAsciiParser(HTMLParser):
     def __init__(self, source_path: Path) -> None:
         super().__init__(convert_charrefs=False)
@@ -804,6 +808,7 @@ def render_wiki_note(
     canonical_url: str,
     source_path: Path,
     has_math: bool,
+    has_mermaid: bool,
 ) -> str:
     rendered = template.render(
         title=title,
@@ -824,6 +829,7 @@ def render_wiki_note(
         section_path="..",
         toc_enabled=True,
         has_math=has_math,
+        has_mermaid=has_mermaid,
     )
     output_path.write_text(rendered, encoding="utf-8")
 
@@ -871,6 +877,7 @@ def build_wiki(output_dir: Path) -> list[dict]:
             canonical_url,
             md_file,
             has_math=html_uses_mathjax(html_content),
+            has_mermaid=html_uses_mermaid(html_content),
         )
         category = str(meta.get("category", "General")).strip().lower() or "general"
         if category not in ("general", "tech"):
@@ -1000,11 +1007,13 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             )
 
         canonical_url = f"{BASE_URL}/blog/posts/{output_filename}"
+        html_content = md_to_html(content, md_file)
         rendered = template.render(
-            content=md_to_html(content, md_file),
+            content=html_content,
             base_path="../..",
             section_path="..",
             toc_enabled=True,
+            has_mermaid=html_uses_mermaid(html_content),
             meta_description=meta_description,
             og_title=og_title,
             og_type="article",
@@ -1376,6 +1385,7 @@ def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
             base_path="..",
             section_path="..",
             toc_enabled=True,
+            has_mermaid=html_uses_mermaid(content),
         )
 
         (output_pages_dir / output_filename).write_text(rendered, encoding="utf-8")
@@ -1468,6 +1478,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             section_path="..",
             toc_enabled=True,
             has_math=html_uses_mathjax(html_content),
+            has_mermaid=html_uses_mermaid(html_content),
         )
 
         output_path = output_pages_dir / output_filename

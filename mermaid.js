@@ -9,6 +9,7 @@
     let mermaidApi = null;
     let renderInFlight = false;
     let renderQueued = false;
+    let renderStarted = false;
     let themeTimer = null;
 
     diagrams.forEach((diagram) => {
@@ -163,6 +164,7 @@
             return;
         }
 
+        renderStarted = true;
         renderInFlight = true;
         try {
             const mermaid = await loadMermaid();
@@ -184,14 +186,37 @@
     }
 
     function scheduleRender() {
+        if (!renderStarted) return;
         window.clearTimeout(themeTimer);
         themeTimer = window.setTimeout(renderDiagrams, 80);
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", renderDiagrams, { once: true });
-    } else {
+    function startRendering() {
         renderDiagrams();
+    }
+
+    function initLazyRender() {
+        if (!("IntersectionObserver" in window)) {
+            startRendering();
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                observer.disconnect();
+                startRendering();
+            },
+            { rootMargin: "360px 0px" },
+        );
+
+        diagrams.forEach((diagram) => observer.observe(diagram));
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initLazyRender, { once: true });
+    } else {
+        initLazyRender();
     }
 
     new MutationObserver(scheduleRender).observe(root, {
