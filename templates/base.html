@@ -33,6 +33,7 @@
   <style>.thin-space:after{content:"\2006"}</style>
   {% block extra_styles %}{% endblock %}
   <script src="{{ section_path }}/script.js" defer></script>
+  <script src="{{ base_path }}/mermaid.js" defer></script>
   {% if toc_enabled|default(false) %}
   <script src="{{ base_path }}/toc.js" defer></script>
   {% endif %}

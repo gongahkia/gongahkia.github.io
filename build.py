@@ -71,6 +71,7 @@ ROOT_STATIC_FILES = [
     "index.html",
     "style.css",
     "script.js",
+    "mermaid.js",
     "toc.js",
     "robots.txt",
     "CNAME",
@@ -135,6 +136,10 @@ def copy_static_site(output_dir: Path) -> None:
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
 ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"ascii-figure[^\"]*\".*?</figure>\s*)</p>", re.S)
+MERMAID_CODE_BLOCK_RE = re.compile(
+    r'<pre class="codehilite"><code class="language-mermaid">(.*?)</code></pre>',
+    re.S,
+)
 
 
 def extract_md_title(md_content: str) -> str:
@@ -172,6 +177,18 @@ def process_wikilinks(md_content: str, notes_dir: Path) -> str:
         return f'<span class="broken-wikilink">{name}</span>'
 
     return re.sub(r"\[\[([^\]]+)\]\]", replace_link, md_content)
+
+
+def render_mermaid_block(match: re.Match[str]) -> str:
+    """Render a fenced Mermaid code block as source for the runtime renderer."""
+    source = html.unescape(match.group(1)).strip()
+    escaped_source = html.escape(source)
+    escaped_attr = html.escape(source, quote=True)
+    return f'<div class="mermaid" data-mermaid-source="{escaped_attr}">\n{escaped_source}\n</div>'
+
+
+def process_mermaid_blocks(rendered_html: str) -> str:
+    return MERMAID_CODE_BLOCK_RE.sub(render_mermaid_block, rendered_html)
 
 
 class MarkdownImageAsciiParser(HTMLParser):
@@ -246,7 +263,7 @@ def md_to_html(md_content: str, source_path: Path | None = None) -> str:
             "pymdownx.arithmatex": {"generic": True},
         },
     )
-    rendered = md.convert(md_content)
+    rendered = process_mermaid_blocks(md.convert(md_content))
     if not source_path:
         return rendered
 
