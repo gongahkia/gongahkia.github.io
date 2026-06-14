@@ -487,19 +487,7 @@
         align-items: flex-start;
         justify-content: center;
         overflow: hidden;
-        --ascii-paper-color: var(--color-white);
-        --ascii-ink-color: var(--color-black);
-        background: var(--ascii-paper-color);
-        padding: 0.6rem;
-        border-radius: 2px;
-    }
-    .ascii-figure--tone-dark {
-        --ascii-paper-color: var(--color-black);
-        --ascii-ink-color: var(--color-white);
-    }
-    .ascii-figure--tone-light {
-        --ascii-paper-color: var(--color-white);
-        --ascii-ink-color: var(--color-black);
+        background: transparent;
     }
     .ascii-art {
         display: block;
@@ -512,7 +500,7 @@
         font-size: clamp(4px, 1.3vw, 7px);
         line-height: 1;
         letter-spacing: 0;
-        color: var(--ascii-ink-color);
+        color: inherit;
         -webkit-font-smoothing: antialiased;
         text-rendering: geometricPrecision;
         font-variant-ligatures: none;

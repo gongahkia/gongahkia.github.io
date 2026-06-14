@@ -37,12 +37,11 @@ PERSON_ID = f"{BASE_URL}/#person"
 DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fg-v4-tone"
+ASCII_ALGORITHM_VERSION = "braille-fg-v3-anim"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
 DEFAULT_FRAME_MS = 100  # fallback when a frame omits its duration (matches browser behaviour)
-ASCII_DARK_BACKGROUND_THRESHOLD = 128
 MAX_IMAGE_BYTES = 12 * 1024 * 1024
 BRAILLE_BLANK = chr(0x2800)
 BRAILLE_DOT_BITS = {
@@ -283,22 +282,11 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
         return render_ascii_animation(result, src, label)
 
     art = result["frames"][0]
-    tone = normalize_ascii_tone(result.get("tone"))
-    tone_class = ascii_tone_class(tone)
     return (
-        f'<figure class="ascii-figure {tone_class}" data-ascii-tone="{tone}" '
-        f'data-image-source="{html.escape(src, quote=True)}">'
+        f'<figure class="ascii-figure" data-image-source="{html.escape(src, quote=True)}">'
         f'<pre class="ascii-art" role="img" aria-label="{html.escape(label, quote=True)}">'
         f"{html.escape(art)}</pre></figure>"
     )
-
-
-def normalize_ascii_tone(tone: object) -> str:
-    return "dark" if tone == "dark" else "light"
-
-
-def ascii_tone_class(tone: str) -> str:
-    return "ascii-figure--tone-dark" if tone == "dark" else "ascii-figure--tone-light"
 
 
 def render_ascii_animation(result: dict, src: str, label: str) -> str:
@@ -312,15 +300,12 @@ def render_ascii_animation(result: dict, src: str, label: str) -> str:
     loop = int(result.get("loop") or 0)
     iterations = "infinite" if loop <= 0 else str(loop)
     sheet = html.escape("\n".join(frames))
-    tone = normalize_ascii_tone(result.get("tone"))
-    tone_class = ascii_tone_class(tone)
     style = (
         f"--ascii-rows:{rows};--ascii-duration:{total_ms}ms;"
         f"--ascii-steps:{steps};--ascii-iterations:{iterations};"
     )
     return (
-        f'<figure class="ascii-figure ascii-figure--anim {tone_class}" '
-        f'data-ascii-tone="{tone}" '
+        f'<figure class="ascii-figure ascii-figure--anim" '
         f'data-image-source="{html.escape(src, quote=True)}">'
         f'<div class="ascii-anim" role="img" aria-label="{html.escape(label, quote=True)}" '
         f'style="{style}">'
@@ -352,13 +337,7 @@ def render_image_frames(data: bytes) -> dict:
         if not animated:
             frame = ImageOps.exif_transpose(image)
             frame = flatten_image(frame)
-            background_level = braille_background_level(frame, ASCII_IMAGE_COLUMNS)
-            return {
-                "animated": False,
-                "frames": [image_to_braille(frame, ASCII_IMAGE_COLUMNS)],
-                "tone": ascii_tone_from_background_levels([background_level]),
-                "background_level": background_level,
-            }
+            return {"animated": False, "frames": [image_to_braille(frame, ASCII_IMAGE_COLUMNS)]}
 
         keep = subsample_indices(n_frames, MAX_ANIMATION_FRAMES)
         keep_set = set(keep)
@@ -366,7 +345,6 @@ def render_image_frames(data: bytes) -> dict:
         loop = int(image.info.get("loop", 0) or 0)
         source_durations: list[int] = []
         rendered: dict[int, str] = {}
-        background_levels = []
         # Seek every frame in order so Pillow accumulates disposal correctly, even though we
         # only braille the kept subset.
         for index in range(n_frames):
@@ -374,7 +352,6 @@ def render_image_frames(data: bytes) -> dict:
             source_durations.append(normalize_frame_ms(image.info.get("duration")))
             if index in keep_set:
                 frame = flatten_image(image)
-                background_levels.append(braille_background_level(frame, ANIMATED_IMAGE_COLUMNS))
                 rendered[index] = image_to_braille(frame, ANIMATED_IMAGE_COLUMNS, keep_all_rows=True)
 
         frames = [rendered[index] for index in keep]
@@ -392,8 +369,6 @@ def render_image_frames(data: bytes) -> dict:
             "total_ms": sum(effective_ms),
             "loop": loop,
             "source_frame_count": n_frames,
-            "tone": ascii_tone_from_background_levels(background_levels),
-            "background_level": round(statistics.median(background_levels)) if background_levels else None,
         }
 
 
@@ -405,27 +380,6 @@ def pad_braille_rows(art: str, rows: int) -> str:
     elif len(lines) > rows:
         lines = lines[:rows]
     return "\n".join(lines)
-
-
-def prepare_braille_gray(image: Image.Image, cols: int) -> Image.Image:
-    gray = ImageOps.grayscale(image)
-    aspect = gray.height / max(gray.width, 1)
-    rows = max(1, round(aspect * cols * 0.55))
-    target_size = (cols * 2, rows * 4)
-    return ImageEnhance.Contrast(gray.resize(target_size, Image.Resampling.LANCZOS)).enhance(1.25)
-
-
-def braille_background_level(image: Image.Image, cols: int) -> int:
-    gray = prepare_braille_gray(image, cols)
-    background_level, _ = estimate_background(gray)
-    return background_level
-
-
-def ascii_tone_from_background_levels(levels: list[int]) -> str:
-    if not levels:
-        return "light"
-    background_level = statistics.median(levels)
-    return "dark" if background_level < ASCII_DARK_BACKGROUND_THRESHOLD else "light"
 
 
 def image_src_to_frames(src: str, source_path: Path) -> dict:
@@ -505,8 +459,11 @@ def flatten_image(image: Image.Image) -> Image.Image:
 
 
 def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
-    gray = prepare_braille_gray(image, cols)
-    rows = gray.height // 4
+    gray = ImageOps.grayscale(image)
+    aspect = gray.height / max(gray.width, 1)
+    rows = max(1, round(aspect * cols * 0.55))
+    target_size = (cols * 2, rows * 4)
+    gray = ImageEnhance.Contrast(gray.resize(target_size, Image.Resampling.LANCZOS)).enhance(1.25)
     edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
     background_level, background_noise = estimate_background(gray)
     delta_floor = min(34, max(10, round(background_noise * 2.5)))
@@ -590,11 +547,9 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
             total_source = result.get("source_frame_count", len(frames))
             kb = len("\n".join(frames).encode("utf-8")) / 1024
             note = "" if len(frames) == total_source else f" (subsampled from {total_source})"
-            tone = normalize_ascii_tone(result.get("tone"))
             print(
                 f"  image: {source_path.name}: animated {len(frames)} frame(s){note}, "
-                f"{result['rows']} rows, {result['total_ms'] / 1000:.1f}s loop, "
-                f"{tone} source, ~{kb:.0f}KB"
+                f"{result['rows']} rows, {result['total_ms'] / 1000:.1f}s loop, ~{kb:.0f}KB"
             )
     return errors
 
