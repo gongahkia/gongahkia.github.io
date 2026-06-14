@@ -76,8 +76,11 @@ window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); })
 
 (() => {
     const LINE_HIGHLIGHT_STEP_MS = 180;
-    const LINE_HIGHLIGHT_PAD_X = 2;
-    const LINE_HIGHLIGHT_PAD_Y = 1;
+    const LINE_HIGHLIGHT_PAD_X_EM = 0.16;
+    const LINE_HIGHLIGHT_PAD_Y_EM = 0.06;
+    const LINE_HIGHLIGHT_OFFSET_X_EM = -0.03;
+    const LINE_HIGHLIGHT_OFFSET_Y_EM = 0.02;
+    const LINE_HIGHLIGHT_MAX_TILT_DEG = 0.8;
     const LINE_GROUP_TOLERANCE = 3;
     let activeHighlight = null;
     let overlayLayer = null;
@@ -149,16 +152,23 @@ window.addEventListener('pageshow', (e) => { if (e.persisted) restoreTheme(); })
         clearSequentialLinkHighlight();
         const layer = getOverlayLayer();
         const reducedMotion = prefersReducedMotion();
+        const fontSize = parseFloat(getComputedStyle(link).fontSize) || 16;
+        const padX = fontSize * LINE_HIGHLIGHT_PAD_X_EM;
+        const padY = fontSize * LINE_HIGHLIGHT_PAD_Y_EM;
+        const offsetX = fontSize * LINE_HIGHLIGHT_OFFSET_X_EM;
+        const offsetY = fontSize * LINE_HIGHLIGHT_OFFSET_Y_EM;
+        const tilt = reducedMotion ? 0 : (Math.random() * 2 - 1) * LINE_HIGHLIGHT_MAX_TILT_DEG;
         link.classList.add("line-highlight-active");
 
         lineRects.forEach((rect, index) => {
             const segment = document.createElement("span");
             segment.className = "link-highlight-segment";
-            segment.style.left = `${rect.left - LINE_HIGHLIGHT_PAD_X}px`;
-            segment.style.top = `${rect.top - LINE_HIGHLIGHT_PAD_Y}px`;
-            segment.style.width = `${rect.width + LINE_HIGHLIGHT_PAD_X * 2}px`;
-            segment.style.height = `${rect.height + LINE_HIGHLIGHT_PAD_Y * 2}px`;
+            segment.style.left = `${rect.left - padX + offsetX}px`;
+            segment.style.top = `${rect.top - padY + offsetY}px`;
+            segment.style.width = `${rect.width + padX * 2}px`;
+            segment.style.height = `${rect.height + padY * 2}px`;
             segment.style.animationDelay = reducedMotion ? "0ms" : `${index * LINE_HIGHLIGHT_STEP_MS}ms`;
+            segment.style.setProperty("--line-highlight-tilt", `${tilt.toFixed(2)}deg`);
             segment.style.setProperty("--line-highlight-duration", reducedMotion ? "1ms" : `${LINE_HIGHLIGHT_STEP_MS}ms`);
             layer.appendChild(segment);
         });
