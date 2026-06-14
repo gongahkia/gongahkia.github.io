@@ -135,30 +135,23 @@
 @layer text-decoration {
     a {
         position: relative;
-        display: inline-block;
-        isolation: isolate;
+        display: inline;
         text-decoration-line: underline;
         text-decoration-thickness: 1px;
         text-underline-offset: 0.08em;
-    }
-    a::after {
-        content: "";
-        position: absolute;
-        left: -0.12em;
-        right: -0.12em;
-        top: -0.04em;
-        bottom: -0.04em;
+        background-image: linear-gradient(var(--interactive-highlight-color), var(--interactive-highlight-color));
+        background-position: 100% 0;
+        background-repeat: no-repeat;
+        background-size: 0 100%;
         border-radius: 0.18em;
-        background: var(--interactive-highlight-color);
-        transform: rotate(var(--link-highlight-tilt, 0deg)) scaleX(0);
-        transform-origin: right center;
-        transition: transform 0.28s ease;
-        z-index: -1;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        transition: background-size 0.28s ease;
     }
-    a:hover::after,
-    a:focus-visible::after {
-        transform: rotate(var(--link-highlight-tilt, 0deg)) scaleX(1);
-        transform-origin: left center;
+    a:hover,
+    a:focus-visible {
+        background-position: 0 0;
+        background-size: 100% 100%;
     }
 }
 
@@ -589,7 +582,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    a::after {
+    a {
         transition: none;
     }
 
