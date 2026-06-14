@@ -32,7 +32,10 @@
   {% block extra_preloads %}{% endblock %}
   <style>.thin-space:after{content:"\2006"}</style>
   {% block extra_styles %}{% endblock %}
-  <script src="{{ section_path }}/script.js" defer></script>
+  <script src="{{ base_path }}/site.js" defer></script>
+  {% if route_script|default(false) %}
+  <script src="{{ route_script }}" defer></script>
+  {% endif %}
   {% if has_mermaid|default(false) %}
   <script src="{{ base_path }}/mermaid.js" defer></script>
   {% endif %}

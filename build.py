@@ -80,6 +80,7 @@ IMAGE_MARKDOWN_DIRS = [
 ROOT_STATIC_FILES = [
     "index.html",
     "style.css",
+    "site.js",
     "script.js",
     "mermaid.js",
     "toc.js",
@@ -92,7 +93,7 @@ ROOT_STATIC_DIRS = [
 SECTION_STATIC_DIRS = {
     "blog": ["script.js", "asset"],
     "personal-wiki": ["script.js", "asset"],
-    "papers": ["script.js", "asset"],
+    "papers": ["asset"],
 }
 
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=False)
@@ -932,6 +933,7 @@ def build_wiki(output_dir: Path) -> list[dict]:
         canonical_url=f"{BASE_URL}/personal-wiki/",
         base_path="..",
         section_path=".",
+        route_script="./script.js",
     )
     (output_dir / "personal-wiki" / "index.html").write_text(index_html, encoding="utf-8")
     print(f"  wiki: generated dist/personal-wiki/index.html ({len(notes_info)} notes)")
@@ -1144,6 +1146,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
         canonical_url=f"{BASE_URL}/blog/",
         base_path="..",
         section_path=".",
+        route_script="./script.js",
     )
     (output_dir / "blog" / "index.html").write_text(index_html, encoding="utf-8")
     print(f"  blog: generated dist/blog/index.html ({len(all_posts)} posts)")
