@@ -487,6 +487,12 @@
         align-items: flex-start;
         justify-content: center;
         overflow: hidden;
+        background: var(--color-white);
+        padding: 0.6rem;
+        border-radius: 2px;
+    }
+    :root[data-theme="dark"] .ascii-figure {
+        background: var(--color-black);
     }
     .ascii-art {
         display: block;
@@ -496,11 +502,16 @@
         white-space: pre;
         font-family: 'SuisseIntlMono', monospace;
         font-weight: 700;
-        font-size: clamp(3px, 1.15vw, 6px);
+        font-size: clamp(4px, 1.3vw, 7px);
         line-height: 1;
         letter-spacing: 0;
+        color: var(--color-black);
+        -webkit-font-smoothing: antialiased;
         text-rendering: geometricPrecision;
         font-variant-ligatures: none;
+    }
+    :root[data-theme="dark"] .ascii-art {
+        color: var(--color-white);
     }
 }
 
