@@ -42,7 +42,7 @@
   {% if toc_enabled|default(false) %}
   <script src="{{ base_path }}/toc.js" defer></script>
   {% endif %}
-  <title>{{ document_title|default("GABRIEL ONG") }}</title>
+  <title>{{ page_title|default(document_title|default("GABRIEL ONG")) }}</title>
   <link rel="shortcut icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
 </head>
 <body{% if toc_enabled|default(false) %} data-toc-enabled="true"{% endif %}>
