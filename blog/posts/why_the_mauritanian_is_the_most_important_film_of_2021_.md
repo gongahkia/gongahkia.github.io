@@ -22,4 +22,4 @@ So I implore you, grab this opportunity with both hands while it is still being 
 
 *(P.S. Do pay Shaw Theatres Lido a visit. I absolutely loved the atmosphere and open foyer. Really, everything about the theatre from the moment I bought a ticket to the instant I entered the Cinema wowed me. Highly recommended!)*
 
-Also, fear not. This blog hasn’t just morphed into a full-on review site for films. While I will keep posting my thoughts on various media I consume, I will likewise continue posting reflections on NS life and other things! Alright thx bye 🙂
+Also, fear not. This blog hasn’t just morphed into a full-on review site for films. While I will keep posting my thoughts on various media I consume, I will likewise continue posting reflections on NS life and other things! Alright thx bye

@@ -80,6 +80,6 @@ Ironic, isn’t it? That after all I’ve said about Chainsaw Man, the one theme
 
 Oh, and to answer my question at the start, Chainsaw Man and other great manga (like Oyasumi Pun Pun) have left me with an assured “yes”.
 
-Thanks for reading 🙂
+Thanks for reading
 
 Soli Deo gloria.

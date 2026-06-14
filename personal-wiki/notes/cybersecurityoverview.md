@@ -21,23 +21,23 @@ category: General
 
 There are 7 main types of cyber attacks.
 
-1. [Phishing](#phishing-)
-2. [Malware](#malware-)
-3. [DoS](#denial-of-service-)
-4. [Identity-Based attacks](#identity-based-attacks-)
-5. [Code injection](#code-injection-)
-6. [MitM attacks](#man-in-the-middle-attacks-)
-7. [Supply chain attacks](#supply-chain-attacks-)
+1. [Phishing](#phishing)
+2. [Malware](#malware)
+3. [DoS](#denial-of-service)
+4. [Identity-Based attacks](#identity-based-attacks)
+5. [Code injection](#code-injection)
+6. [MitM attacks](#man-in-the-middle-attacks)
+7. [Supply chain attacks](#supply-chain-attacks)
 
 ```mermaid
 flowchart TD;
-    A[Cyber Attacks] --> B[Phishing Attacks 🎣]
-    A --> C[Malware Attacks 💻]
-    A --> D[Denial of Service Attacks ⛔]
-    A --> E[Identity-Based Attacks 🧟]
-    A --> F[Code Injection Attacks 💉]
-    A --> G[Man-in-the-Middle Attacks 🖕]
-    A --> H[Supply Chain Attacks 🚚]
+    A[Cyber Attacks] --> B[Phishing Attacks]
+    A --> C[Malware Attacks]
+    A --> D[Denial of Service Attacks]
+    A --> E[Identity-Based Attacks]
+    A --> F[Code Injection Attacks]
+    A --> G[Man-in-the-Middle Attacks]
+    A --> H[Supply Chain Attacks]
     B --> J[Spear Phishing]
     B --> K[Whaling]
     B --> L[Vishing]
@@ -58,7 +58,7 @@ flowchart TD;
     H
 ```
 
-### Phishing 🎣
+### Phishing
 
 Malicious actors trick individuals into revealing SENSITIVE information by impersonating as a trustworthy entity.
 
@@ -69,7 +69,7 @@ Specific variants include
 3. VISHING: Voice phishing conducted through phone calls.
 4. SMISHI: Phishing via SMS messages.
 
-### Malware 💻
+### Malware
 
 Malicious software that harms devices or networks.
 
@@ -80,7 +80,7 @@ Specific variants include
 3. TROJAN HORSES: Malicious software disguised as legitimate applications.
 4. RANSOMWARE: Encrypts data and demands payment for decryption.
 
-### Denial of Service ⛔
+### Denial of Service
 
 * A.K.A DoS.
 * Make a service unavailable by overwhelming it with traffic.
@@ -90,21 +90,21 @@ Specific variants include
 1. DISTRIBUTED DENIAL OF SERVICE: A.K.A DDoS. Uses multiple compromised systems to launch an attack.
 2. APPLICATION LAYER ATTACKS: Targets specific applications to exploit vulnerabilities.
 
-### Identity-Based attacks 🧟
+### Identity-Based attacks
 
 Stealing personal information to gain unauthorized access.
 
 1. CREDENTIAL HARVESTING: Malicious actors collect login credentials en masse.
 2. BUSINESS EMAIL COMPROMISE: A.K.A BEC. Involves impersonating a trusted source to deceive customers or employees into transferring funds or data.
 
-### Code Injection 💉
+### Code Injection
 
 Feeding programs malicious code to manipulate data and execute unauthorized commands.
 
 1. SQL INJECTION: Inserting malicious SQL queries through input fields.
 2. CROSS-SITE SCRIPTING: A.K.A XSS. Injecting scripts into web pages viewed by users.
 
-### Man-in-the-Middle attacks 🖕
+### Man-in-the-Middle attacks
 
 * A.K.A MitM attacks.
 * Malicious actors intercept and alter communication between two parties without their knowledge.
@@ -114,7 +114,7 @@ Typically arises from
 1. ROGUE ACCESS POINTS mimicking legitimate networks, created by the malicious actors.
 2. EAVESDROPPING on existing unsecured connections.
 
-### Supply Chain attacks 🚚
+### Supply Chain attacks
 
 * Exploit supply chain vulnerabilities.
 * Can target both SOFTWARE and HARDWARE components.

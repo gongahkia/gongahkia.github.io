@@ -76,8 +76,6 @@ Still, I like it. We, the readers, have been made privy to many of Kafka’s pri
 
 Just as it should be.
 
-~ 🚪 ~
-
 Okay haha that’s the end of what I think I can write on Murakami’s Kafka on the Shore for now.
 
 There’s so much I didn’t even begin to unpack here, Nakata’s journey, the labyrinth within Kafka, the doctrine of correspondences, the converging of different realities. Hopefully I’ll be given the chance to write on this wonderful book again, perhaps after a few more reads.

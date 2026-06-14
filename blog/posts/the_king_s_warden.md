@@ -7,4 +7,4 @@ year: 2026
 rating: 4.5
 ---
 
-[Yoo Hae-jin](https://www.imdb.com/name/nm1041999/) has never missed. 👏
+[Yoo Hae-jin](https://www.imdb.com/name/nm1041999/) has never missed.

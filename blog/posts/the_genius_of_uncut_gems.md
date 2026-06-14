@@ -72,6 +72,6 @@ So at the end of the day, all I can say is the Safdie brothers knew exactly what
 
 That, and the Weeknd’s voice is crazy.
 
-That’s all for today. Thanks for taking the time to read this review/ commentary. I appreciate it. More blog posts coming soon regarding 2022 updates on life in general. See ya then 🙂
+That’s all for today. Thanks for taking the time to read this review/ commentary. I appreciate it. More blog posts coming soon regarding 2022 updates on life in general. See ya then
 
 Soli Deo gloria.
