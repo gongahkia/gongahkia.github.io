@@ -34,7 +34,17 @@ BASE_URL = "https://gabrielongzm.com"
 DEFAULT_OUTPUT_DIR = ROOT / "dist"
 WORKS_SOURCE_DIR = ROOT / "works"
 PERSON_ID = f"{BASE_URL}/#person"
-DEFAULT_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2.png"
+DEFAULT_SOCIAL_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2-og.png"
+PORTRAIT_SOURCE = ROOT / "asset" / "portrait" / "gong-2.png"
+PORTRAIT_VARIANTS = [
+    ("gong-2-140.webp", 140, "WEBP", {"quality": 82, "method": 6}),
+    ("gong-2-280.webp", 280, "WEBP", {"quality": 82, "method": 6}),
+    ("gong-2-560.webp", 560, "WEBP", {"quality": 82, "method": 6}),
+    ("gong-2-140.png", 140, "PNG", {"optimize": True}),
+    ("gong-2-280.png", 280, "PNG", {"optimize": True}),
+    ("gong-2-560.png", 560, "PNG", {"optimize": True}),
+    ("gong-2-og.png", 1200, "PNG", {"optimize": True}),
+]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
 ASCII_ALGORITHM_VERSION = "braille-fg-v3-anim"
@@ -77,7 +87,6 @@ ROOT_STATIC_FILES = [
     "CNAME",
 ]
 ROOT_STATIC_DIRS = [
-    "asset",
     "resume",
 ]
 SECTION_STATIC_DIRS = {
@@ -119,6 +128,8 @@ def copy_static_site(output_dir: Path) -> None:
     for relative_path in ROOT_STATIC_FILES:
         copy_file(ROOT / relative_path, output_dir / relative_path)
 
+    copy_root_asset_dir(output_dir)
+
     for relative_path in ROOT_STATIC_DIRS:
         copy_tree(ROOT / relative_path, output_dir / relative_path)
 
@@ -132,6 +143,37 @@ def copy_static_site(output_dir: Path) -> None:
                 copy_file(source, destination)
 
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
+
+
+def copy_root_asset_dir(output_dir: Path) -> None:
+    """Copy root assets without shipping unused large portrait variants."""
+    source = ROOT / "asset"
+    destination = output_dir / "asset"
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+
+    for entry in source.iterdir():
+        if entry.name == "portrait":
+            continue
+        target = destination / entry.name
+        if entry.is_dir():
+            copy_tree(entry, target)
+        else:
+            copy_file(entry, target)
+
+    generate_responsive_portrait_assets(destination / "portrait")
+
+
+def generate_responsive_portrait_assets(destination: Path) -> None:
+    """Generate the portrait files served by the built site from the original source PNG."""
+    destination.mkdir(parents=True, exist_ok=True)
+    with Image.open(PORTRAIT_SOURCE) as image:
+        image = ImageOps.exif_transpose(image).convert("RGBA")
+        for filename, width, image_format, options in PORTRAIT_VARIANTS:
+            height = round(image.height * (width / image.width))
+            resized = image.resize((width, height), Image.Resampling.LANCZOS)
+            resized.save(destination / filename, image_format, **options)
 
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
@@ -772,7 +814,7 @@ def render_wiki_note(
         date_published=parse_date_to_iso("2 Feb 2026"),
         date_modified=git_lastmod(source_path),
         person_id=PERSON_ID,
-        default_image_url=DEFAULT_IMAGE_URL,
+        default_image_url=DEFAULT_SOCIAL_IMAGE_URL,
         base_path="../..",
         section_path="..",
         toc_enabled=True,
@@ -958,7 +1000,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             date_published=parse_date_to_iso(date),
             date_modified=git_lastmod(md_file),
             person_id=PERSON_ID,
-            default_image_url=DEFAULT_IMAGE_URL,
+            default_image_url=DEFAULT_SOCIAL_IMAGE_URL,
             **meta,
         )
 
@@ -1316,7 +1358,7 @@ def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
             date_published=parse_date_to_iso(date),
             date_modified=git_lastmod(source_path),
             person_id=PERSON_ID,
-            default_image_url=DEFAULT_IMAGE_URL,
+            default_image_url=DEFAULT_SOCIAL_IMAGE_URL,
             base_path="..",
             section_path="..",
             toc_enabled=True,
@@ -1406,7 +1448,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             date_published=parse_date_to_iso(date),
             date_modified=git_lastmod(md_file),
             person_id=PERSON_ID,
-            default_image_url=DEFAULT_IMAGE_URL,
+            default_image_url=DEFAULT_SOCIAL_IMAGE_URL,
             base_path="../..",
             section_path="..",
             toc_enabled=True,

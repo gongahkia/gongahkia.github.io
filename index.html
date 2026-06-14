@@ -19,7 +19,7 @@ font reference
   <meta property="og:description" content="Gabriel Ong is a Product-minded Software Developer in Singapore specialising in Legal Technology.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://gabrielongzm.com/">
-  <meta property="og:image" content="https://gabrielongzm.com/asset/portrait/gong-2.png">
+  <meta property="og:image" content="https://gabrielongzm.com/asset/portrait/gong-2-og.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Gabriel Ong - Product-minded Software Developer">
   <meta name="twitter:description" content="Gabriel Ong is a Product-minded Software Developer in Singapore specialising in Legal Technology.">
@@ -42,7 +42,7 @@ font reference
         "name": "Gabriel Ong",
         "alternateName": "王哲勉",
         "url": "https://gabrielongzm.com",
-        "image": "https://gabrielongzm.com/asset/portrait/gong-2.png",
+        "image": "https://gabrielongzm.com/asset/portrait/gong-2-og.png",
         "mainEntityOfPage": "https://gabrielongzm.com/",
         "jobTitle": "Product-minded Software Developer",
         "description": "Product-minded Software Developer in Singapore specialising in Legal Technology",
@@ -91,7 +91,22 @@ font reference
         </header>
         <aside>
           <figure>
-            <img src="asset/portrait/gong-2.png" width="140" alt="Gabriel Ong" id="gongImage">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="asset/portrait/gong-2-140.webp 140w, asset/portrait/gong-2-280.webp 280w, asset/portrait/gong-2-560.webp 560w"
+                sizes="140px">
+              <img
+                src="asset/portrait/gong-2-280.png"
+                srcset="asset/portrait/gong-2-140.png 140w, asset/portrait/gong-2-280.png 280w, asset/portrait/gong-2-560.png 560w"
+                sizes="140px"
+                width="140"
+                height="187"
+                alt="Gabriel Ong"
+                id="gongImage"
+                decoding="async"
+                fetchpriority="high">
+            </picture>
           </figure>
         </aside>
       </section>
