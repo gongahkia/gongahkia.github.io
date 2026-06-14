@@ -502,6 +502,29 @@
         max-width: 100%;
         height: auto;
     }
+    .mermaid {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        padding: calc(var(--unit-size) / 2) 0;
+        background: transparent;
+        color: var(--foreground-color);
+        font-family: 'SuisseIntlMono', monospace;
+        white-space: pre;
+        text-align: left;
+    }
+    .mermaid-rendered {
+        font-family: inherit;
+        white-space: normal;
+        text-align: center;
+    }
+    .mermaid svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin-inline: auto;
+    }
     .ascii-figure {
         align-items: flex-start;
         justify-content: center;
