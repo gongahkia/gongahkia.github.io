@@ -495,7 +495,6 @@
     }
     .mermaid {
         display: block;
-        width: 100%;
         max-width: 100%;
         overflow-x: auto;
         padding: calc(var(--unit-size) / 2) 0;
