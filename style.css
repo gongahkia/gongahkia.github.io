@@ -167,13 +167,13 @@
         position: absolute;
         background: var(--interactive-highlight-color);
         border-radius: 0.18em;
-        transform: scaleX(0);
+        transform: rotate(var(--line-highlight-tilt, 0deg)) scaleX(0);
         transform-origin: left center;
         animation: link-highlight-segment-in var(--line-highlight-duration, 180ms) ease forwards;
     }
     @keyframes link-highlight-segment-in {
         to {
-            transform: scaleX(1);
+            transform: rotate(var(--line-highlight-tilt, 0deg)) scaleX(1);
         }
     }
 }
