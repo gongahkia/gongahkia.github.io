@@ -17,37 +17,93 @@
         }
     });
 
+    function clampByte(value) {
+        return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function rgbString(channels) {
+        return `rgb(${channels.map(clampByte).join(", ")})`;
+    }
+
+    function parseCssNumber(value, percentScale = 1) {
+        const trimmed = value.trim();
+        if (trimmed.endsWith("%")) {
+            return (Number(trimmed.slice(0, -1)) / 100) * percentScale;
+        }
+        return Number(trimmed);
+    }
+
+    function linearToSrgb(value) {
+        const channel = Math.max(0, Math.min(1, value));
+        return channel <= 0.0031308
+            ? channel * 12.92
+            : 1.055 * Math.pow(channel, 1 / 2.4) - 0.055;
+    }
+
+    function oklabToRgb(l, a, b) {
+        const lPrime = l + 0.3963377774 * a + 0.2158037573 * b;
+        const mPrime = l - 0.1055613458 * a - 0.0638541728 * b;
+        const sPrime = l - 0.0894841775 * a - 1.2914855480 * b;
+        const lCube = lPrime ** 3;
+        const mCube = mPrime ** 3;
+        const sCube = sPrime ** 3;
+
+        return [
+            linearToSrgb(+4.0767416621 * lCube - 3.3077115913 * mCube + 0.2309699292 * sCube) * 255,
+            linearToSrgb(-1.2684380046 * lCube + 2.6097574011 * mCube - 0.3413193965 * sCube) * 255,
+            linearToSrgb(-0.0041960863 * lCube - 0.7034186147 * mCube + 1.7076147010 * sCube) * 255,
+        ].map(clampByte);
+    }
+
     function parseRgb(color) {
         const rgb = color?.match(/rgba?\(([^)]+)\)/i);
         if (rgb) {
             const parts = rgb[1].split(/[,\s/]+/).filter(Boolean).slice(0, 3).map(Number);
             if (parts.length === 3 && parts.every(Number.isFinite)) {
-                return parts.map((value) => Math.max(0, Math.min(255, Math.round(value))));
+                return parts.map(clampByte);
             }
         }
 
         const srgb = color?.match(/color\(srgb\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)/i);
         if (srgb) {
-            return srgb.slice(1, 4).map((value) => Math.max(0, Math.min(255, Math.round(Number(value) * 255))));
+            return srgb.slice(1, 4).map((value) => clampByte(Number(value) * 255));
+        }
+
+        const oklab = color?.match(/oklab\(([^)]+)\)/i);
+        if (oklab) {
+            const parts = oklab[1].split(/[,\s/]+/).filter(Boolean).slice(0, 3);
+            if (parts.length === 3) {
+                const l = parseCssNumber(parts[0], 1);
+                const a = parseCssNumber(parts[1], 0.4);
+                const b = parseCssNumber(parts[2], 0.4);
+                if ([l, a, b].every(Number.isFinite)) {
+                    return oklabToRgb(l, a, b);
+                }
+            }
         }
 
         return null;
     }
 
+    function normalizeColor(color, fallback) {
+        const parsed = parseRgb(color) || parseRgb(fallback);
+        return parsed ? rgbString(parsed) : fallback;
+    }
+
     function mixColor(baseColor, tintColor, tintWeight) {
         const base = parseRgb(baseColor);
         const tint = parseRgb(tintColor);
-        if (!base || !tint) return tintColor;
+        if (!base || !tint) return normalizeColor(tintColor, "#101010");
 
         const weight = Math.max(0, Math.min(1, tintWeight));
         const mixed = base.map((channel, index) => Math.round(channel * (1 - weight) + tint[index] * weight));
-        return `rgb(${mixed[0]}, ${mixed[1]}, ${mixed[2]})`;
+        return rgbString(mixed);
     }
 
     function currentThemeConfig() {
         const bodyStyle = getComputedStyle(document.body);
-        const background = bodyStyle.backgroundColor || "#ffffff";
-        const foreground = bodyStyle.color || "#101010";
+        const background = normalizeColor(bodyStyle.backgroundColor, "#ffffff");
+        const foreground = normalizeColor(bodyStyle.color, "#101010");
         const isDark = root.dataset.theme === "dark";
         const nodeFill = mixColor(background, foreground, isDark ? 0.09 : 0.035);
         const secondaryFill = mixColor(background, foreground, isDark ? 0.16 : 0.08);
