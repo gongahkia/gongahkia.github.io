@@ -233,6 +233,10 @@ def process_mermaid_blocks(rendered_html: str) -> str:
     return MERMAID_CODE_BLOCK_RE.sub(render_mermaid_block, rendered_html)
 
 
+def html_uses_mathjax(rendered_html: str) -> bool:
+    return "arithmatex" in rendered_html
+
+
 class MarkdownImageAsciiParser(HTMLParser):
     def __init__(self, source_path: Path) -> None:
         super().__init__(convert_charrefs=False)
@@ -799,6 +803,7 @@ def render_wiki_note(
     output_path: Path,
     canonical_url: str,
     source_path: Path,
+    has_math: bool,
 ) -> str:
     rendered = template.render(
         title=title,
@@ -818,6 +823,7 @@ def render_wiki_note(
         base_path="../..",
         section_path="..",
         toc_enabled=True,
+        has_math=has_math,
     )
     output_path.write_text(rendered, encoding="utf-8")
 
@@ -857,7 +863,15 @@ def build_wiki(output_dir: Path) -> list[dict]:
         output_filename = md_file.stem.lower() + ".html"
         output_path = output_pages_dir / output_filename
         canonical_url = f"{BASE_URL}/personal-wiki/pages/{output_filename}"
-        rendered = render_wiki_note(template, title, html_content, output_path, canonical_url, md_file)
+        rendered = render_wiki_note(
+            template,
+            title,
+            html_content,
+            output_path,
+            canonical_url,
+            md_file,
+            has_math=html_uses_mathjax(html_content),
+        )
         category = str(meta.get("category", "General")).strip().lower() or "general"
         if category not in ("general", "tech"):
             category = "general"
@@ -1424,6 +1438,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
         output_filename = md_file.stem.lower() + ".html"
         canonical_url = f"{BASE_URL}/papers/pages/{output_filename}"
 
+        html_content = md_to_html(content, md_file)
         rendered = detail_template.render(
             title=title,
             date=date,
@@ -1438,7 +1453,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             version=version,
             license=license_,
             github=github,
-            content=md_to_html(content, md_file),
+            content=html_content,
             meta_description=f"Paper: {title} - Gabriel Ong",
             og_title=f"{title} | Gabriel Ong",
             og_type="article",
@@ -1452,6 +1467,7 @@ def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
             base_path="../..",
             section_path="..",
             toc_enabled=True,
+            has_math=html_uses_mathjax(html_content),
         )
 
         output_path = output_pages_dir / output_filename
