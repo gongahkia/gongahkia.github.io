@@ -244,18 +244,20 @@ document.addEventListener('click', function(event) {
 // ----- GitHub contributions calendar -----
 
 async function loadContributions() {
+    const container = document.getElementById('github-contrib-calendar');
+    if (!container) return;
+
     try {
-        const resp = await fetch('/asset/contributions.json', { cache: 'no-store' });
+        const resp = await fetch('/asset/contributions.json');
         if (!resp.ok) return;
         const data = await resp.json();
-        renderContribCalendar(data);
+        renderContribCalendar(data, container);
     } catch (_) {
         // fail silently if file absent
     }
 }
 
-function renderContribCalendar(data) {
-    const container = document.getElementById('github-contrib-calendar');
+function renderContribCalendar(data, container = document.getElementById('github-contrib-calendar')) {
     if (!container) return;
     container.innerHTML = '';
 
