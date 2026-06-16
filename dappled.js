@@ -38,13 +38,25 @@
             const int = Number.parseInt(raw, 16);
             return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
         }
-        const channels = color.match(/\d+(\.\d+)?/g)?.slice(0, 3).map(Number);
-        if (channels?.length === 3) return channels;
-        return fallback.match(/\d+/g).map(Number);
+        const srgb = color.match(/^color\(\s*srgb\s+([^)]+)\)$/i);
+        if (srgb) {
+            const channels = srgb[1].split("/")[0].trim().split(/\s+/).slice(0, 3).map(parseCssChannel);
+            if (channels.length === 3 && channels.every(Number.isFinite)) return channels.map(clampChannel);
+        }
+        const channels = color.match(/-?\d*\.?\d+%?/g)?.slice(0, 3).map(parseCssChannel);
+        if (channels?.length === 3 && channels.every(Number.isFinite)) return channels.map(clampChannel);
+        return parseColor(fallback, "rgb(255,255,255)");
     }
 
     function clampChannel(value) {
         return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function parseCssChannel(value) {
+        const raw = String(value).trim();
+        if (raw.endsWith("%")) return Number.parseFloat(raw) * 2.55;
+        const channel = Number.parseFloat(raw);
+        return channel <= 1 ? channel * 255 : channel;
     }
 
     function mixColor(a, b, weight) {
@@ -52,21 +64,34 @@
         return a.map((channel, index) => clampChannel(channel * (1 - w) + b[index] * w));
     }
 
-    function isDarkColor(color) {
-        const luminance = (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]) / 255;
-        return luminance < 0.5;
+    function luminance(color) {
+        return (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]) / 255;
     }
 
-    function currentPalette() {
+    function isDarkColor(color) {
+        return luminance(color) < 0.5;
+    }
+
+    function withMinLuminanceDelta(base, color, minDelta, target) {
+        let next = color;
+        for (let i = 0; i < 8 && Math.abs(luminance(next) - luminance(base)) < minDelta; i++) {
+            next = mixColor(next, target, 0.22);
+        }
+        return next;
+    }
+
+    function currentPalette(container) {
         const bodyStyle = getComputedStyle(document.body);
-        const bg = parseColor(bodyStyle.backgroundColor, "rgb(255,255,255)");
+        const containerStyle = getComputedStyle(container);
+        const bg = parseColor(containerStyle.backgroundColor || bodyStyle.backgroundColor, "rgb(255,255,255)");
         const fg = parseColor(bodyStyle.color, "rgb(16,16,16)");
         const dark = document.documentElement.dataset.theme === "dark" || isDarkColor(bg);
         if (dark) {
+            const readable = isDarkColor(fg) ? mixColor(bg, [255, 255, 255], 0.86) : fg;
             return {
-                shadow: mixColor(bg, [0, 0, 0], 0.46),
-                mid: mixColor(bg, fg, 0.34),
-                light: mixColor(bg, fg, 0.58),
+                shadow: withMinLuminanceDelta(bg, mixColor(bg, [0, 0, 0], 0.32), 0.08, [0, 0, 0]),
+                mid: withMinLuminanceDelta(bg, mixColor(bg, readable, 0.5), 0.18, readable),
+                light: withMinLuminanceDelta(bg, mixColor(bg, readable, 0.72), 0.3, readable),
             };
         }
         return {
@@ -204,7 +229,7 @@
         if (width < 2 || height < 2) return;
 
         const rootStyle = getComputedStyle(document.documentElement);
-        const { shadow, mid, light } = currentPalette();
+        const { shadow, mid, light } = currentPalette(container);
         const wind = prefersReducedMotion ? 0.32 : 0.32 + Math.sin(time * 0.00034) * 0.16 + Math.sin(time * 0.00013 + 1.6) * 0.1;
         const parallax = state.pointer * 0.045;
 
