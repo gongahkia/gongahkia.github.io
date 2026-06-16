@@ -81,6 +81,7 @@ ROOT_STATIC_FILES = [
     "index.html",
     "style.css",
     "site.js",
+    "dappled.js",
     "script.js",
     "mermaid.js",
     "toc.js",
