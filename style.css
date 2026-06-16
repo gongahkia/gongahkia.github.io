@@ -187,11 +187,8 @@
         --thin-border-color: var(--foreground-color);
         --click-text-color: #363636;
         --interactive-highlight-color: color-mix(in oklab, var(--foreground-color) 18%, transparent);
-        --dappled-shadow: #233452;
-        --dappled-mid: #e89a39;
-        --dappled-light: #f5eedd;
-        --dappled-frame: var(--dappled-shadow);
-        --dappled-gap: var(--dappled-light);
+        --dappled-frame: var(--foreground-color);
+        --dappled-gap: var(--active-background-color, var(--background-color));
         --dappled-center: 0.38;
     }
     :root[data-theme="dark"] {
@@ -200,11 +197,8 @@
         --toc-surface-color: color-mix(in oklab, var(--active-background-color, var(--background-color)) 94%, var(--color-white));
         --thin-border-color: color-mix(in oklab, var(--foreground-color), transparent 50%);
         --click-text-color: #cccccc;
-        --dappled-shadow: #0c2038;
-        --dappled-mid: #6a86b0;
-        --dappled-light: #83a1c9;
-        --dappled-frame: var(--dappled-light);
-        --dappled-gap: var(--dappled-shadow);
+        --dappled-frame: var(--foreground-color);
+        --dappled-gap: var(--active-background-color, var(--background-color));
         --dappled-center: 0.38;
     }
     html, body {

@@ -43,8 +43,37 @@
         return fallback.match(/\d+/g).map(Number);
     }
 
-    function cssColor(name, fallback) {
-        return parseColor(getComputedStyle(document.documentElement).getPropertyValue(name).trim(), fallback);
+    function clampChannel(value) {
+        return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function mixColor(a, b, weight) {
+        const w = Math.max(0, Math.min(1, weight));
+        return a.map((channel, index) => clampChannel(channel * (1 - w) + b[index] * w));
+    }
+
+    function isDarkColor(color) {
+        const luminance = (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]) / 255;
+        return luminance < 0.5;
+    }
+
+    function currentPalette() {
+        const bodyStyle = getComputedStyle(document.body);
+        const bg = parseColor(bodyStyle.backgroundColor, "rgb(255,255,255)");
+        const fg = parseColor(bodyStyle.color, "rgb(16,16,16)");
+        const dark = document.documentElement.dataset.theme === "dark" || isDarkColor(bg);
+        if (dark) {
+            return {
+                shadow: mixColor(bg, [0, 0, 0], 0.46),
+                mid: mixColor(bg, fg, 0.34),
+                light: mixColor(bg, fg, 0.58),
+            };
+        }
+        return {
+            shadow: mixColor(bg, fg, 0.86),
+            mid: mixColor(bg, fg, 0.34),
+            light: mixColor(bg, [255, 255, 255], 0.58),
+        };
     }
 
     function sceneRoots(random) {
@@ -175,9 +204,7 @@
         if (width < 2 || height < 2) return;
 
         const rootStyle = getComputedStyle(document.documentElement);
-        const shadow = cssColor("--dappled-shadow", "rgb(12,32,56)");
-        const mid = cssColor("--dappled-mid", "rgb(106,134,176)");
-        const light = cssColor("--dappled-light", "rgb(131,161,201)");
+        const { shadow, mid, light } = currentPalette();
         const wind = prefersReducedMotion ? 0.32 : 0.32 + Math.sin(time * 0.00034) * 0.16 + Math.sin(time * 0.00013 + 1.6) * 0.1;
         const parallax = state.pointer * 0.045;
 
