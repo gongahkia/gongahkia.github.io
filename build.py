@@ -8,6 +8,7 @@ import hashlib
 import html
 import io
 import json
+import math
 import re
 import shutil
 import statistics
@@ -47,7 +48,7 @@ PORTRAIT_VARIANTS = [
 ]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fs-v4-photo"
+ASCII_ALGORITHM_VERSION = "braille-fs-v5-sigmoid"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
@@ -525,6 +526,17 @@ _SRGB_TO_LINEAR_LUT = [int(round(((v / 255.0) ** 2.2) * 255.0)) for v in range(2
 _LINEAR_TO_SRGB_LUT = [int(round(((v / 255.0) ** (1 / 2.2)) * 255.0)) for v in range(256)]
 
 
+def _sigmoid_lut(gain: float) -> list[int]:
+    # logistic S-curve centered on 128, normalized so 0→0 and 255→255
+    def raw(v: float) -> float:
+        return 1.0 / (1.0 + math.exp(-gain * (v / 127.5 - 1.0)))
+    lo, hi = raw(0), raw(255)
+    return [int(round((raw(v) - lo) / (hi - lo) * 255)) for v in range(256)]
+
+
+_SIGMOID_LUT = _sigmoid_lut(5.5)
+
+
 def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
     del keep_all_rows  # rows are always padded now; flag kept for callers
     gray = ImageOps.grayscale(image)
@@ -536,7 +548,9 @@ def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_a
     linear = gray.point(_SRGB_TO_LINEAR_LUT)
     linear = linear.resize((target_w, target_h), Image.Resampling.LANCZOS)
     gray = linear.point(_LINEAR_TO_SRGB_LUT)
-    gray = ImageOps.autocontrast(gray, cutoff=2)
+    # cutoff=6 clips outliers; sigmoid pushes mid-tones toward extremes so that
+    # cell-level density (visible at small font sizes) carries contrast
+    gray = ImageOps.autocontrast(gray, cutoff=6).point(_SIGMOID_LUT)
 
     bg_level, bg_noise = estimate_background(gray)
     is_photo = bg_noise > 24  # noisy border → no uniform background to subtract
