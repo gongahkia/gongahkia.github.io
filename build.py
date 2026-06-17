@@ -48,7 +48,7 @@ PORTRAIT_VARIANTS = [
 ]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fs-v7-block-1"
+ASCII_ALGORITHM_VERSION = "braille-fs-v8-shade-default"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
@@ -547,18 +547,7 @@ def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_a
     rows = max(1, round(aspect * cols * 0.55))
 
     linear = gray.point(_SRGB_TO_LINEAR_LUT)
-    # downsampled for photo-vs-diagram detection
-    sub = linear.resize((cols * 2, rows * 4), Image.Resampling.LANCZOS).point(_LINEAR_TO_SRGB_LUT)
-    sub = ImageOps.autocontrast(sub, cutoff=4)
-    _, bg_noise = estimate_background(sub)
-    hist = sub.histogram()
-    total = max(1, sum(hist))
-    extreme_frac = (sum(hist[:32]) + sum(hist[224:])) / total  # near-pure-black/white pixel ratio
-    is_photo = bg_noise > 12 or extreme_frac < 0.4  # photos: noisy borders OR few extreme tones
-
-    if is_photo:
-        return _photo_to_braille(linear, cols, rows)
-    return _diagram_to_braille(sub, cols, rows)
+    return _photo_to_braille(linear, cols, rows)  # shade-block path is default; _diagram_to_braille kept available for callers that want braille line-art
 
 
 def _photo_to_braille(linear: Image.Image, cols: int, rows: int) -> str:
