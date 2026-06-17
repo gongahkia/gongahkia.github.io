@@ -48,7 +48,7 @@ PORTRAIT_VARIANTS = [
 ]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fs-v6-cell"
+ASCII_ALGORITHM_VERSION = "braille-fs-v7-block"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
@@ -536,15 +536,8 @@ def _sigmoid_lut(gain: float) -> list[int]:
 
 _SIGMOID_LUT = _sigmoid_lut(5.5)
 
-# 9-step density ramp: each glyph adds one dot in a spatially-dispersed (Bayer-ordered)
-# position so the cell's fill ratio reads as a uniform shade at small font sizes
-_DENSITY_DOT_ORDER = [(0, 0), (1, 2), (0, 2), (1, 0), (0, 1), (1, 3), (0, 3), (1, 1)]
-_DENSITY_GLYPHS: list[str] = []
-_density_mask = 0
-_DENSITY_GLYPHS.append(chr(0x2800))
-for _dx, _dy in _DENSITY_DOT_ORDER:
-    _density_mask |= BRAILLE_DOT_BITS[(_dx, _dy)]
-    _DENSITY_GLYPHS.append(chr(0x2800 + _density_mask))
+# block-element shade ramp: each cell renders as a solid fill so density reads at any font size
+_SHADE_RAMP = [" ", "░", "▒", "▓", "█"]  # ' ', ░, ▒, ▓, █
 
 
 def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
@@ -572,7 +565,7 @@ def _photo_to_braille(linear: Image.Image, cols: int, rows: int) -> str:
     pixels = cell.load()
     signal = [[pixels[x, y] for x in range(cols)] for y in range(rows)]
 
-    levels = len(_DENSITY_GLYPHS)
+    levels = len(_SHADE_RAMP)
     step = 255 / (levels - 1)
     lines = []
     for y in range(rows):
@@ -583,7 +576,7 @@ def _photo_to_braille(linear: Image.Image, cols: int, rows: int) -> str:
             old = row_signal[x]
             level = max(0, min(levels - 1, int(round(old / step))))
             err = old - int(round(level * step))
-            chars.append(_DENSITY_GLYPHS[level])
+            chars.append(_SHADE_RAMP[level])
             if x + 1 < cols:
                 row_signal[x + 1] = max(0, min(255, row_signal[x + 1] + err * 7 // 16))
             if next_row is not None:

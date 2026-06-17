@@ -586,7 +586,7 @@
         white-space: pre;
         font-family: 'SuisseIntlMono', monospace;
         font-weight: 700;
-        font-size: clamp(6px, 1.4vw, 8px);
+        font-size: clamp(7px, 1.5vw, 9px);
         line-height: 1;
         letter-spacing: 0;
         color: inherit;
@@ -602,7 +602,7 @@
         overflow: hidden;
         max-width: 100%;
         margin-inline: auto;
-        font-size: clamp(6px, 1.4vw, 8px);
+        font-size: clamp(7px, 1.5vw, 9px);
         line-height: 1;
         height: calc(var(--ascii-rows, 1) * 1em);
     }
