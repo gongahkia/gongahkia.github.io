@@ -26,6 +26,11 @@
     font-display: swap;
     src: url(https://res.hajimehoshi.com/fonts/SuisseIntlMono-Regular-WebXL.woff2) format('woff2');
 }
+@font-face {
+    font-family: 'SuisseIntlMono';  /* fallback for block-element range (U+2580–259F) so ░▒▓█ render as uniform fills, not striated dots */
+    src: local('Menlo'), local('Monaco'), local('Consolas'), local('DejaVu Sans Mono'), local('Courier New');
+    unicode-range: U+2580-259F;
+}
 
 @font-face {
     font-family: 'Noto Sans JP';
