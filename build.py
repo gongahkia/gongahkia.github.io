@@ -24,7 +24,7 @@ try:
     import markdown
     import yaml
     from jinja2 import Environment, FileSystemLoader
-    from PIL import Image, ImageEnhance, ImageFilter, ImageOps, UnidentifiedImageError
+    from PIL import Image, ImageChops, ImageFilter, ImageOps, UnidentifiedImageError
 except ImportError:
     print("error: missing deps. run: pip install -r requirements.txt")
     sys.exit(1)
@@ -47,7 +47,7 @@ PORTRAIT_VARIANTS = [
 ]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fg-v3-anim"
+ASCII_ALGORITHM_VERSION = "braille-fs-v4-photo"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
@@ -64,12 +64,6 @@ BRAILLE_DOT_BITS = {
     (1, 2): 0x20,
     (1, 3): 0x80,
 }
-BAYER_4 = (
-    (0, 8, 2, 10),
-    (12, 4, 14, 6),
-    (3, 11, 1, 9),
-    (15, 7, 13, 5),
-)
 IMAGE_MARKDOWN_DIRS = [
     ROOT / "works",
     ROOT / "blog" / "posts",
@@ -527,18 +521,69 @@ def flatten_image(image: Image.Image) -> Image.Image:
     return image.convert("RGB")
 
 
+_SRGB_TO_LINEAR_LUT = [int(round(((v / 255.0) ** 2.2) * 255.0)) for v in range(256)]
+_LINEAR_TO_SRGB_LUT = [int(round(((v / 255.0) ** (1 / 2.2)) * 255.0)) for v in range(256)]
+
+
 def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
+    del keep_all_rows  # rows are always padded now; flag kept for callers
     gray = ImageOps.grayscale(image)
     aspect = gray.height / max(gray.width, 1)
     rows = max(1, round(aspect * cols * 0.55))
-    target_size = (cols * 2, rows * 4)
-    gray = ImageEnhance.Contrast(gray.resize(target_size, Image.Resampling.LANCZOS)).enhance(1.25)
-    edge = ImageOps.autocontrast(gray.filter(ImageFilter.FIND_EDGES))
-    background_level, background_noise = estimate_background(gray)
-    delta_floor = min(34, max(10, round(background_noise * 2.5)))
-    edge_floor = min(52, max(18, round(background_noise * 1.5)))
-    gray_pixels = gray.load()
+    target_w, target_h = cols * 2, rows * 4
+
+    # gamma-correct resize: decode sRGB → resize in linear light → re-encode
+    linear = gray.point(_SRGB_TO_LINEAR_LUT)
+    linear = linear.resize((target_w, target_h), Image.Resampling.LANCZOS)
+    gray = linear.point(_LINEAR_TO_SRGB_LUT)
+    gray = ImageOps.autocontrast(gray, cutoff=2)
+
+    bg_level, bg_noise = estimate_background(gray)
+    is_photo = bg_noise > 24  # noisy border → no uniform background to subtract
+
+    # DoG edge layer: small-sigma minus large-sigma, centered on 128
+    edge = ImageChops.subtract(
+        gray.filter(ImageFilter.GaussianBlur(0.8)),
+        gray.filter(ImageFilter.GaussianBlur(2.0)),
+        scale=1.0,
+        offset=128,
+    )
+
+    if is_photo:
+        base = ImageOps.invert(gray)  # darker pixels become denser braille
+    elif bg_level >= 128:
+        base = ImageOps.invert(gray)  # dark subject on light background
+    else:
+        base = gray  # light subject on dark background
+
+    base_pixels = base.load()
     edge_pixels = edge.load()
+    signal = [
+        [
+            min(255, base_pixels[x, y] + int(abs(edge_pixels[x, y] - 128) * 0.5))
+            for x in range(target_w)
+        ]
+        for y in range(target_h)
+    ]
+
+    # Floyd-Steinberg error diffusion, 1-bit
+    bits = [[0] * target_w for _ in range(target_h)]
+    for y in range(target_h):
+        row_signal = signal[y]
+        next_row = signal[y + 1] if y + 1 < target_h else None
+        for x in range(target_w):
+            old = row_signal[x]
+            new = 255 if old >= 128 else 0
+            bits[y][x] = 1 if new else 0
+            err = old - new
+            if x + 1 < target_w:
+                row_signal[x + 1] = max(0, min(255, row_signal[x + 1] + err * 7 // 16))
+            if next_row is not None:
+                if x > 0:
+                    next_row[x - 1] = max(0, min(255, next_row[x - 1] + err * 3 // 16))
+                next_row[x] = max(0, min(255, next_row[x] + err * 5 // 16))
+                if x + 1 < target_w:
+                    next_row[x + 1] = max(0, min(255, next_row[x + 1] + err * 1 // 16))
 
     lines = []
     for row in range(rows):
@@ -547,26 +592,11 @@ def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_a
             mask = 0
             for y in range(4):
                 for x in range(2):
-                    px = col * 2 + x
-                    py = row * 4 + y
-                    value = gray_pixels[px, py]
-                    delta = max(0, abs(value - background_level) - delta_floor)
-                    if background_level >= 128:
-                        foreground = max(0, background_level - value - delta_floor)
-                    else:
-                        foreground = max(0, value - background_level - delta_floor)
-                    detail = max(0, edge_pixels[px, py] - edge_floor)
-                    signal = min(255, int(max(foreground, delta * 0.7) * 1.35 + detail * 0.9))
-                    threshold = int((BAYER_4[py % 4][px % 4] + 0.5) * 14)
-                    if signal > threshold and (foreground > 8 or delta > 18 or detail > 34):
+                    if bits[row * 4 + y][col * 2 + x]:
                         mask |= BRAILLE_DOT_BITS[(x, y)]
             chars.append(chr(0x2800 + mask))
-        lines.append("".join(chars).rstrip(BRAILLE_BLANK))
-
-    if keep_all_rows:
-        # Preserve the exact row count so animation frames stack to a fixed height.
-        return "\n".join(lines)
-    return "\n".join(lines).strip("\n") or BRAILLE_BLANK
+        lines.append("".join(chars))
+    return "\n".join(lines)
 
 
 def estimate_background(gray: Image.Image) -> tuple[int, float]:
