@@ -48,7 +48,7 @@ PORTRAIT_VARIANTS = [
 ]
 IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fs-v5-sigmoid"
+ASCII_ALGORITHM_VERSION = "braille-fs-v6-cell"
 ASCII_IMAGE_COLUMNS = 104
 ANIMATED_IMAGE_COLUMNS = 90  # narrower for animated sources to keep frame payload reasonable
 MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
@@ -536,40 +536,77 @@ def _sigmoid_lut(gain: float) -> list[int]:
 
 _SIGMOID_LUT = _sigmoid_lut(5.5)
 
+# 9-step density ramp: each glyph adds one dot in a spatially-dispersed (Bayer-ordered)
+# position so the cell's fill ratio reads as a uniform shade at small font sizes
+_DENSITY_DOT_ORDER = [(0, 0), (1, 2), (0, 2), (1, 0), (0, 1), (1, 3), (0, 3), (1, 1)]
+_DENSITY_GLYPHS: list[str] = []
+_density_mask = 0
+_DENSITY_GLYPHS.append(chr(0x2800))
+for _dx, _dy in _DENSITY_DOT_ORDER:
+    _density_mask |= BRAILLE_DOT_BITS[(_dx, _dy)]
+    _DENSITY_GLYPHS.append(chr(0x2800 + _density_mask))
+
 
 def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_all_rows: bool = False) -> str:
     del keep_all_rows  # rows are always padded now; flag kept for callers
     gray = ImageOps.grayscale(image)
     aspect = gray.height / max(gray.width, 1)
     rows = max(1, round(aspect * cols * 0.55))
-    target_w, target_h = cols * 2, rows * 4
 
-    # gamma-correct resize: decode sRGB → resize in linear light → re-encode
     linear = gray.point(_SRGB_TO_LINEAR_LUT)
-    linear = linear.resize((target_w, target_h), Image.Resampling.LANCZOS)
-    gray = linear.point(_LINEAR_TO_SRGB_LUT)
-    # cutoff=6 clips outliers; sigmoid pushes mid-tones toward extremes so that
-    # cell-level density (visible at small font sizes) carries contrast
-    gray = ImageOps.autocontrast(gray, cutoff=6).point(_SIGMOID_LUT)
+    # downsampled for photo-vs-diagram detection
+    sub = linear.resize((cols * 2, rows * 4), Image.Resampling.LANCZOS).point(_LINEAR_TO_SRGB_LUT)
+    sub = ImageOps.autocontrast(sub, cutoff=4)
+    _, bg_noise = estimate_background(sub)
+    is_photo = bg_noise > 24
 
-    bg_level, bg_noise = estimate_background(gray)
-    is_photo = bg_noise > 24  # noisy border → no uniform background to subtract
+    if is_photo:
+        return _photo_to_braille(linear, cols, rows)
+    return _diagram_to_braille(sub, cols, rows)
 
-    # DoG edge layer: small-sigma minus large-sigma, centered on 128
+
+def _photo_to_braille(linear: Image.Image, cols: int, rows: int) -> str:
+    # one pixel per cell so quantization controls visible cell-level fill at small font sizes
+    cell = linear.resize((cols, rows), Image.Resampling.LANCZOS).point(_LINEAR_TO_SRGB_LUT)
+    cell = ImageOps.invert(ImageOps.autocontrast(cell, cutoff=3)).point(_SIGMOID_LUT)
+    pixels = cell.load()
+    signal = [[pixels[x, y] for x in range(cols)] for y in range(rows)]
+
+    levels = len(_DENSITY_GLYPHS)
+    step = 255 / (levels - 1)
+    lines = []
+    for y in range(rows):
+        row_signal = signal[y]
+        next_row = signal[y + 1] if y + 1 < rows else None
+        chars = []
+        for x in range(cols):
+            old = row_signal[x]
+            level = max(0, min(levels - 1, int(round(old / step))))
+            err = old - int(round(level * step))
+            chars.append(_DENSITY_GLYPHS[level])
+            if x + 1 < cols:
+                row_signal[x + 1] = max(0, min(255, row_signal[x + 1] + err * 7 // 16))
+            if next_row is not None:
+                if x > 0:
+                    next_row[x - 1] = max(0, min(255, next_row[x - 1] + err * 3 // 16))
+                next_row[x] = max(0, min(255, next_row[x] + err * 5 // 16))
+                if x + 1 < cols:
+                    next_row[x + 1] = max(0, min(255, next_row[x + 1] + err * 1 // 16))
+        lines.append("".join(chars))
+    return "\n".join(lines)
+
+
+def _diagram_to_braille(sub: Image.Image, cols: int, rows: int) -> str:
+    target_w, target_h = cols * 2, rows * 4
+    gray = sub.point(_SIGMOID_LUT)
+    bg_level, _ = estimate_background(gray)
     edge = ImageChops.subtract(
         gray.filter(ImageFilter.GaussianBlur(0.8)),
         gray.filter(ImageFilter.GaussianBlur(2.0)),
         scale=1.0,
         offset=128,
     )
-
-    if is_photo:
-        base = ImageOps.invert(gray)  # darker pixels become denser braille
-    elif bg_level >= 128:
-        base = ImageOps.invert(gray)  # dark subject on light background
-    else:
-        base = gray  # light subject on dark background
-
+    base = ImageOps.invert(gray) if bg_level >= 128 else gray
     base_pixels = base.load()
     edge_pixels = edge.load()
     signal = [
@@ -580,7 +617,6 @@ def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS, keep_a
         for y in range(target_h)
     ]
 
-    # Floyd-Steinberg error diffusion, 1-bit
     bits = [[0] * target_w for _ in range(target_h)]
     for y in range(target_h):
         row_signal = signal[y]
