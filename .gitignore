@@ -11,3 +11,5 @@ __pycache__/
 .cache/
 
 .obsidian
+CLAUDE.md
+AGENTS.md
