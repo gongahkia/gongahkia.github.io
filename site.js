@@ -65,21 +65,26 @@ function buildFaviconDataUri(bgColor) {
     let center, body, edge;
     const rgb = parseStoredRgb(bgColor);
     if (!rgb) {
-        center = "#ffffff"; body = "#f0f0f0"; edge = "#c8c8c8";
+        center = "#f7f7f7"; body = "#ececec"; edge = "#d8d8d8";
     } else {
         const [h, s, l] = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-        center = hslCss(h, s * 0.7, l + 32); // lighter highlight, slight desat for sheen
-        body = hslCss(h, s, l);              // dominant orb tone matches bg
-        edge = hslCss(h, s + 8, l - 28);     // deeper rim, same hue family
+        center = hslCss(h, s * 0.85, l + 12); // gentle highlight, not a specular hotspot
+        body = hslCss(h, s, l);               // dominant disc tone matches bg
+        edge = hslCss(h, s + 4, l - 10);      // soft vignette only
     }
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="35%" cy="32%" r="78%" fx="28%" fy="26%"><stop offset="0%" stop-color="${center}"/><stop offset="55%" stop-color="${body}"/><stop offset="100%" stop-color="${edge}"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(#g)"/></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="48%" cy="44%" r="62%" fx="46%" fy="42%"><stop offset="0%" stop-color="${center}"/><stop offset="70%" stop-color="${body}"/><stop offset="100%" stop-color="${edge}"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(#g)"/></svg>`;
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 function updateFavicon(bgColor) {
-    const link = document.getElementById("favicon");
-    if (!link) return;
-    link.href = buildFaviconDataUri(bgColor);
+    const old = document.getElementById("favicon");
+    if (!old) return;
+    const link = document.createElement("link");
+    link.id = "favicon";
+    link.rel = "icon";
+    link.type = "image/svg+xml";
+    link.href = buildFaviconDataUri(bgColor); // chrome refreshes favicon only on element replace, not href mutation
+    old.replaceWith(link);
 }
 
 function pressTheButton(event) {
