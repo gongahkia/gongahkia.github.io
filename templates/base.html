@@ -43,7 +43,8 @@
   <script src="{{ base_path }}/toc.js" defer></script>
   {% endif %}
   <title>{{ page_title|default(document_title|default("GABRIEL ONG")) }}</title>
-  <link rel="shortcut icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
+  <link rel="icon" type="image/svg+xml" id="favicon" href="{{ section_path }}/asset/favicon.svg">
+  <link rel="alternate icon" href="{{ section_path }}/asset/blob.ico" type="image/x-icon">
 </head>
 <body{% if toc_enabled|default(false) %} data-toc-enabled="true"{% endif %}>
   <div id="click-container"></div>
