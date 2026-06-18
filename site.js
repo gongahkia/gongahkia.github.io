@@ -81,9 +81,11 @@ function buildFaviconDataUri(bgColor, focal) {
         center = "#f7f7f7"; body = "#ececec"; edge = "#d8d8d8";
     } else {
         const [h, s, l] = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-        center = hslCss(h, s * 0.85, l + 12);  // gentle highlight, not a specular hotspot
-        body = hslCss(h, s, l);                // dominant disc tone matches bg
-        edge = hslCss(h + 45, s + 4, l - 10);  // soft vignette, hue-shifted for iridescence
+        const adjL = clamp(l, 22, 84);             // pull extremes into a favicon-safe L range so highlight + hue drift stay visible
+        const sat = Math.max(s, 22);               // ensure desaturated bgs still show hue character at the rim
+        center = hslCss(h, sat * 0.85, adjL + 12); // gentle highlight, not a specular hotspot
+        body = hslCss(h, sat, adjL);               // dominant disc tone matches bg hue
+        edge = hslCss(h + 45, sat + 4, adjL - 10); // soft vignette, hue-shifted for iridescence
     }
     const f = parseFocal(focal) || [48, 44];
     const [cx, cy] = f;
