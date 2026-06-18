@@ -21,7 +21,7 @@ function isDarkBackground(color) {
     return luminance < 0.5;
 }
 
-function applyThemeState(nextMode, bgColor) {
+function applyThemeState(nextMode, bgColor, focal) {
     isDarkMode = nextMode;
     document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -33,7 +33,7 @@ function applyThemeState(nextMode, bgColor) {
         document.documentElement.style.removeProperty("--active-background-color");
         document.body.style.removeProperty("background-color");
     }
-    updateFavicon(bgColor);
+    updateFavicon(bgColor, focal);
 }
 
 function rgbToHsl(r, g, b) {
@@ -61,7 +61,20 @@ function hslCss(h, s, l) {
     return `hsl(${h.toFixed(1)}, ${clamp(s, 0, 100).toFixed(1)}%, ${clamp(l, 0, 100).toFixed(1)}%)`;
 }
 
-function buildFaviconDataUri(bgColor) {
+function parseFocal(focal) {
+    if (!focal) return null;
+    const parts = focal.split(",").map(Number);
+    if (parts.length !== 2 || parts.some(Number.isNaN)) return null;
+    return parts;
+}
+
+function randomFocal() {
+    const cx = 30 + Math.random() * 40; // 30-70% horizontal
+    const cy = 26 + Math.random() * 28; // 26-54% vertical, bias upward feels natural
+    return `${cx.toFixed(1)},${cy.toFixed(1)}`;
+}
+
+function buildFaviconDataUri(bgColor, focal) {
     let center, body, edge;
     const rgb = parseStoredRgb(bgColor);
     if (!rgb) {
@@ -72,18 +85,22 @@ function buildFaviconDataUri(bgColor) {
         body = hslCss(h, s, l);               // dominant disc tone matches bg
         edge = hslCss(h, s + 4, l - 10);      // soft vignette only
     }
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="48%" cy="44%" r="62%" fx="46%" fy="42%"><stop offset="0%" stop-color="${center}"/><stop offset="70%" stop-color="${body}"/><stop offset="100%" stop-color="${edge}"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(#g)"/></svg>`;
+    const f = parseFocal(focal) || [48, 44];
+    const [cx, cy] = f;
+    const fx = clamp(cx - 2, 0, 100);
+    const fy = clamp(cy - 2, 0, 100);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="${cx}%" cy="${cy}%" r="62%" fx="${fx}%" fy="${fy}%"><stop offset="0%" stop-color="${center}"/><stop offset="70%" stop-color="${body}"/><stop offset="100%" stop-color="${edge}"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(#g)"/></svg>`;
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-function updateFavicon(bgColor) {
+function updateFavicon(bgColor, focal) {
     const old = document.getElementById("favicon");
     if (!old) return;
     const link = document.createElement("link");
     link.id = "favicon";
     link.rel = "icon";
     link.type = "image/svg+xml";
-    link.href = buildFaviconDataUri(bgColor); // chrome refreshes favicon only on element replace, not href mutation
+    link.href = buildFaviconDataUri(bgColor, focal); // chrome refreshes favicon only on element replace, not href mutation
     old.replaceWith(link);
 }
 
@@ -91,9 +108,11 @@ function pressTheButton(event) {
     event?.preventDefault();
     const nextMode = !isDarkMode;
     const newColor = nextMode ? generateDarkColor() : generateLightColor();
-    applyThemeState(nextMode, newColor);
+    const newFocal = randomFocal();
+    applyThemeState(nextMode, newColor, newFocal);
     localStorage.setItem("theme_isDarkMode", isDarkMode);
     localStorage.setItem("theme_bgColor", newColor);
+    localStorage.setItem("theme_focal", newFocal);
 }
 
 function generateDarkColor() {
@@ -113,14 +132,15 @@ function generateLightColor() {
 function restoreTheme() {
     const saved = localStorage.getItem("theme_isDarkMode");
     const bgColor = localStorage.getItem("theme_bgColor");
+    const focal = localStorage.getItem("theme_focal");
     if (saved === null) {
-        applyThemeState(false, null);
+        applyThemeState(false, null, null);
         return;
     }
     const savedMode = saved === "true";
     const inferredMode = isDarkBackground(bgColor);
     const restoredMode = inferredMode ?? savedMode;
-    applyThemeState(restoredMode, bgColor);
+    applyThemeState(restoredMode, bgColor, focal);
     localStorage.setItem("theme_isDarkMode", String(restoredMode));
 }
 restoreTheme();
