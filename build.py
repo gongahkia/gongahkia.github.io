@@ -69,7 +69,6 @@ IMAGE_MARKDOWN_DIRS = [
     ROOT / "works",
     ROOT / "blog" / "posts",
     ROOT / "personal-wiki" / "notes",
-    ROOT / "papers" / "sources",
 ]
 
 ROOT_STATIC_FILES = [
@@ -89,7 +88,6 @@ ROOT_STATIC_DIRS = [
 SECTION_STATIC_DIRS = {
     "blog": ["script.js", "asset"],
     "personal-wiki": ["script.js", "asset"],
-    "papers": ["asset"],
 }
 
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=False)
@@ -710,9 +708,6 @@ REQUIRED_FIELDS = {
     "book": ["title", "date", "author", "isbn", "category", "rating"],
     "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "status"],
-    "paper": ["title", "date", "authors"],
-    "paper:arxiv": ["title", "date", "authors", "arxiv"],
-    "paper:zenodo": ["title", "date", "authors", "zenodo", "doi", "resource_type"],
 }
 
 
@@ -724,16 +719,12 @@ def validate_frontmatter(meta: dict, filepath: Path) -> list[str]:
         return [f"{filepath}: {meta['__fm_error__']}"]
 
     post_type = meta.get("type", "blog")
-    key = post_type
-    if post_type == "paper":
-        source = str(meta.get("source", "arxiv")).lower() # default arxiv for back-compat
-        key = f"paper:{source}" if f"paper:{source}" in REQUIRED_FIELDS else "paper"
-    required = REQUIRED_FIELDS.get(key, ["title", "date"])
+    required = REQUIRED_FIELDS.get(post_type, ["title", "date"])
     errors = []
 
     for field in required:
         if not meta.get(field):
-            errors.append(f"{filepath}: missing required field '{field}' for type '{key}'")
+            errors.append(f"{filepath}: missing required field '{field}' for type '{post_type}'")
 
     return errors
 
@@ -870,11 +861,6 @@ def parse_html_wiki_note(filepath: Path) -> dict:
 def browser_title(title: str) -> str:
     """Format detail-page browser titles in the site's compact all-caps style."""
     return str(title).strip().upper()
-
-
-def paper_browser_title(title: str) -> str:
-    """Use the compact paper name before the subtitle delimiter."""
-    return browser_title(str(title).split(":", 1)[0])
 
 
 def render_wiki_note(
@@ -1486,158 +1472,11 @@ def build_work(output_dir: Path) -> tuple[list[dict], list[str], list[dict]]:
     return urls, validation_errors, works
 
 
-def build_papers(output_dir: Path) -> tuple[list[dict], list[str]]:
-    """Build paper detail pages and index into the output directory."""
-    sources_dir = ROOT / "papers" / "sources"
-    output_pages_dir = output_dir / "papers" / "pages"
-    output_pages_dir.mkdir(parents=True, exist_ok=True)
-
-    md_files = []
-    if sources_dir.exists():
-        md_files = [path for path in sorted(sources_dir.glob("*.md")) if not path.name.startswith(".")]
-
-    print(f"papers: found {len(md_files)} markdown papers")
-
-    detail_template = env.get_template("paper-detail.html")
-    papers_info = []
-    validation_errors = []
-
-    for md_file in md_files:
-        raw = md_file.read_text(encoding="utf-8")
-        meta, content = parse_frontmatter(raw)
-        meta["type"] = "paper" # force type for validation
-        errors = validate_frontmatter(meta, md_file)
-        validation_errors.extend(errors)
-        if errors:
-            continue
-
-        title = str(meta["title"])
-        date = str(meta["date"])
-        authors = str(meta.get("authors", ""))
-        source = str(meta.get("source", "arxiv")).lower() # default arxiv for back-compat
-        arxiv = str(meta.get("arxiv", ""))
-        arxiv_id = str(meta.get("arxiv_id", ""))
-        arxiv_category = str(meta.get("arxiv_category", ""))
-        zenodo = str(meta.get("zenodo", ""))
-        doi = str(meta.get("doi", ""))
-        resource_type = str(meta.get("resource_type", ""))
-        version = str(meta.get("version", ""))
-        license_ = str(meta.get("license", ""))
-        github = str(meta.get("github", ""))
-        output_filename = md_file.stem.lower() + ".html"
-        canonical_url = f"{BASE_URL}/papers/pages/{output_filename}"
-
-        html_content = md_to_html(content, md_file)
-        rendered = detail_template.render(
-            title=title,
-            date=date,
-            authors=authors,
-            source=source,
-            arxiv=arxiv,
-            arxiv_id=arxiv_id,
-            arxiv_category=arxiv_category,
-            zenodo=zenodo,
-            doi=doi,
-            resource_type=resource_type,
-            version=version,
-            license=license_,
-            github=github,
-            content=html_content,
-            meta_description=f"Paper: {title} - Gabriel Ong",
-            og_title=f"{title} | Gabriel Ong",
-            og_type="article",
-            page_title=paper_browser_title(title),
-            document_title="PAPERS",
-            canonical_url=canonical_url,
-            date_published=parse_date_to_iso(date),
-            date_modified=git_lastmod(md_file),
-            person_id=PERSON_ID,
-            default_image_url=DEFAULT_SOCIAL_IMAGE_URL,
-            base_path="../..",
-            section_path="..",
-            toc_enabled=True,
-            has_math=html_uses_mathjax(html_content),
-            has_mermaid=html_uses_mermaid(html_content),
-        )
-
-        output_path = output_pages_dir / output_filename
-        output_path.write_text(rendered, encoding="utf-8")
-        print(f"  papers: {md_file.name} -> dist/papers/pages/{output_filename}")
-
-        papers_info.append({
-            "title": title,
-            "date": date,
-            "authors": authors,
-            "source": source,
-            "arxiv": arxiv,
-            "arxiv_id": arxiv_id,
-            "arxiv_category": arxiv_category,
-            "zenodo": zenodo,
-            "doi": doi,
-            "resource_type": resource_type,
-            "version": version,
-            "license": license_,
-            "github": github,
-            "filename": output_filename,
-            "source_path": md_file,
-            "canonical_url": canonical_url,
-        })
-
-    def parse_date(date_value: str) -> datetime:
-        for fmt in ("%d %b %Y", "%Y-%m-%d", "%d %B %Y"):
-            try:
-                return datetime.strptime(date_value, fmt)
-            except (TypeError, ValueError):
-                continue
-        return datetime.min
-
-    papers_info.sort(key=lambda paper: parse_date(paper.get("date", "")), reverse=True)
-
-    index_template = env.get_template("papers-index.html")
-    index_html = index_template.render(
-        papers=papers_info,
-        meta_description="Gabriel Ong's research papers published.",
-        og_title="Papers | Gabriel Ong",
-        og_type="website",
-        page_title="PAPERS",
-        document_title="PAPERS",
-        canonical_url=f"{BASE_URL}/papers/",
-        base_path="..",
-        section_path=".",
-    )
-    (output_dir / "papers" / "index.html").write_text(index_html, encoding="utf-8")
-    print(f"  papers: generated dist/papers/index.html ({len(papers_info)} papers)")
-
-    if validation_errors:
-        print("\npapers frontmatter validation errors:")
-        for error in validation_errors:
-            print(f"  {error}")
-
-    urls = [
-        {
-            "loc": f"{BASE_URL}/papers/",
-            "priority": "0.8",
-            "changefreq": "weekly",
-            "source_path": [ROOT / "templates" / "papers-index.html", *(paper["source_path"] for paper in papers_info)],
-        }
-    ]
-    urls.extend(
-        {
-            "loc": paper["canonical_url"],
-            "priority": "0.7",
-            "changefreq": "monthly",
-            "source_path": paper["source_path"],
-        }
-        for paper in papers_info
-    )
-    return urls, validation_errors
-
-
 def build_site(output_dir: Path) -> list[str]:
     print("=== building gabrielongzm.com ===\n")
     print(f"output: {output_dir}")
 
-    print("\n[0/5] checking markdown images...")
+    print("\n[0/4] checking markdown images...")
     markdown_images = markdown_image_sources()
     image_errors = validate_markdown_images(markdown_images)
     if image_errors:
@@ -1650,7 +1489,7 @@ def build_site(output_dir: Path) -> list[str]:
     ensure_clean_output_dir(output_dir)
     copy_static_site(output_dir)
 
-    print("\n[1/5] building work writeups...")
+    print("\n[1/4] building work writeups...")
     work_urls, errors, works = build_work(output_dir)
     inject_home_works(output_dir, works)
 
@@ -1664,20 +1503,15 @@ def build_site(output_dir: Path) -> list[str]:
     ]
     all_urls.extend(work_urls)
 
-    print("\n[2/5] building wiki...")
+    print("\n[2/4] building wiki...")
     all_urls.extend(build_wiki(output_dir))
 
-    print("\n[3/5] building blog...")
+    print("\n[3/4] building blog...")
     blog_urls, blog_errors = build_blog(output_dir)
     all_urls.extend(blog_urls)
     errors.extend(blog_errors)
 
-    print("\n[4/5] building papers...")
-    paper_urls, paper_errors = build_papers(output_dir)
-    all_urls.extend(paper_urls)
-    errors.extend(paper_errors)
-
-    print("\n[5/5] generating sitemap...")
+    print("\n[4/4] generating sitemap...")
     (output_dir / "sitemap.xml").write_text(generate_sitemap(all_urls), encoding="utf-8")
     print(f"  sitemap: {len(all_urls)} URLs")
 

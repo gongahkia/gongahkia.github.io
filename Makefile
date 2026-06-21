@@ -1,4 +1,4 @@
-.PHONY: work blog book film project paper wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
+.PHONY: work blog book film project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -17,7 +17,6 @@ help:
 	@echo "  make book           - Create a new book review (interactive)"
 	@echo "  make film           - Create a new film review (interactive)"
 	@echo "  make project        - Create a new tech writeup blog post (interactive)"
-	@echo "  make paper          - Create a new paper entry in papers/sources/ (interactive)"
 	@echo "  make wiki           - Create a new General wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make tech           - Create a new Tech wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make build-wiki     - Build the deployable site into dist/ (legacy alias)"
@@ -232,83 +231,6 @@ project:
 	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
 	printf -- "---\ntitle: \"$$title\"\ndate: $$current_date\ntype: tech-writeup\ntech_stack: \"$$tech_stack\"\ndate_range: \"$$date_range\"\nstatus: \"$$status\"\ngithub: \"$$github\"\ndemo: \"$$demo\"\n---\n\nAdd writeup content here.\n" > blog/posts/$$filename; \
 	echo "Created blog/posts/$$filename"; \
-	echo "Run 'make build' after editing to rebuild index"
-
-
-# Create a new paper entry (markdown with frontmatter)
-paper:
-	@echo "Creating new paper..."
-	@mkdir -p papers/sources; \
-	current_date=$$(date +"%e %b %Y" | xargs); \
-	printf "Source? (a)rXiv / (z)enodo: "; \
-	read source; \
-	while [ "$$source" != "a" ] && [ "$$source" != "A" ] && [ "$$source" != "z" ] && [ "$$source" != "Z" ]; do \
-		echo "Source must be 'a' or 'z'."; \
-		printf "Source? (a)rXiv / (z)enodo: "; \
-		read source; \
-	done; \
-	printf "Enter date (default: $$current_date): "; \
-	read date; \
-	date=$${date:-$$current_date}; \
-	printf "Enter paper title (required): "; \
-	read title; \
-	while [ -z "$$title" ]; do \
-		echo "Paper title is required."; \
-		printf "Enter paper title (required): "; \
-		read title; \
-	done; \
-	printf "Enter authors (default: Gabriel Ong Zhe Mian): "; \
-	read authors; \
-	authors=$${authors:-Gabriel Ong Zhe Mian}; \
-	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	if [ "$$source" = "a" ] || [ "$$source" = "A" ]; then \
-		printf "Enter arXiv URL (required): "; \
-		read arxiv; \
-		while [ -z "$$arxiv" ]; do \
-			echo "arXiv URL is required."; \
-			printf "Enter arXiv URL (required): "; \
-			read arxiv; \
-		done; \
-		printf "Enter arXiv ID (e.g. 2604.01234, optional): "; \
-		read arxiv_id; \
-		printf "Enter arXiv category (e.g. cs.CL, optional): "; \
-		read arxiv_category; \
-		printf "Enter GitHub URL (optional): "; \
-		read github; \
-		printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nsource: arxiv\nauthors: \"$$authors\"\narxiv: \"$$arxiv\"\narxiv_id: \"$$arxiv_id\"\narxiv_category: \"$$arxiv_category\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
-	else \
-		printf "Enter Zenodo URL (required): "; \
-		read zenodo; \
-		while [ -z "$$zenodo" ]; do \
-			echo "Zenodo URL is required."; \
-			printf "Enter Zenodo URL (required): "; \
-			read zenodo; \
-		done; \
-		printf "Enter DOI (e.g. 10.5281/zenodo.12345, required): "; \
-		read doi; \
-		while [ -z "$$doi" ]; do \
-			echo "DOI is required."; \
-			printf "Enter DOI (e.g. 10.5281/zenodo.12345, required): "; \
-			read doi; \
-		done; \
-		printf "Enter resource type (Dataset/Software/Publication/Presentation/Poster/Lesson, required): "; \
-		read resource_type; \
-		while [ -z "$$resource_type" ]; do \
-			echo "Resource type is required."; \
-			printf "Enter resource type (Dataset/Software/Publication/Presentation/Poster/Lesson, required): "; \
-			read resource_type; \
-		done; \
-		printf "Enter version (default: v1): "; \
-		read version; \
-		version=$${version:-v1}; \
-		printf "Enter license (default: CC-BY-4.0): "; \
-		read license; \
-		license=$${license:-CC-BY-4.0}; \
-		printf "Enter GitHub URL (optional): "; \
-		read github; \
-		printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: paper\nsource: zenodo\nauthors: \"$$authors\"\nzenodo: \"$$zenodo\"\ndoi: \"$$doi\"\nresource_type: \"$$resource_type\"\nversion: \"$$version\"\nlicense: \"$$license\"\ngithub: \"$$github\"\n---\n\n## Abstract\n\nAdd abstract here.\n\n## Notes\n\nThoughts and experiences on this paper.\n" > papers/sources/$$filename; \
-	fi; \
-	echo "Created papers/sources/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 
 # Create a new General wiki note
