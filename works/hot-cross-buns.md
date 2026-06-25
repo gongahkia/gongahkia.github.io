@@ -2,7 +2,7 @@
 slug: hot-cross-buns
 title: "hot cross buns"
 date: "May 2026"
-summary: "FOSS Google Calendar & Tasks Wrapper for MacOS"
+summary: "FOSS Google Calendar and Tasks Wrapper for MacOS, Linux & Windows"
 href: "https://github.com/gongahkia/hot-cross-buns"
 order: 1
 ---
