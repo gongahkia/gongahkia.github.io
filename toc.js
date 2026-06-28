@@ -6,16 +6,11 @@
 
     const headingSelector = [
         ".blog-details > h2",
-        ".book-details > h2",
-        ".film-details > h2",
         ".writeup-details > h2",
         ".note-header > h2",
         ".blog-content h2",
         ".blog-content h3",
         ".blog-content h4",
-        ".review-content h2",
-        ".review-content h3",
-        ".review-content h4",
         ".writeup-content h2",
         ".writeup-content h3",
         ".writeup-content h4",

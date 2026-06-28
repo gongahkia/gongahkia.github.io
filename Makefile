@@ -1,4 +1,4 @@
-.PHONY: work blog book film project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
+.PHONY: work blog project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -14,8 +14,6 @@ help:
 	@echo "  make build          - Build the full deployable site into dist/ (preserves Markdown sources)"
 	@echo "  make work           - Create a new work writeup in works/ (interactive)"
 	@echo "  make blog           - Create a new blog post (interactive)"
-	@echo "  make book           - Create a new book review (interactive)"
-	@echo "  make film           - Create a new film review (interactive)"
 	@echo "  make project        - Create a new tech writeup blog post (interactive)"
 	@echo "  make wiki           - Create a new General wiki note in personal-wiki/notes/ (interactive)"
 	@echo "  make tech           - Create a new Tech wiki note in personal-wiki/notes/ (interactive)"
@@ -93,98 +91,6 @@ blog:
 	done; \
 	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
 	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: blog\n---\n\nAdd post content here.\n" > blog/posts/$$filename; \
-	echo "Created blog/posts/$$filename"; \
-	echo "Run 'make build' after editing to rebuild index"
-
-# Create a new book review (markdown with frontmatter)
-book:
-	@echo "Creating new book review..."
-	@current_date=$$(date +"%e %b %Y" | xargs); \
-	printf "Enter date (default: $$current_date): "; \
-	read date; \
-	date=$${date:-$$current_date}; \
-	printf "Enter book name (required): "; \
-	read book_name; \
-	while [ -z "$$book_name" ]; do \
-		echo "Book name is required."; \
-		printf "Enter book name (required): "; \
-		read book_name; \
-	done; \
-	printf "Enter author name (required): "; \
-	read author_name; \
-	while [ -z "$$author_name" ]; do \
-		echo "Author name is required."; \
-		printf "Enter author name (required): "; \
-		read author_name; \
-	done; \
-	printf "Enter ISBN number (required): "; \
-	read isbn; \
-	while [ -z "$$isbn" ]; do \
-		echo "ISBN number is required."; \
-		printf "Enter ISBN number (required): "; \
-		read isbn; \
-	done; \
-	printf "Enter category (F for Fiction, N for Non-Fiction): "; \
-	read category; \
-	while [ "$$category" != "F" ] && [ "$$category" != "N" ]; do \
-		echo "Category must be F or N."; \
-		printf "Enter category (F for Fiction, N for Non-Fiction): "; \
-		read category; \
-	done; \
-	if [ "$$category" = "F" ]; then \
-		category_text="Fiction"; \
-	else \
-		category_text="Non-Fiction"; \
-	fi; \
-	printf "Enter rating (0-5, can be decimal): "; \
-	read rating; \
-	while [ -z "$$rating" ] || ! echo "$$rating" | grep -q "^[0-5]\(\.[0-9]\+\)\?$$"; do \
-		echo "Rating must be a number between 0 and 5 (can be decimal)."; \
-		printf "Enter rating (0-5, can be decimal): "; \
-		read rating; \
-	done; \
-	filename=$$(echo $$book_name | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	printf -- "---\ntitle: \"$$book_name\"\nauthor: \"$$author_name\"\nisbn: \"$$isbn\"\ncategory: $$category_text\nrating: $$rating\ndate: $$date\ntype: book\n---\n\nAdd book review content here.\n" > blog/posts/$$filename; \
-	echo "Created blog/posts/$$filename"; \
-	echo "Run 'make build' after editing to rebuild index"
-
-# Create a new film review (markdown with frontmatter)
-film:
-	@echo "Creating new film review..."
-	@current_date=$$(date +"%e %b %Y" | xargs); \
-	printf "Enter date (default: $$current_date): "; \
-	read date; \
-	date=$${date:-$$current_date}; \
-	printf "Enter film title (required): "; \
-	read title; \
-	while [ -z "$$title" ]; do \
-		echo "Film title is required."; \
-		printf "Enter film title (required): "; \
-		read title; \
-	done; \
-	printf "Enter director name (required): "; \
-	read director; \
-	while [ -z "$$director" ]; do \
-		echo "Director name is required."; \
-		printf "Enter director name (required): "; \
-		read director; \
-	done; \
-	printf "Enter release year (required): "; \
-	read year; \
-	while [ -z "$$year" ] || ! echo "$$year" | grep -q "^[0-9]\{4\}$$"; do \
-		echo "Release year must be a 4-digit number."; \
-		printf "Enter release year (required): "; \
-		read year; \
-	done; \
-	printf "Enter rating (0-5, can be decimal): "; \
-	read rating; \
-	while [ -z "$$rating" ] || ! echo "$$rating" | grep -q "^[0-5]\(\.[0-9]\+\)\?$$"; do \
-		echo "Rating must be a number between 0 and 5 (can be decimal)."; \
-		printf "Enter rating (0-5, can be decimal): "; \
-		read rating; \
-	done; \
-	filename=$$(echo $$title | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g' | sed 's/__*/_/g').md; \
-	printf -- "---\ntitle: \"$$title\"\ndate: $$date\ntype: film\ndirector: \"$$director\"\nyear: $$year\nrating: $$rating\n---\n\nAdd film review content here.\n" > blog/posts/$$filename; \
 	echo "Created blog/posts/$$filename"; \
 	echo "Run 'make build' after editing to rebuild index"
 

@@ -1,6 +1,6 @@
 "use strict";
 
-const BLOG_CATEGORIES = ["general", "film", "book", "project"];
+const BLOG_CATEGORIES = ["general", "project"];
 
 (function initBlogCategoryFilter() {
     const filterBar = document.querySelector(".blogFilterBar");

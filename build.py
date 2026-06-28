@@ -705,8 +705,6 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
 
 REQUIRED_FIELDS = {
     "blog": ["title", "date"],
-    "book": ["title", "date", "author", "isbn", "category", "rating"],
-    "film": ["title", "date", "director", "year", "rating"],
     "tech-writeup": ["title", "date", "tech_stack", "status"],
 }
 
@@ -776,7 +774,7 @@ class BlogPostParser(HTMLParser):
             css_class = attrs_dict.get("class", "") or ""
             if any(
                 section in css_class
-                for section in ("book-details", "blog-details", "writeup-details", "film-details")
+                for section in ("blog-details", "writeup-details")
             ):
                 self._in_section = css_class
         elif tag == "h2" and self._in_section:
@@ -1030,14 +1028,10 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
     validation_errors = []
     template_map = {
         "blog": "blog-post.html",
-        "book": "book-review.html",
         "tech-writeup": "tech-writeup.html",
-        "film": "film-review.html",
     }
     filter_category_map = {
         "blog": "general",
-        "book": "book",
-        "film": "film",
         "tech-writeup": "project",
     }
 
@@ -1061,14 +1055,6 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
 
         og_title = title
         meta_description = f"Blog Post: {title} - Gabriel Ong"
-        if post_type == "book":
-            og_title = f"{title} by {meta.get('author', '')} | Gabriel Ong"
-            meta_description = f"Book Review: {title} by {meta.get('author', '')} - Gabriel Ong"
-        elif post_type == "film":
-            og_title = f"{title} ({meta.get('year', '')}) | Gabriel Ong"
-            meta_description = (
-                f"Film Review: {title} ({meta.get('year', '')}) dir. {meta.get('director', '')} - Gabriel Ong"
-            )
 
         canonical_url = f"{BASE_URL}/blog/posts/{output_filename}"
         html_content = md_to_html(content, md_file)
@@ -1102,24 +1088,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             "source_path": md_file,
             "filter_category": filter_category_map.get(post_type, "general"),
         }
-        if post_type == "book":
-            post_info.update(
-                {
-                    "author": str(meta.get("author", "")),
-                    "isbn": str(meta.get("isbn", "")),
-                    "rating": str(meta.get("rating", "")),
-                    "category": str(meta.get("category", "")),
-                }
-            )
-        elif post_type == "film":
-            post_info.update(
-                {
-                    "director": str(meta.get("director", "")),
-                    "year": str(meta.get("year", "")),
-                    "rating": str(meta.get("rating", "")),
-                }
-            )
-        elif post_type == "tech-writeup":
+        if post_type == "tech-writeup":
             post_info.update(
                 {
                     "status": str(meta.get("status", "")),
@@ -1140,11 +1109,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
 
         copy_file(html_file, output_posts_dir / html_file.name)
 
-        if meta.get("author"):
-            legacy_category = "book"
-        elif meta.get("director"):
-            legacy_category = "film"
-        elif meta.get("tech stack") or meta.get("status"):
+        if meta.get("tech stack") or meta.get("status"):
             legacy_category = "project"
         else:
             legacy_category = "general"
@@ -1156,24 +1121,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
             "source_path": html_file,
             "filter_category": legacy_category,
         }
-        if meta.get("author"):
-            post_info.update(
-                {
-                    "author": meta.get("author", ""),
-                    "isbn": meta.get("isbn", ""),
-                    "rating": meta.get("rating", "").replace("/5", ""),
-                    "category": meta.get("category", ""),
-                }
-            )
-        elif meta.get("director"):
-            post_info.update(
-                {
-                    "director": meta.get("director", ""),
-                    "year": meta.get("release year", meta.get("year", "")),
-                    "rating": meta.get("rating", "").replace("/5", ""),
-                }
-            )
-        elif meta.get("tech stack") or meta.get("status"):
+        if meta.get("tech stack") or meta.get("status"):
             post_info.update(
                 {
                     "status": meta.get("status", ""),
@@ -1200,7 +1148,7 @@ def build_blog(output_dir: Path) -> tuple[list[dict], list[str]]:
     index_template = env.get_template("blog-index.html")
     index_html = index_template.render(
         posts=all_posts,
-        meta_description="Gabriel Ong's blog - thoughts on books, film, and other media.",
+        meta_description="Gabriel Ong's blog - thoughts, notes, and project writeups.",
         og_title="Gabriel's Blog",
         og_type="website",
         page_title="BLOG",
