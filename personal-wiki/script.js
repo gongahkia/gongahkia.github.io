@@ -46,14 +46,17 @@ function applyWikiCategoryState(state) {
     });
 
     const counts = WIKI_CATEGORIES.reduce((acc, cat) => (acc[cat] = 0, acc), {});
+    let visibleCount = 0;
     document.querySelectorAll(".booksAndBlog dl[data-filter-category]").forEach((dl) => {
         const cat = dl.dataset.filterCategory;
         counts[cat] = (counts[cat] || 0) + 1;
         const show = !!state[cat];
+        if (show) visibleCount += 1;
         dl.classList.toggle("filter-hidden", !show);
     });
 
     const noneSelected = WIKI_CATEGORIES.every((cat) => !state[cat]);
+    const hasVisibleNotes = visibleCount > 0;
 
     document.querySelectorAll(".filter-empty-message").forEach((msg) => {
         const cat = msg.dataset.filterEmpty;
@@ -61,7 +64,7 @@ function applyWikiCategoryState(state) {
         if (cat === "none") {
             show = noneSelected;
         } else {
-            show = !noneSelected && !!state[cat] && (counts[cat] || 0) === 0;
+            show = !noneSelected && !hasVisibleNotes && !!state[cat] && (counts[cat] || 0) === 0;
         }
         msg.classList.toggle("show", show);
     });
