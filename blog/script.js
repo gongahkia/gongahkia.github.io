@@ -46,14 +46,17 @@ function applyCategoryState(state) {
     });
 
     const counts = BLOG_CATEGORIES.reduce((acc, cat) => (acc[cat] = 0, acc), {});
+    let visibleCount = 0;
     document.querySelectorAll(".booksAndBlog dl[data-filter-category]").forEach((dl) => {
         const cat = dl.dataset.filterCategory;
         counts[cat] = (counts[cat] || 0) + 1;
         const show = !!state[cat];
+        if (show) visibleCount += 1;
         dl.classList.toggle("filter-hidden", !show);
     });
 
     const noneSelected = BLOG_CATEGORIES.every((cat) => !state[cat]);
+    const hasVisiblePosts = visibleCount > 0;
 
     document.querySelectorAll(".filter-empty-message").forEach((msg) => {
         const cat = msg.dataset.filterEmpty;
@@ -61,7 +64,7 @@ function applyCategoryState(state) {
         if (cat === "none") {
             show = noneSelected;
         } else {
-            show = !noneSelected && !!state[cat] && (counts[cat] || 0) === 0;
+            show = !noneSelected && !hasVisiblePosts && !!state[cat] && (counts[cat] || 0) === 0;
         }
         msg.classList.toggle("show", show);
     });
