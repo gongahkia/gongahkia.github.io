@@ -65,7 +65,6 @@ Common carpentry terminology.
 | --- | --- | --- |
 | Butt joint | Ends of two boards butted together, simple and quick | Weakest *(often reinforced with nails or screws)* |
 | Dado joint | Groove cut across one piece, other fits into it | Stronger than butt joints *(often used in shelving)* |
-| Rebate joint | Notch cut on edge of one piece, joined at right angle | Moderate strength *(often used in cabinets and frames)* |
 | Mortise and Tenon joint | Tenon fits into a matching Mortise hole | Very strong *(often used for frames and furniture)* |
 | Dowel joint | Wooden dowels align and join two pieces | Good strength *(requires precise drilling)* |
 | Biscuit joint | Oval biscuit in slots for edge-to-edge joining | Moderate strength *(often used in panels)* |
@@ -79,10 +78,6 @@ Common carpentry terminology.
 ### Dado joint
 
 ![](https://images.squarespace-cdn.com/content/v1/5f1383605e8fb4756df3a2be/1596414521156-VBQ8ZD62RZDE5M5XFXES/Joinatree_Illustration_Marcus_Lee-44.jpg)
-
-### Rebate joint
-
-![](https://www.familyhandyman.com/wp-content/uploads/2022/10/GettyImages-844389912-rabbet-joint-FHM.jpg)
 
 ### Mortise and Tenon joint
 
