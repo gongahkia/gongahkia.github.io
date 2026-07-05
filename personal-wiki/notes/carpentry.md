@@ -73,7 +73,7 @@ Common carpentry terminology.
 
 ### Butt joint
 
-![](https://mtcopeland.com/wp-content/uploads/2022/01/unnamed-min.png)
+![](https://mtcopeland.com/wp-content/uploads/2022/01/unnamed-min.png#dither)
 
 ### Dado joint
 

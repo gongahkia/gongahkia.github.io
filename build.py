@@ -71,6 +71,24 @@ IMAGE_MARKDOWN_DIRS = [
     ROOT / "personal-wiki" / "notes",
 ]
 
+DITHER_CACHE_DIR = ROOT / ".cache" / "dither-out"  # dither taster, opt-in via '#dither' fragment
+DITHER_ALGORITHM_VERSION = "dither-v2-palette"  # bump to invalidate v1 raw-1-bit cache
+DITHER_MAX_WIDTH = 720  # baked source width; higher = finer dots, less pixelated upscaling
+DITHER_ALGORITHMS = {"atkinson", "bayer", "fs"}
+DITHER_DEFAULT_ALGO = "atkinson"
+DITHER_URL_PREFIX = "/asset/dither"
+DITHER_INK_RGB = (0x33, 0x33, 0x33)  # matches site --foreground-color (80% #101010 + 20% #fff in oklab)
+BAYER_8 = [  # ordered dither matrix, values 0..63
+    0, 32, 8, 40, 2, 34, 10, 42,
+    48, 16, 56, 24, 50, 18, 58, 26,
+    12, 44, 4, 36, 14, 46, 6, 38,
+    60, 28, 52, 20, 62, 30, 54, 22,
+    3, 35, 11, 43, 1, 33, 9, 41,
+    51, 19, 59, 27, 49, 17, 57, 25,
+    15, 47, 7, 39, 13, 45, 5, 37,
+    63, 31, 55, 23, 61, 29, 53, 21,
+]
+
 ROOT_STATIC_FILES = [
     "index.html",
     "style.css",
@@ -158,6 +176,16 @@ def copy_root_asset_dir(output_dir: Path) -> None:
             copy_file(entry, target)
 
     generate_responsive_portrait_assets(destination / "portrait")
+    copy_dithered_assets(destination / "dither")
+
+
+def copy_dithered_assets(destination: Path) -> None:
+    """Copy every baked 1-bit dither PNG into dist/asset/dither/. Safe if cache empty."""
+    if not DITHER_CACHE_DIR.exists():
+        return
+    destination.mkdir(parents=True, exist_ok=True)
+    for png in DITHER_CACHE_DIR.glob("*.png"):
+        copy_file(png, destination / png.name)
 
 
 def generate_responsive_portrait_assets(destination: Path) -> None:
@@ -172,7 +200,7 @@ def generate_responsive_portrait_assets(destination: Path) -> None:
 
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
-ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"ascii-figure[^\"]*\".*?</figure>\s*)</p>", re.S)
+ASCII_FIGURE_PARAGRAPH_RE = re.compile(r"<p>(\s*<figure class=\"(?:ascii-figure|dither-figure)[^\"]*\".*?</figure>\s*)</p>", re.S)
 MERMAID_CODE_BLOCK_RE = re.compile(
     r'<pre class="codehilite"><code class="language-mermaid">(.*?)</code></pre>',
     re.S,
@@ -335,6 +363,22 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
 
     if not src:
         raise ValueError(f"{source_path}: missing image source")
+
+    clean_src, dither_algo = parse_dither_directive(src)
+    if dither_algo is not None:
+        try:
+            web_path, width, height = image_src_to_dithered_path(clean_src, source_path, dither_algo)
+        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+            raise RuntimeError(f"{source_path}: {clean_src}: {exc}") from exc
+        return (
+            f'<figure class="dither-figure" data-image-source="{html.escape(clean_src, quote=True)}" data-dither="{dither_algo}">'
+            f'<img class="dithered-image" src="{html.escape(web_path, quote=True)}" '
+            f'width="{width}" height="{height}" '
+            f'alt="{html.escape(label, quote=True)}" '
+            f'loading="lazy" decoding="async"/>'
+            f'</figure>'
+        )
+
     try:
         result = image_src_to_frames(src, source_path)
     except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
@@ -632,6 +676,119 @@ def _diagram_to_braille(sub: Image.Image, cols: int, rows: int) -> str:
     return "\n".join(lines)
 
 
+def parse_dither_directive(src: str) -> tuple[str, str | None]:
+    """Detect '#dither' or '#dither=<algo>' fragment. Return (clean_src, algo_or_None)."""
+    frag_idx = src.rfind("#")
+    if frag_idx < 0:
+        return src, None
+    fragment = src[frag_idx + 1:]
+    if not fragment.lower().startswith("dither"):
+        return src, None
+    tail = fragment[len("dither"):]
+    algo = DITHER_DEFAULT_ALGO
+    if tail.startswith("="):
+        candidate = tail[1:].split("&", 1)[0].strip().lower()
+        if candidate in DITHER_ALGORITHMS:
+            algo = candidate
+        else:
+            return src, None  # unknown algo, fall back to ASCII pipeline
+    elif tail:
+        return src, None  # not exactly '#dither' or '#dither=...'
+    return src[:frag_idx], algo
+
+
+def _atkinson_dither(gray: Image.Image) -> Image.Image:
+    """Atkinson error diffusion -> L image with 0/255 pixels. Distributes err/8 to 6 neighbours."""
+    width, height = gray.size
+    data = list(gray.getdata())
+    for y in range(height):
+        row_off = y * width
+        for x in range(width):
+            i = row_off + x
+            old = data[i]
+            new = 255 if old >= 128 else 0
+            data[i] = new
+            err = (old - new) // 8
+            if err == 0:
+                continue
+            for dx, dy in ((1, 0), (2, 0), (-1, 1), (0, 1), (1, 1), (0, 2)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < width and 0 <= ny < height:
+                    j = ny * width + nx
+                    data[j] = max(0, min(255, data[j] + err))
+    out = Image.new("L", (width, height))
+    out.putdata(data)
+    return out
+
+
+def _bayer_dither(gray: Image.Image) -> Image.Image:
+    """Ordered Bayer 8x8 dither -> L image with 0/255 pixels."""
+    width, height = gray.size
+    src = list(gray.getdata())
+    out_data = [0] * (width * height)
+    for y in range(height):
+        row_off = y * width
+        by = (y & 7) * 8
+        for x in range(width):
+            threshold = (BAYER_8[by + (x & 7)] + 0.5) * 4.0  # ~0..256
+            out_data[row_off + x] = 255 if src[row_off + x] >= threshold else 0
+    out = Image.new("L", (width, height))
+    out.putdata(out_data)
+    return out
+
+
+def _fs_dither(gray: Image.Image) -> Image.Image:
+    """Floyd-Steinberg via Pillow's built-in mode-'1' quantizer -> L image."""
+    return gray.convert("1", dither=Image.Dither.FLOYDSTEINBERG).convert("L")
+
+
+def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> Image.Image:
+    """Read raw image bytes -> paletted PIL Image: palette=[transparent-bg, ink=#333], theme-blends."""
+    with Image.open(io.BytesIO(data)) as image:
+        frame = ImageOps.exif_transpose(image)
+    frame = flatten_image(frame)
+    if frame.width > max_width:
+        new_h = round(frame.height * max_width / frame.width)
+        frame = frame.resize((max_width, new_h), Image.Resampling.LANCZOS)
+    gray = ImageOps.autocontrast(ImageOps.grayscale(frame), cutoff=2)
+    if algo == "bayer":
+        dithered = _bayer_dither(gray)
+    elif algo == "fs":
+        dithered = _fs_dither(gray)
+    else:
+        dithered = _atkinson_dither(gray)
+    width, height = dithered.size
+    src = dithered.tobytes()  # L-mode buffer, 0 or 255 per pixel
+    idx_data = bytes(0 if b >= 128 else 1 for b in src)  # index 0 = transparent bg, 1 = ink
+    palette_img = Image.new("P", (width, height))
+    palette_img.frombytes(idx_data)
+    ink_r, ink_g, ink_b = DITHER_INK_RGB
+    palette_img.putpalette([255, 255, 255, ink_r, ink_g, ink_b] + [0] * (256 - 2) * 3)
+    palette_img.info["transparency"] = 0  # index 0 -> tRNS chunk on save
+    return palette_img
+
+
+def image_src_to_dithered_path(src: str, source_path: Path, algo: str) -> tuple[str, int, int]:
+    """Bake and cache a 1-bit PNG for src+algo. Return (web_path, width, height)."""
+    data = read_image_bytes(src, source_path)
+    key = hashlib.sha256(
+        b"\0".join([
+            DITHER_ALGORITHM_VERSION.encode("utf-8"),
+            algo.encode("utf-8"),
+            str(DITHER_MAX_WIDTH).encode("utf-8"),
+            hashlib.sha256(data).digest(),
+        ])
+    ).hexdigest()
+    DITHER_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = DITHER_CACHE_DIR / f"{key}.png"
+    if not cache_path.is_file():
+        image = render_dithered_png(data, algo)
+        image.save(cache_path, "PNG", optimize=True, transparency=0)
+    with Image.open(cache_path) as verify:
+        w, h = verify.size
+    return f"{DITHER_URL_PREFIX}/{key}.png", w, h
+
+
 def estimate_background(gray: Image.Image) -> tuple[int, float]:
     width, height = gray.size
     pixels = gray.load()
@@ -668,6 +825,15 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
         src = (attrs_dict.get("src") or "").strip()
         if not src:
             errors.append(f"{source_path}: missing image source")
+            continue
+        clean_src, dither_algo = parse_dither_directive(src)
+        if dither_algo is not None:
+            try:
+                image_src_to_dithered_path(clean_src, source_path, dither_algo)
+            except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+                errors.append(f"{source_path}: {clean_src}: {exc}")
+            else:
+                print(f"  image: {source_path.name}: dithered ({dither_algo})")
             continue
         try:
             result = image_src_to_frames(src, source_path)

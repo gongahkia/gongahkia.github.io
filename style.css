@@ -624,6 +624,23 @@
             animation: none;
         }
     }
+    .dither-figure {
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: transparent;
+    }
+    .dithered-image {
+        display: block;
+        margin-inline: auto;
+        max-width: 100%;
+        height: auto;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
+    :root[data-theme="dark"] .dithered-image {
+        filter: invert(1);
+    }
 }
 
 /* defines styles when toggling dark mode */
