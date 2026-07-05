@@ -367,15 +367,8 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
     clean_src, mode, algo = parse_image_directive(src)
 
     if mode == "auto":
-        try:
-            data = read_image_bytes(clean_src, source_path)
-        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-            raise RuntimeError(f"{source_path}: {clean_src}: {exc}") from exc
-        if _is_animated_bytes(data):
-            mode = "ascii"  # animated -> keep ASCII (dithered-anim not yet built)
-        else:
-            mode = "dither"
-            algo = DITHER_DEFAULT_ALGO
+        mode = "dither"  # default: dither static + animated (APNG); '#ascii' opts out
+        algo = DITHER_DEFAULT_ALGO
 
     if mode == "dither":
         try:
@@ -763,15 +756,11 @@ def _fs_dither(gray: Image.Image) -> Image.Image:
     return gray.convert("1", dither=Image.Dither.FLOYDSTEINBERG).convert("L")
 
 
-def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> Image.Image:
-    """Read raw image bytes -> paletted PIL Image: palette=[transparent-bg, ink=#333], theme-blends."""
-    with Image.open(io.BytesIO(data)) as image:
-        frame = ImageOps.exif_transpose(image)
-    frame = flatten_image(frame)
-    if frame.width > max_width:
-        new_h = round(frame.height * max_width / frame.width)
-        frame = frame.resize((max_width, new_h), Image.Resampling.LANCZOS)
-    gray = ImageOps.autocontrast(ImageOps.grayscale(frame), cutoff=2)
+def _dither_frame(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
+    """RGB frame -> paletted PIL Image at target size: palette=[transparent-bg, ink=#333]."""
+    if rgb_frame.size != size:
+        rgb_frame = rgb_frame.resize(size, Image.Resampling.LANCZOS)
+    gray = ImageOps.autocontrast(ImageOps.grayscale(rgb_frame), cutoff=2)
     if algo == "bayer":
         dithered = _bayer_dither(gray)
     elif algo == "fs":
@@ -779,18 +768,93 @@ def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDT
     else:
         dithered = _atkinson_dither(gray)
     width, height = dithered.size
-    src = dithered.tobytes()  # L-mode buffer, 0 or 255 per pixel
+    src = dithered.tobytes()  # L-mode, 0 or 255 per pixel
     idx_data = bytes(0 if b >= 128 else 1 for b in src)  # index 0 = transparent bg, 1 = ink
     palette_img = Image.new("P", (width, height))
     palette_img.frombytes(idx_data)
     ink_r, ink_g, ink_b = DITHER_INK_RGB
     palette_img.putpalette([255, 255, 255, ink_r, ink_g, ink_b] + [0] * (256 - 2) * 3)
-    palette_img.info["transparency"] = 0  # index 0 -> tRNS chunk on save
+    palette_img.info["transparency"] = 0
     return palette_img
 
 
+def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> Image.Image:
+    """Read raw image bytes -> paletted PIL Image (single frame)."""
+    with Image.open(io.BytesIO(data)) as image:
+        frame = ImageOps.exif_transpose(image)
+    frame = flatten_image(frame)
+    if frame.width > max_width:
+        new_h = round(frame.height * max_width / frame.width)
+        target = (max_width, new_h)
+    else:
+        target = frame.size
+    return _dither_frame(frame, algo, target)
+
+
+def render_dithered_apng(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> dict:
+    """Bake dithered frames from an animated source. Frames share one palette + timing metadata."""
+    with Image.open(io.BytesIO(data)) as image:
+        n_frames = int(getattr(image, "n_frames", 1) or 1)
+        if n_frames <= 1:
+            raise ValueError("source is not animated")
+        loop = int(image.info.get("loop", 0) or 0)
+        keep = subsample_indices(n_frames, MAX_ANIMATION_FRAMES)
+        keep_set = set(keep)
+
+        image.seek(0)
+        first = ImageOps.exif_transpose(image)
+        first = flatten_image(first)
+        if first.width > max_width:
+            new_h = round(first.height * max_width / first.width)
+            target = (max_width, new_h)
+        else:
+            target = first.size
+
+        source_durations: list[int] = []
+        rendered: dict[int, Image.Image] = {}
+        for index in range(n_frames):
+            image.seek(index)  # seek every frame so Pillow accumulates disposal correctly
+            source_durations.append(normalize_frame_ms(image.info.get("duration")))
+            if index not in keep_set:
+                continue
+            frame = flatten_image(ImageOps.exif_transpose(image))
+            rendered[index] = _dither_frame(frame, algo, target)
+
+    frames = [rendered[i] for i in keep]
+    effective_ms = []
+    for position, index in enumerate(keep):
+        end = keep[position + 1] if position + 1 < len(keep) else n_frames
+        effective_ms.append(sum(source_durations[index:end]) or DEFAULT_FRAME_MS)
+    return {
+        "frames": frames,
+        "durations": effective_ms,
+        "loop": loop,
+        "size": target,
+        "kept": len(keep),
+        "source_frame_count": n_frames,
+    }
+
+
+def save_dithered_apng(result: dict, path: Path) -> None:
+    """Write APNG with per-frame durations. disposal=1 (bg), blend=0 (source) - each frame independent."""
+    frames = result["frames"]
+    first = frames[0]
+    first.save(
+        path,
+        "PNG",
+        save_all=True,
+        append_images=frames[1:],
+        duration=result["durations"],
+        loop=result["loop"],
+        transparency=0,
+        disposal=1,
+        blend=0,
+        optimize=True,
+    )
+
+
 def image_src_to_dithered_path(src: str, source_path: Path, algo: str) -> tuple[str, int, int]:
-    """Bake and cache a 1-bit PNG for src+algo. Return (web_path, width, height)."""
+    """Bake and cache a paletted PNG (or APNG for animated) for src+algo. Return (web_path, w, h)."""
     data = read_image_bytes(src, source_path)
     key = hashlib.sha256(
         b"\0".join([
@@ -803,8 +867,11 @@ def image_src_to_dithered_path(src: str, source_path: Path, algo: str) -> tuple[
     DITHER_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = DITHER_CACHE_DIR / f"{key}.png"
     if not cache_path.is_file():
-        image = render_dithered_png(data, algo)
-        image.save(cache_path, "PNG", optimize=True, transparency=0)
+        if _is_animated_bytes(data):
+            save_dithered_apng(render_dithered_apng(data, algo), cache_path)
+        else:
+            image = render_dithered_png(data, algo)
+            image.save(cache_path, "PNG", optimize=True, transparency=0)
     with Image.open(cache_path) as verify:
         w, h = verify.size
     return f"{DITHER_URL_PREFIX}/{key}.png", w, h
@@ -849,23 +916,17 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
             continue
         clean_src, mode, algo = parse_image_directive(src)
         if mode == "auto":
-            try:
-                data = read_image_bytes(clean_src, source_path)
-            except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-                errors.append(f"{source_path}: {clean_src}: {exc}")
-                continue
-            if _is_animated_bytes(data):
-                mode = "ascii"
-            else:
-                mode = "dither"
-                algo = DITHER_DEFAULT_ALGO
+            mode = "dither"
+            algo = DITHER_DEFAULT_ALGO
         if mode == "dither":
             try:
-                image_src_to_dithered_path(clean_src, source_path, algo)
+                web_path, w_px, h_px = image_src_to_dithered_path(clean_src, source_path, algo)
             except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
                 errors.append(f"{source_path}: {clean_src}: {exc}")
             else:
-                print(f"  image: {source_path.name}: dithered ({algo})")
+                cache_path = DITHER_CACHE_DIR / Path(web_path).name
+                kb = cache_path.stat().st_size / 1024 if cache_path.is_file() else 0
+                print(f"  image: {source_path.name}: dithered ({algo}, {w_px}x{h_px}, {kb:.0f}KB)")
             continue
         try:
             result = image_src_to_frames(clean_src, source_path)
