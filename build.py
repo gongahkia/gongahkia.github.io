@@ -756,19 +756,23 @@ def _fs_dither(gray: Image.Image) -> Image.Image:
     return gray.convert("1", dither=Image.Dither.FLOYDSTEINBERG).convert("L")
 
 
-def _dither_frame(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
-    """RGB frame -> paletted PIL Image at target size: palette=[transparent-bg, ink=#333]."""
+def _dither_to_L(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
+    """RGB frame -> L-mode dithered image (0 or 255 per pixel)."""
     if rgb_frame.size != size:
         rgb_frame = rgb_frame.resize(size, Image.Resampling.LANCZOS)
     gray = ImageOps.autocontrast(ImageOps.grayscale(rgb_frame), cutoff=2)
     if algo == "bayer":
-        dithered = _bayer_dither(gray)
-    elif algo == "fs":
-        dithered = _fs_dither(gray)
-    else:
-        dithered = _atkinson_dither(gray)
+        return _bayer_dither(gray)
+    if algo == "fs":
+        return _fs_dither(gray)
+    return _atkinson_dither(gray)
+
+
+def _dither_frame(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
+    """RGB frame -> paletted PIL Image: palette=[transparent-bg, ink=#333]. Used for still PNG."""
+    dithered = _dither_to_L(rgb_frame, algo, size)
     width, height = dithered.size
-    src = dithered.tobytes()  # L-mode, 0 or 255 per pixel
+    src = dithered.tobytes()
     idx_data = bytes(0 if b >= 128 else 1 for b in src)  # index 0 = transparent bg, 1 = ink
     palette_img = Image.new("P", (width, height))
     palette_img.frombytes(idx_data)
@@ -776,6 +780,21 @@ def _dither_frame(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> I
     palette_img.putpalette([255, 255, 255, ink_r, ink_g, ink_b] + [0] * (256 - 2) * 3)
     palette_img.info["transparency"] = 0
     return palette_img
+
+
+def _dither_frame_la(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
+    """RGB frame -> LA mode (grayscale + alpha). Used for APNG where P-mode disposal misbehaves."""
+    dithered = _dither_to_L(rgb_frame, algo, size)
+    width, height = dithered.size
+    src = dithered.tobytes()
+    ink_luma = DITHER_INK_RGB[0]  # #333333 -> L=0x33 (grayscale)
+    la = bytearray(width * height * 2)
+    for i, v in enumerate(src):
+        if v < 128:  # ink pixel
+            la[i * 2] = ink_luma
+            la[i * 2 + 1] = 255
+        # else remains (0, 0) = fully transparent
+    return Image.frombytes("LA", (width, height), bytes(la))
 
 
 def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> Image.Image:
@@ -818,7 +837,7 @@ def render_dithered_apng(data: bytes, algo: str, max_width: int = DITHER_MAX_WID
             if index not in keep_set:
                 continue
             frame = flatten_image(ImageOps.exif_transpose(image))
-            rendered[index] = _dither_frame(frame, algo, target)
+            rendered[index] = _dither_frame_la(frame, algo, target)
 
     frames = [rendered[i] for i in keep]
     effective_ms = []
@@ -846,11 +865,10 @@ def save_dithered_apng(result: dict, path: Path) -> None:
         append_images=frames[1:],
         duration=result["durations"],
         loop=result["loop"],
-        transparency=0,
         disposal=1,
         blend=0,
         optimize=True,
-    )
+    )  # LA mode carries alpha natively; no palette transparency chunk needed
 
 
 def image_src_to_dithered_path(src: str, source_path: Path, algo: str) -> tuple[str, int, int]:
