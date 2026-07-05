@@ -364,14 +364,26 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
     if not src:
         raise ValueError(f"{source_path}: missing image source")
 
-    clean_src, dither_algo = parse_dither_directive(src)
-    if dither_algo is not None:
+    clean_src, mode, algo = parse_image_directive(src)
+
+    if mode == "auto":
         try:
-            web_path, width, height = image_src_to_dithered_path(clean_src, source_path, dither_algo)
+            data = read_image_bytes(clean_src, source_path)
+        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+            raise RuntimeError(f"{source_path}: {clean_src}: {exc}") from exc
+        if _is_animated_bytes(data):
+            mode = "ascii"  # animated -> keep ASCII (dithered-anim not yet built)
+        else:
+            mode = "dither"
+            algo = DITHER_DEFAULT_ALGO
+
+    if mode == "dither":
+        try:
+            web_path, width, height = image_src_to_dithered_path(clean_src, source_path, algo)
         except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
             raise RuntimeError(f"{source_path}: {clean_src}: {exc}") from exc
         return (
-            f'<figure class="dither-figure" data-image-source="{html.escape(clean_src, quote=True)}" data-dither="{dither_algo}">'
+            f'<figure class="dither-figure" data-image-source="{html.escape(clean_src, quote=True)}" data-dither="{algo}">'
             f'<img class="dithered-image" src="{html.escape(web_path, quote=True)}" '
             f'width="{width}" height="{height}" '
             f'alt="{html.escape(label, quote=True)}" '
@@ -380,16 +392,16 @@ def render_ascii_image(attrs: list[tuple[str, str | None]], source_path: Path) -
         )
 
     try:
-        result = image_src_to_frames(src, source_path)
+        result = image_src_to_frames(clean_src, source_path)
     except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-        raise RuntimeError(f"{source_path}: {src}: {exc}") from exc
+        raise RuntimeError(f"{source_path}: {clean_src}: {exc}") from exc
 
     if result.get("animated"):
-        return render_ascii_animation(result, src, label)
+        return render_ascii_animation(result, clean_src, label)
 
     art = result["frames"][0]
     return (
-        f'<figure class="ascii-figure" data-image-source="{html.escape(src, quote=True)}">'
+        f'<figure class="ascii-figure" data-image-source="{html.escape(clean_src, quote=True)}">'
         f'<pre class="ascii-art" role="img" aria-label="{html.escape(label, quote=True)}">'
         f"{html.escape(art)}</pre></figure>"
     )
@@ -676,25 +688,34 @@ def _diagram_to_braille(sub: Image.Image, cols: int, rows: int) -> str:
     return "\n".join(lines)
 
 
-def parse_dither_directive(src: str) -> tuple[str, str | None]:
-    """Detect '#dither' or '#dither=<algo>' fragment. Return (clean_src, algo_or_None)."""
+def parse_image_directive(src: str) -> tuple[str, str, str | None]:
+    """Return (clean_src, mode, algo). mode: 'auto'|'ascii'|'dither'. algo set only for dither."""
     frag_idx = src.rfind("#")
     if frag_idx < 0:
-        return src, None
+        return src, "auto", None
     fragment = src[frag_idx + 1:]
-    if not fragment.lower().startswith("dither"):
-        return src, None
-    tail = fragment[len("dither"):]
-    algo = DITHER_DEFAULT_ALGO
-    if tail.startswith("="):
-        candidate = tail[1:].split("&", 1)[0].strip().lower()
-        if candidate in DITHER_ALGORITHMS:
-            algo = candidate
-        else:
-            return src, None  # unknown algo, fall back to ASCII pipeline
-    elif tail:
-        return src, None  # not exactly '#dither' or '#dither=...'
-    return src[:frag_idx], algo
+    lowered = fragment.lower()
+    if lowered == "ascii":
+        return src[:frag_idx], "ascii", None
+    if lowered.startswith("dither"):
+        tail = lowered[len("dither"):]
+        algo = DITHER_DEFAULT_ALGO
+        if tail.startswith("="):
+            candidate = tail[1:].split("&", 1)[0].strip()
+            if candidate in DITHER_ALGORITHMS:
+                algo = candidate
+            else:
+                return src, "auto", None
+        elif tail:
+            return src, "auto", None
+        return src[:frag_idx], "dither", algo
+    return src, "auto", None
+
+
+def _is_animated_bytes(data: bytes) -> bool:
+    with Image.open(io.BytesIO(data)) as image:
+        n_frames = int(getattr(image, "n_frames", 1) or 1)
+        return bool(getattr(image, "is_animated", False)) and n_frames > 1
 
 
 def _atkinson_dither(gray: Image.Image) -> Image.Image:
@@ -826,19 +847,30 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
         if not src:
             errors.append(f"{source_path}: missing image source")
             continue
-        clean_src, dither_algo = parse_dither_directive(src)
-        if dither_algo is not None:
+        clean_src, mode, algo = parse_image_directive(src)
+        if mode == "auto":
             try:
-                image_src_to_dithered_path(clean_src, source_path, dither_algo)
+                data = read_image_bytes(clean_src, source_path)
+            except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
+                errors.append(f"{source_path}: {clean_src}: {exc}")
+                continue
+            if _is_animated_bytes(data):
+                mode = "ascii"
+            else:
+                mode = "dither"
+                algo = DITHER_DEFAULT_ALGO
+        if mode == "dither":
+            try:
+                image_src_to_dithered_path(clean_src, source_path, algo)
             except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
                 errors.append(f"{source_path}: {clean_src}: {exc}")
             else:
-                print(f"  image: {source_path.name}: dithered ({dither_algo})")
+                print(f"  image: {source_path.name}: dithered ({algo})")
             continue
         try:
-            result = image_src_to_frames(src, source_path)
+            result = image_src_to_frames(clean_src, source_path)
         except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-            errors.append(f"{source_path}: {src}: {exc}")
+            errors.append(f"{source_path}: {clean_src}: {exc}")
             continue
         if result.get("animated"):
             frames = result["frames"]
