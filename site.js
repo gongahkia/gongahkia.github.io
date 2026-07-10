@@ -352,3 +352,51 @@ function applyFilter(filter) {
     const btn = document.getElementById("filter-toggle");
     if (btn) btn.title = "Visual filter: " + filter;
 }
+
+// --- bitmap typography ---
+
+let isBitmapMode = false;
+
+(function initBitmapSystem() {
+    const btn = document.createElement("button");
+    btn.id = "bitmap-toggle";
+    btn.type = "button";
+    btn.title = "Bitmap typography: off";
+    btn.setAttribute("aria-label", "Toggle bitmap typography");
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = '<span class="bitmap-toggle-glyph" aria-hidden="true"></span>';
+    btn.addEventListener("click", function() {
+        applyBitmapMode(!isBitmapMode);
+        localStorage.setItem("bitmap_mode", String(isBitmapMode));
+    });
+
+    const filterBtn = document.getElementById("filter-toggle");
+    const darkLabel = document.querySelector('label[for="dark-mode"]');
+    if (filterBtn && filterBtn.parentNode) {
+        filterBtn.after(btn);
+    } else if (darkLabel && darkLabel.parentNode) {
+        darkLabel.after(btn);
+    }
+    restoreBitmapMode();
+})();
+
+function restoreBitmapMode() {
+    const saved = localStorage.getItem("bitmap_mode");
+    applyBitmapMode(saved === "true" || saved === "on");
+}
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) restoreBitmapMode();
+});
+
+function applyBitmapMode(nextMode) {
+    isBitmapMode = Boolean(nextMode);
+    if (isBitmapMode) {
+        document.documentElement.dataset.bitmap = "on";
+    } else {
+        document.documentElement.removeAttribute("data-bitmap");
+    }
+    const btn = document.getElementById("bitmap-toggle");
+    if (!btn) return;
+    btn.title = "Bitmap typography: " + (isBitmapMode ? "on" : "off");
+    btn.setAttribute("aria-pressed", String(isBitmapMode));
+}
