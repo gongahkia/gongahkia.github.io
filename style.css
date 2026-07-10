@@ -33,22 +33,6 @@
 }
 
 @font-face {
-    font-family: 'CozetteBitmap';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('asset/fonts/CozetteVector.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'CozetteBitmap';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('asset/fonts/CozetteVectorBold.woff2') format('woff2');
-}
-
-@font-face {
     font-family: 'Noto Sans JP';
     font-style: normal;
     font-weight: 400;
@@ -813,56 +797,6 @@ html[data-filter] #filter-overlay {
     display: block;
     width: var(--unit-size);
     height: var(--unit-size);
-}
-#bitmap-toggle {
-    position: absolute;
-    top: calc((var(--unit-size) - var(--thick-border-width)) / 4 - var(--unit-size) / 2 + var(--unit-size) / 6);
-    right: max(calc((100vw - 4 * var(--column-size) - 3 * var(--unit-size)) / 2 + 88px), calc(var(--unit-size) + 88px));
-    cursor: pointer;
-    padding: 10px;
-    background: none;
-    border: none;
-    color: var(--foreground-color);
-}
-.bitmap-toggle-glyph {
-    position: relative;
-    display: block;
-    width: var(--unit-size);
-    height: var(--unit-size);
-}
-.bitmap-toggle-glyph::before {
-    content: "";
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 5px;
-    height: 5px;
-    background: currentColor;
-    box-shadow: 8px 0 currentColor, 16px 0 currentColor, 0 8px currentColor, 16px 8px currentColor, 0 16px currentColor, 8px 16px currentColor, 16px 16px currentColor;
-    opacity: 0.72;
-}
-#bitmap-toggle[aria-pressed="true"] .bitmap-toggle-glyph::before {
-    opacity: 1;
-    box-shadow: 8px 0 currentColor, 16px 0 currentColor, 0 8px currentColor, 8px 8px currentColor, 16px 8px currentColor, 0 16px currentColor, 8px 16px currentColor, 16px 16px currentColor;
-}
-
-/* bitmap typography mode */
-html[data-bitmap="on"] :where(p, a, li, dt, dd, th, td, caption, figcaption, blockquote, h1, h2, h3, h4, h5, h6, label, button, input, textarea, select, footer, summary, .blogFilterBar, .filter-link, .filter-empty-message, .toc-island, .click-animation, #time) {
-    font-family: 'CozetteBitmap', 'SuisseIntlMono', monospace;
-    letter-spacing: 0;
-    font-variant-ligatures: none;
-    -webkit-font-smoothing: none;
-    text-rendering: geometricPrecision;
-}
-html[data-bitmap="on"] :where(a, .link-highlight-segment, .toc-island-pill, .toc-island-menu, .toc-island-marker) {
-    border-radius: 0;
-}
-html[data-bitmap="on"] :where(code, pre, kbd, samp, .ascii-art) {
-    font-family: 'SuisseIntlMono', monospace;
-    letter-spacing: -0.04em;
-}
-html[data-bitmap="on"] :where(.mermaid, .mermaid *) {
-    font-family: 'SuisseIntlMono', monospace;
 }
 
 /* vhs filter */
