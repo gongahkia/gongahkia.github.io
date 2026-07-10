@@ -1,12 +1,10 @@
-# portfolio site version 11
+version 13 of the website
 
-* probably my most polished one to date
-
-### technologies
+made with the following
 
 ![JavaScript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
 ![HTML](https://img.shields.io/badge/-HTML-000?&logo=html5)
-![CSS](https://img.shields.io/badge/-CSS-000?&logo=css3)
+![CSS](https://img.shields.io/badge/-CSS-000?&logo=css)
 ![Python](https://img.shields.io/badge/-Python-000?&logo=python)
 ![Jinja](https://img.shields.io/badge/-Jinja-000?&logo=jinja)
 ![Markdown](https://img.shields.io/badge/-Markdown-000?&logo=markdown)
