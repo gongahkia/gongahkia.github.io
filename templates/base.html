@@ -1,66 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="{{ meta_description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="Gabriel Ong">
   <meta name="robots" content="index, follow">
-  {% set resolved_url = canonical_url|default('') %}
-  {% if resolved_url %}
-  <link rel="canonical" href="{{ resolved_url }}">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="author" content="Gabriel Ong">
+  <link rel="stylesheet" href="{{ root_path }}/style.css">
+  {% if has_mermaid %}<script src="{{ root_path }}/mermaid.js" defer></script>{% endif %}
+  {% if toc_enabled %}<script src="{{ root_path }}/toc.js" defer></script>{% endif %}
+  {% if has_math %}
+  <script>window.MathJax = {tex: {inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']]}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   {% endif %}
-  {% block canonical %}{% endblock %}
-  <meta property="og:title" content="{{ og_title }}">
-  <meta property="og:description" content="{{ meta_description }}">
-  <meta property="og:type" content="{{ og_type|default('article') }}">
-  <meta property="og:site_name" content="Gabriel Ong">
-  {% if resolved_url %}
-  <meta property="og:url" content="{{ resolved_url }}">
-  {% endif %}
-  {% block og_extras %}
-  <meta property="og:image" content="https://gabrielongzm.com/asset/portrait/gong-2-og.png">
-  {% endblock %}
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{{ og_title }}">
-  <meta name="twitter:description" content="{{ meta_description }}">
-  <meta name="twitter:image" content="https://gabrielongzm.com/asset/portrait/gong-2-og.png">
-  <meta name="twitter:creator" content="@gongahkia">
-  {% block structured_data %}{% endblock %}
-  <link rel="stylesheet" href="{{ base_path }}/style.css">
-  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
-  {% block extra_preloads %}{% endblock %}
-  <style>.thin-space:after{content:"\2006"}</style>
-  {% block extra_styles %}{% endblock %}
-  <script src="{{ base_path }}/site.js" defer></script>
-  {% if route_script|default(false) %}
-  <script src="{{ route_script }}" defer></script>
-  {% endif %}
-  {% if has_mermaid|default(false) %}
-  <script src="{{ base_path }}/mermaid.js" defer></script>
-  {% endif %}
-  {% if toc_enabled|default(false) %}
-  <script src="{{ base_path }}/toc.js" defer></script>
-  {% endif %}
-  <title>{{ page_title|default(document_title|default("GABRIEL ONG")) }}</title>
-  <link rel="icon" href="{{ section_path }}/asset/blob.ico" sizes="any" type="image/x-icon">
-  <link rel="icon" type="image/svg+xml" id="favicon" href="{{ section_path }}/asset/favicon.svg">
+  <script src="{{ root_path }}/site.js" defer></script>
+  <title>{{ page_title }}</title>
+  <link rel="icon" href="{{ root_path }}/asset/favicon.svg" type="image/svg+xml">
 </head>
-<body{% if toc_enabled|default(false) %} data-toc-enabled="true"{% endif %}>
-  <div id="click-container"></div>
-  <input type="button" id="dark-mode">
-  <label for="dark-mode">
-    <img id="infinityButton" src="{{ section_path }}/asset/roller.png" height="24" width="24"/>
-  </label>
-  <main>
-    <article class="overallArticleTags">
+<body{% if toc_enabled %} data-toc-enabled="true"{% endif %}>
+  <div class="site-shell">
+    <header class="site-header">
+      <nav aria-label="Primary">
+        <a href="{{ root_path }}/">Home</a>
+        <a href="{{ root_path }}/blog/">Writing</a>
+        <a href="{{ root_path }}/personal-wiki/">Wiki</a>
+      </nav>
+    </header>
+    <main>
       {% block content %}{% endblock %}
-    </article>
-    <footer>
-      <p>&copy; 2023-<span id="current-year"></span> Gabriel Ong. All rights reserved.</p>
+    </main>
+    <footer class="site-footer">
+      <p>© 2023–<span id="current-year"></span> Gabriel Ong.</p>
     </footer>
-  </main>
-  <div class="wrapper"></div>
-  {% block extra_scripts %}{% endblock %}
+  </div>
 </body>
 </html>

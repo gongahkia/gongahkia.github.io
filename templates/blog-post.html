@@ -1,38 +1,19 @@
 {% extends "base.html" %}
-{% block structured_data %}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": {{ (canonical_url ~ "#article")|tojson }},
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": {{ canonical_url|tojson }}
-    },
-    "url": {{ canonical_url|tojson }},
-    "headline": {{ title|tojson }},
-    "description": {{ meta_description|tojson }},
-    "datePublished": {{ date_published|tojson }},
-    "dateModified": {{ date_modified|tojson }},
-    "image": "https://gabrielongzm.com/asset/portrait/gong-2-og.png",
-    "author": {
-      "@type": "Person",
-      "@id": "https://gabrielongzm.com/#person",
-      "name": "Gabriel Ong",
-      "url": "https://gabrielongzm.com"
-    }
-  }
-  </script>
-{% endblock %}
 {% block content %}
-      <section class="blog-details">
-        <h2>{{ title }}</h2>
-        <dl>
-          <dt>Date</dt>
-          <dd>{{ date }}</dd>
-        </dl>
-      </section>
-      <section class="blog-content">
-        {{ content }}
-      </section>
+<article class="detail-page">
+  <section class="{% if post_type == 'tech-writeup' %}writeup-details{% else %}blog-details{% endif %}">
+    <h1 data-toc>{{ title }}</h1>
+    <dl>
+      <dt>Date</dt><dd>{{ date }}</dd>
+      {% if post_type == 'tech-writeup' %}
+      <dt>Timeline</dt><dd>{{ metadata.date_range }}</dd>
+      <dt>Tech stack</dt><dd>{{ metadata.tech_stack }}</dd>
+      <dt>Status</dt><dd>{{ metadata.status }}</dd>
+      {% if metadata.github %}<dt>GitHub</dt><dd><a href="{{ metadata.github }}">{{ metadata.github }}</a></dd>{% endif %}
+      {% if metadata.demo %}<dt>Demo</dt><dd><a href="{{ metadata.demo }}">{{ metadata.demo }}</a></dd>{% endif %}
+      {% endif %}
+    </dl>
+  </section>
+  <section class="{% if post_type == 'tech-writeup' %}writeup-content{% else %}blog-content{% endif %} prose">{{ content }}</section>
+</article>
 {% endblock %}

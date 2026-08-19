@@ -1,51 +1,13 @@
 {% extends "base.html" %}
-{% block structured_data %}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": {{ (canonical_url ~ "#article")|tojson }},
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": {{ canonical_url|tojson }}
-    },
-    "url": {{ canonical_url|tojson }},
-    "headline": {{ title|tojson }},
-    "description": {{ meta_description|tojson }},
-    "datePublished": {{ date_published|tojson }},
-    "dateModified": {{ date_modified|tojson }},
-    "author": {
-      "@type": "Person",
-      "@id": "https://gabrielongzm.com/#person",
-      "name": "Gabriel Ong",
-      "url": "https://gabrielongzm.com"
-    }
-  }
-  </script>
-{% endblock %}
-{% block extra_scripts %}
-  {% if has_math %}
-  <script>window.MathJax = {tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}};</script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
-  {% endif %}
-{% endblock %}
-{% block extra_preloads %}
-  <link rel="preload" href="https://res.hajimehoshi.com/fonts/SuisseIntlMono-Regular-WebXL.woff2" as="font" crossorigin="anonymous">
-{% endblock %}
-{% block extra_styles %}
-  <style>pre { overflow-x: auto; max-width: 100%; }</style>
-{% endblock %}
 {% block content %}
-      <section class="note-header">
-        <h2>{{ title }}</h2>
-        <dl>
-          <dt>File size</dt>
-          <dd>{{ file_size }}</dd>
-          <dt>Rendered lines</dt>
-          <dd>{{ loc }}</dd>
-        </dl>
-      </section>
-      <section class="note-content">
-        {{ content }}
-      </section>
+<article class="detail-page">
+  <section class="note-header">
+    <h1 data-toc>{{ title }}</h1>
+    <dl>
+      <dt>File size</dt><dd>{{ file_size }}</dd>
+      <dt>Rendered lines</dt><dd>{{ loc }}</dd>
+    </dl>
+  </section>
+  <section class="note-content prose">{{ content }}</section>
+</article>
 {% endblock %}

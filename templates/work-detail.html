@@ -1,43 +1,14 @@
 {% extends "base.html" %}
-{% block structured_data %}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
-    "@id": {{ (canonical_url ~ "#software")|tojson }},
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": {{ canonical_url|tojson }}
-    },
-    "url": {{ canonical_url|tojson }},
-    "name": {{ title|tojson }},
-    "headline": {{ title|tojson }},
-    "description": {{ summary|tojson }},
-    "datePublished": {{ date_published|tojson }},
-    "dateModified": {{ date_modified|tojson }},
-    {% if href %}"codeRepository": {{ href|tojson }},{% endif %}
-    "author": {
-      "@type": "Person",
-      "@id": "https://gabrielongzm.com/#person",
-      "name": "Gabriel Ong",
-      "url": "https://gabrielongzm.com"
-    }
-  }
-  </script>
-{% endblock %}
 {% block content %}
-      <section class="writeup-details">
-        <h2>{{ title }}</h2>
-        <dl>
-          <dt>Date</dt>
-          <dd>{{ date }}</dd>
-          <dt>Summary</dt>
-          <dd>{{ summary }}</dd>
-          {% if href %}<dt>Repository</dt>
-          <dd><a href="{{ href }}">{{ href }}</a></dd>{% endif %}
-        </dl>
-      </section>
-      <section class="writeup-content">
-        {{ content }}
-      </section>
+<article class="detail-page">
+  <section class="writeup-details">
+    <h1 data-toc>{{ title }}</h1>
+    <dl>
+      <dt>Date</dt><dd>{{ date }}</dd>
+      <dt>Summary</dt><dd>{{ summary }}</dd>
+      {% if repository %}<dt>Repository</dt><dd><a href="{{ repository }}">{{ repository }}</a></dd>{% endif %}
+    </dl>
+  </section>
+  <section class="writeup-content prose">{{ content }}</section>
+</article>
 {% endblock %}

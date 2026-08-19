@@ -1,52 +1,22 @@
 {% extends "base.html" %}
-{% block structured_data %}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "@id": {{ (canonical_url ~ "#collection")|tojson }},
-    "url": {{ canonical_url|tojson }},
-    "name": "Gabriel's Personal Wiki",
-    "description": {{ meta_description|tojson }},
-    "isPartOf": {
-      "@type": "WebSite",
-      "@id": "https://gabrielongzm.com/#website",
-      "url": "https://gabrielongzm.com",
-      "name": "Gabriel Ong"
-    },
-    "author": {
-      "@type": "Person",
-      "@id": "https://gabrielongzm.com/#person",
-      "name": "Gabriel Ong",
-      "url": "https://gabrielongzm.com"
-    }
-  }
-  </script>
-{% endblock %}
 {% block content %}
-      <section class="introductionPortion">
-        <h2>Gabriel's Personal Wiki</h2>
-        <p><i>My notes from the things I've learnt. Available as a <a href="https://github.com/gongahkia/gongahkia.github.io/releases"><b>ZIP file</b></a>.</i></p>
-        <nav class="blogFilterBar" aria-label="Filter notes by category">
-          <a href="#" class="filter-link" data-filter="general">General</a>
-          <a href="#" class="filter-link" data-filter="tech">Tech</a>
-        </nav>
-      </section>
-      <section class="booksAndBlog">
-        {% for note in notes %}
-        <dl data-filter-category="{{ note.filter_category }}">
-          <dt>{{ note.date }}</dt>
-          <dd>
-            <a href="pages/{{ note.filename }}">{{ note.title }}</a>
-            <br>
-            <i>{{ note.size }}</i>
-            <br>
-            <i>{{ note.loc }} lines</i>
-          </dd>
-        </dl>
-        {% endfor %}
-        <p class="filter-empty-message" data-filter-empty="general">No general notes yet</p>
-        <p class="filter-empty-message" data-filter-empty="tech">No tech notes yet</p>
-        <p class="filter-empty-message" data-filter-empty="none">No notes are selected yet</p>
-      </section>
+<article class="collection-page">
+  <h1>Personal Wiki</h1>
+  <p class="lede">Notes from things I have learnt. Available as a <a href="https://github.com/gongahkia/gongahkia.github.io/releases">ZIP file</a>.</p>
+  <nav class="filter-bar" aria-label="Filter wiki notes">
+    <button class="filter-link" type="button" data-filter="general" aria-pressed="true">General</button>
+    <button class="filter-link" type="button" data-filter="tech" aria-pressed="true">Tech</button>
+  </nav>
+  <ul class="collection-list" data-filter-list>
+    {% for note in notes %}
+    <li data-filter-category="{{ note.category }}">
+      <p><a href="pages/{{ note.filename }}">{{ note.title }}</a></p>
+      <p class="muted">{{ note.size }} · {{ note.loc }} rendered lines</p>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="filter-empty" data-filter-empty="general" hidden>No general notes yet</p>
+  <p class="filter-empty" data-filter-empty="tech" hidden>No tech notes yet</p>
+  <p class="filter-empty" data-filter-empty="none" hidden>No notes are selected yet</p>
+</article>
 {% endblock %}
