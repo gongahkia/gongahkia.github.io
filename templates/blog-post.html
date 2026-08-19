@@ -1,4 +1,22 @@
 {% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "{% if post_type == 'tech-writeup' %}TechArticle{% else %}BlogPosting{% endif %}",
+    "@id": {{ (canonical_url ~ "#article")|tojson }},
+    "mainEntityOfPage": {"@type": "WebPage", "@id": {{ canonical_url|tojson }}},
+    "url": {{ canonical_url|tojson }},
+    "headline": {{ title|tojson }},
+    "description": {{ meta_description|tojson }},
+    "datePublished": {{ date_published|tojson }},
+    "dateModified": {{ date_modified|tojson }},
+    {% if post_type == 'tech-writeup' %}"keywords": {{ metadata.tech_stack|tojson }},{% endif %}
+    "image": {{ default_image_url|tojson }},
+    "author": {"@type": "Person", "@id": {{ person_id|tojson }}, "name": "Gabriel Ong", "url": {{ root_site_url|tojson }}}
+  }
+  </script>
+{% endblock %}
 {% block content %}
 <article class="detail-page">
   <section class="{% if post_type == 'tech-writeup' %}writeup-details{% else %}blog-details{% endif %}">

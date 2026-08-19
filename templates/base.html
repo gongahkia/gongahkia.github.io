@@ -2,10 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="{{ meta_description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#ffffff">
   <meta name="author" content="Gabriel Ong">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ meta_description }}">
+  <meta property="og:type" content="{{ og_type }}">
+  <meta property="og:site_name" content="Gabriel Ong">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="{{ default_image_url }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ meta_description }}">
+  <meta name="twitter:image" content="{{ default_image_url }}">
+  <meta name="twitter:creator" content="@gongahkia">
+  {% block structured_data %}{% endblock %}
   <link rel="stylesheet" href="{{ root_path }}/style.css">
   {% if has_mermaid %}<script src="{{ root_path }}/mermaid.js" defer></script>{% endif %}
   {% if toc_enabled %}<script src="{{ root_path }}/toc.js" defer></script>{% endif %}

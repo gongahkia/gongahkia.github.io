@@ -1,4 +1,23 @@
 {% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": {{ (canonical_url ~ "#collection")|tojson }},
+    "url": {{ canonical_url|tojson }},
+    "name": "Gabriel's Blog",
+    "description": {{ meta_description|tojson }},
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": {{ (root_site_url ~ "#website")|tojson }},
+      "url": {{ root_site_url|tojson }},
+      "name": "Gabriel Ong"
+    },
+    "author": {"@type": "Person", "@id": {{ person_id|tojson }}, "name": "Gabriel Ong", "url": {{ root_site_url|tojson }}}
+  }
+  </script>
+{% endblock %}
 {% block content %}
 <article class="collection-page">
   <h1>Writing</h1>

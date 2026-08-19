@@ -23,6 +23,13 @@ DEFAULT_OUTPUT = ROOT / "dist"
 TEMPLATES = ROOT / "templates"
 STATIC = ROOT
 HOME_SOURCE = ROOT / "content" / "home.html"
+BASE_URL = v9.BASE_URL.rstrip("/")
+PERSON_ID = f"{BASE_URL}/#person"
+DEFAULT_SOCIAL_IMAGE_URL = f"{BASE_URL}/asset/portrait/gong-2-og.png"
+HOME_DESCRIPTION = (
+    "Gabriel Ong is a Product-minded Full Stack Engineer in Singapore "
+    "specialising in Production AI Agents."
+)
 
 v9.IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
 v9.ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
@@ -91,13 +98,29 @@ def page_context(
     title: str,
     root_path: str,
     *,
+    route: str,
+    meta_description: str,
+    og_title: str,
+    og_type: str,
+    date_published: str | None = None,
+    date_modified: str | None = None,
     toc_enabled: bool = False,
     has_math: bool = False,
     has_mermaid: bool = False,
 ) -> dict:
+    canonical_url = f"{BASE_URL}{route}"
     return {
         "page_title": title,
         "root_path": root_path,
+        "canonical_url": canonical_url,
+        "root_site_url": f"{BASE_URL}/",
+        "meta_description": meta_description,
+        "og_title": og_title,
+        "og_type": og_type,
+        "default_image_url": DEFAULT_SOCIAL_IMAGE_URL,
+        "person_id": PERSON_ID,
+        "date_published": date_published,
+        "date_modified": date_modified,
         "toc_enabled": toc_enabled,
         "has_math": has_math,
         "has_mermaid": has_mermaid,
@@ -111,8 +134,8 @@ def write_template(output: Path, relative_path: str, template_name: str, **conte
     return target
 
 
-def build_sitemap(output: Path) -> None:
-    """Create a sitemap for every generated HTML page in the deployable output."""
+def build_sitemap(output: Path, source_paths: dict[str, Path | list[Path]]) -> None:
+    """Create a sitemap for every generated HTML page with Git-derived freshness."""
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -125,7 +148,15 @@ def build_sitemap(output: Path) -> None:
             route = f"/{relative.removesuffix('index.html')}"
         else:
             route = f"/{relative}"
-        lines.extend(("  <url>", f"    <loc>{html.escape(v9.BASE_URL + route)}</loc>", "  </url>"))
+        lastmod = v9.git_lastmod(source_paths[relative])
+        lines.extend(
+            (
+                "  <url>",
+                f"    <loc>{html.escape(BASE_URL + route)}</loc>",
+                f"    <lastmod>{lastmod}</lastmod>",
+                "  </url>",
+            )
+        )
     lines.append("</urlset>")
     (output / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -152,6 +183,7 @@ def browser_title(title: str) -> str:
 
 
 FENCE_START_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>[^\r\n]*)")
+MARKDOWN_H1_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
 
 
 def code_language_for(source: Path) -> str | None:
@@ -211,6 +243,19 @@ def prepare_markdown(content: str, source: Path) -> str:
 
 def render_markdown(content: str, source: Path) -> str:
     return v9.md_to_html(prepare_markdown(content, source), source)
+
+
+def strip_duplicate_wiki_title(body: str, title: str) -> str:
+    """Drop the source H1 that duplicates the page's semantic H1 header."""
+    lines = body.splitlines()
+    for index, line in enumerate(lines):
+        if not line.strip():
+            continue
+        match = MARKDOWN_H1_RE.fullmatch(line.strip())
+        if not match or match.group(1).strip().casefold() != title.strip().casefold():
+            return body
+        return "\n".join(lines[index + 1 :]).lstrip("\n")
+    return body
 
 
 def rewrite_wiki_markdown_links(html_content: str, notes_dir: Path) -> str:
@@ -288,22 +333,32 @@ def homepage_content(works: list[dict]) -> str:
     return content.replace(marker, render_home_works(works), 1)
 
 
-def build_home(output: Path, works: list[dict]) -> None:
+def build_home(output: Path, works: list[dict]) -> dict[str, list[Path]]:
     write_template(
         output,
         "index.html",
         "home.html",
         home_content=Markup(homepage_content(works)),
-        **page_context("GABRIEL ONG", "."),
+        **page_context(
+            "GABRIEL ONG",
+            ".",
+            route="/",
+            meta_description=HOME_DESCRIPTION,
+            og_title="Gabriel Ong - Product-minded Full Stack Engineer",
+            og_type="website",
+        ),
     )
+    return {"index.html": [HOME_SOURCE, TEMPLATES / "home.html", TEMPLATES / "base.html"]}
 
 
-def build_work(output: Path, works: list[dict]) -> None:
+def build_work(output: Path, works: list[dict]) -> dict[str, list[Path]]:
+    sitemap_sources = {}
     for work in works:
         html_content = render_markdown(work["content"], work["source_path"])
+        relative_path = f"work/{work['slug']}.html"
         write_template(
             output,
-            f"work/{work['slug']}.html",
+            relative_path,
             "work-detail.html",
             title=work["title"],
             date=work["date"],
@@ -313,14 +368,28 @@ def build_work(output: Path, works: list[dict]) -> None:
             **page_context(
                 browser_title(work["title"]),
                 "..",
+                route=f"/{relative_path}",
+                meta_description=(
+                    f"Work: {work['title']} - {work['summary']} - Gabriel Ong"
+                ),
+                og_title=f"{work['title']} | Gabriel Ong",
+                og_type="article",
+                date_published=v9.parse_date_to_iso(work["date"]),
+                date_modified=v9.git_lastmod(work["source_path"]),
                 toc_enabled=True,
                 has_math=v9.html_uses_mathjax(html_content),
                 has_mermaid=v9.html_uses_mermaid(html_content),
             ),
         )
+        sitemap_sources[relative_path] = [
+            work["source_path"],
+            TEMPLATES / "work-detail.html",
+            TEMPLATES / "base.html",
+        ]
+    return sitemap_sources
 
 
-def build_blog(output: Path) -> None:
+def build_blog(output: Path) -> dict[str, list[Path]]:
     post_dir = SOURCE_ROOT / "blog" / "posts"
     posts = []
     for source in sorted(post_dir.glob("*.md")):
@@ -356,6 +425,12 @@ def build_blog(output: Path) -> None:
             **page_context(
                 browser_title(title),
                 "../..",
+                route=f"/blog/posts/{filename}",
+                meta_description=f"Blog Post: {title} - Gabriel Ong",
+                og_title=title,
+                og_type="article",
+                date_published=v9.parse_date_to_iso(date),
+                date_modified=v9.git_lastmod(source),
                 toc_enabled=True,
                 has_math=v9.html_uses_mathjax(html_content),
                 has_mermaid=v9.html_uses_mermaid(html_content),
@@ -368,16 +443,39 @@ def build_blog(output: Path) -> None:
         "blog/index.html",
         "blog-index.html",
         posts=posts,
-        **page_context("BLOG", ".."),
+        **page_context(
+            "BLOG",
+            "..",
+            route="/blog/",
+            meta_description="Gabriel Ong's blog - thoughts, notes, and project writeups.",
+            og_title="Gabriel's Blog",
+            og_type="website",
+        ),
     )
+    return {
+        "blog/index.html": [
+            TEMPLATES / "blog-index.html",
+            TEMPLATES / "base.html",
+            *sorted(post_dir.glob("*.md")),
+        ],
+        **{
+            f"blog/posts/{source.stem}.html": [
+                source,
+                TEMPLATES / "blog-post.html",
+                TEMPLATES / "base.html",
+            ]
+            for source in post_dir.glob("*.md")
+        },
+    }
 
 
-def build_wiki(output: Path) -> None:
+def build_wiki(output: Path) -> dict[str, list[Path]]:
     notes_dir = SOURCE_ROOT / "personal-wiki" / "notes"
     notes = []
     for source in sorted(notes_dir.glob("*.md")):
         metadata, markdown_content = v9.parse_frontmatter(source.read_text(encoding="utf-8"))
         title, body = v9.split_md_title(markdown_content)
+        body = strip_duplicate_wiki_title(body, title)
         html_content = render_markdown(v9.process_wikilinks(body, notes_dir), source)
         html_content = rewrite_wiki_markdown_links(html_content, notes_dir)
         filename = f"{source.stem.lower()}.html"
@@ -392,6 +490,12 @@ def build_wiki(output: Path) -> None:
             **page_context(
                 browser_title(title),
                 "../..",
+                route=f"/personal-wiki/pages/{filename}",
+                meta_description=f"Wiki Note: {title} - Gabriel Ong",
+                og_title=f"{title} | Gabriel Ong Wiki",
+                og_type="article",
+                date_published=v9.parse_date_to_iso("2 Feb 2026"),
+                date_modified=v9.git_lastmod(source),
                 toc_enabled=True,
                 has_math=v9.html_uses_mathjax(html_content),
                 has_mermaid=v9.html_uses_mermaid(html_content),
@@ -418,20 +522,45 @@ def build_wiki(output: Path) -> None:
         "personal-wiki/index.html",
         "wiki-index.html",
         notes=notes,
-        **page_context("PERSONAL WIKI", ".."),
+        **page_context(
+            "PERSONAL WIKI",
+            "..",
+            route="/personal-wiki/",
+            meta_description=(
+                "Gabriel Ong's personal wiki - programming notes, language references, "
+                "and CS topics."
+            ),
+            og_title="Personal Wiki | Gabriel Ong",
+            og_type="website",
+        ),
     )
+    return {
+        "personal-wiki/index.html": [
+            TEMPLATES / "wiki-index.html",
+            TEMPLATES / "base.html",
+            *sorted(notes_dir.glob("*.md")),
+        ],
+        **{
+            f"personal-wiki/pages/{source.stem.lower()}.html": [
+                source,
+                TEMPLATES / "wiki-note.html",
+                TEMPLATES / "base.html",
+            ]
+            for source in notes_dir.glob("*.md")
+        },
+    }
 
 
 def build_site(output: Path) -> None:
     clean_output(output)
     copy_static_files(output)
     works = load_works()
-    build_home(output, works)
-    build_work(output, works)
-    build_blog(output)
-    build_wiki(output)
+    sitemap_sources = build_home(output, works)
+    sitemap_sources.update(build_work(output, works))
+    sitemap_sources.update(build_blog(output))
+    sitemap_sources.update(build_wiki(output))
     copy_generated_media(output)
-    build_sitemap(output)
+    build_sitemap(output, sitemap_sources)
     print(
         f"built v10 site: {len(works)} work pages, "
         f"{len(list((SOURCE_ROOT / 'blog' / 'posts').glob('*.md')))} posts, "
