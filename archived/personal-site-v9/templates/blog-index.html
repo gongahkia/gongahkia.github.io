@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": {{ (canonical_url ~ "#collection")|tojson }},
+    "url": {{ canonical_url|tojson }},
+    "name": "Gabriel's Blog",
+    "description": {{ meta_description|tojson }},
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": "https://gabrielongzm.com/#website",
+      "url": "https://gabrielongzm.com",
+      "name": "Gabriel Ong"
+    },
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabrielongzm.com/#person",
+      "name": "Gabriel Ong",
+      "url": "https://gabrielongzm.com"
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+      <section class="introductionPortion">
+        <h2>Gabriel's Blog</h2>
+        <p><i>Thoughts, notes, and project writeups.</i></p>
+        <nav class="blogFilterBar" aria-label="Filter posts by category">
+          <a href="#" class="filter-link" data-filter="general">General</a>
+          <a href="#" class="filter-link" data-filter="project">Project</a>
+        </nav>
+      </section>
+      <section class="booksAndBlog">
+        {% for post in posts %}
+        <dl data-filter-category="{{ post.filter_category }}">
+          <dt>{{ post.date }}</dt>
+          <dd>
+            <a href="posts/{{ post.filename }}">{{ post.title }}</a>
+            {% if post.status %}
+            <br>
+            {{ post.date_range }}
+            <br>
+            <strong>{{ post.status }}</strong>
+            {% endif %}
+          </dd>
+        </dl>
+        {% endfor %}
+        <p class="filter-empty-message" data-filter-empty="general">No general posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="project">No project posts yet</p>
+        <p class="filter-empty-message" data-filter-empty="none">No posts are selected yet</p>
+      </section>
+{% endblock %}

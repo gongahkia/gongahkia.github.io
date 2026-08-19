@@ -1,0 +1,15 @@
+dist/
+output/
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+
+.DS_Store
+*.log
+.playwright-cli/
+.cache/
+
+.obsidian
+CLAUDE.md
+AGENTS.md
