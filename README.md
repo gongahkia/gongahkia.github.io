@@ -1,4 +1,4 @@
-version [9](./archived/) of my website
+version 10 of my website
 
 made with the following
 
