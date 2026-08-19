@@ -299,14 +299,6 @@ def build_home(output: Path, works: list[dict]) -> None:
 
 
 def build_work(output: Path, works: list[dict]) -> None:
-    work_items = [{**work, "href": f"{work['slug']}.html"} for work in works]
-    write_template(
-        output,
-        "work/index.html",
-        "work-index.html",
-        works=work_items,
-        **page_context("WORK", ".."),
-    )
     for work in works:
         html_content = render_markdown(work["content"], work["source_path"])
         write_template(
