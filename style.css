@@ -483,9 +483,12 @@ dd {
 /* The existing content TOC remains available, but is visually quiet. */
 .toc-island {
     position: fixed;
-    left: 50%;
+    right: 0;
+    left: 0;
+    width: max-content;
+    max-width: calc(100vw - 2rem);
+    margin-inline: auto;
     bottom: 1rem;
-    transform: translateX(-50%);
     z-index: 10;
 }
 

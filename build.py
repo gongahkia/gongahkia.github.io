@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the local-only v10 prototype from the repository's live sources."""
+"""Build version 10 of the site from the repository's root content sources."""
 
 from __future__ import annotations
 
@@ -35,12 +35,12 @@ env = Environment(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build the v10 local prototype from the root content sources."
+        description="Build version 10 of the site from the root content sources."
     )
     parser.add_argument(
         "--output",
         default=str(DEFAULT_OUTPUT),
-        help="Output directory (default: prototype-v10/dist)",
+        help="Output directory (default: dist)",
     )
     return parser.parse_args()
 
@@ -67,7 +67,7 @@ def copy_tree(source: Path, destination: Path) -> None:
 
 
 def copy_static_files(output: Path) -> None:
-    copy_tree(SOURCE_ROOT / "asset", output / "asset")
+    v9.copy_root_asset_dir(output)
     copy_tree(SOURCE_ROOT / "resume", output / "resume")
     for section in ("blog", "personal-wiki"):
         source = SOURCE_ROOT / section / "asset"
@@ -75,9 +75,8 @@ def copy_static_files(output: Path) -> None:
             copy_tree(source, output / section / "asset")
     for filename in ("style.css", "site.js"):
         shutil.copy2(STATIC / filename, output / filename)
-    for filename in ("mermaid.js", "toc.js"):
+    for filename in ("mermaid.js", "toc.js", "robots.txt", "CNAME"):
         shutil.copy2(SOURCE_ROOT / filename, output / filename)
-    (output / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
     (output / ".nojekyll").write_text("", encoding="utf-8")
 
 
@@ -110,6 +109,25 @@ def write_template(output: Path, relative_path: str, template_name: str, **conte
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(env.get_template(template_name).render(**context), encoding="utf-8")
     return target
+
+
+def build_sitemap(output: Path) -> None:
+    """Create a sitemap for every generated HTML page in the deployable output."""
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for page in sorted(output.rglob("*.html")):
+        relative = page.relative_to(output).as_posix()
+        if relative == "index.html":
+            route = "/"
+        elif relative.endswith("/index.html"):
+            route = f"/{relative.removesuffix('index.html')}"
+        else:
+            route = f"/{relative}"
+        lines.extend(("  <url>", f"    <loc>{html.escape(v9.BASE_URL + route)}</loc>", "  </url>"))
+    lines.append("</urlset>")
+    (output / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def format_file_size(size_bytes: int) -> str:
@@ -421,8 +439,9 @@ def build_site(output: Path) -> None:
     build_blog(output)
     build_wiki(output)
     copy_generated_media(output)
+    build_sitemap(output)
     print(
-        f"built v10 prototype: {len(works)} work pages, "
+        f"built v10 site: {len(works)} work pages, "
         f"{len(list((SOURCE_ROOT / 'blog' / 'posts').glob('*.md')))} posts, "
         f"{len(list((SOURCE_ROOT / 'personal-wiki' / 'notes').glob('*.md')))} notes"
     )
