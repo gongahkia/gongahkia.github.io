@@ -352,6 +352,13 @@ dd {
     margin: 0;
 }
 
+@media (min-width: 603px) {
+    .writing-detail-page > .blog-details > dl,
+    .writing-detail-page > .writeup-details > dl {
+        grid-template-columns: max-content 1fr;
+    }
+}
+
 .resume-content .title {
     display: grid;
     grid-template-columns: 1fr auto;
