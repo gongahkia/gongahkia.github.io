@@ -25,6 +25,10 @@ category: General
 * Faber-Castell Hexo M nib
 * Muji Aluminium Round Fountain Pen F nib
 
+## Others
+
+* Pentel EnerGel Style Gel Pen M (BL2007AABX)
+
 ## More on
 
 * [*Why I have written with a fountain pen since the start of my legal studies*](https://youtu.be/B28hG0nBFwI?feature=shared) by Terry Gorry Solicitor
