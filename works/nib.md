@@ -7,7 +7,7 @@ href: "https://github.com/gongahkia/nib"
 order: 0
 ---
 
-I made Nib after 3 months of being stuck within a perpetual motion machine of aleternating [ghostty](https://ghostty.org/) themes.
+I made Nib after 3 months of being stuck within a perpetual motion machine of alternating [ghostty](https://ghostty.org/) themes.
 
 [Jvscholz](https://www.youtube.com/jvscholz) fanboy that I am, I wanted a color scheme that bore the look of deep blue-black fountain pen ink on cool paper *(peppered with with moss, sepia and graphite tones)*.
 
