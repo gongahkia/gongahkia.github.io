@@ -1,7 +1,7 @@
 ---
 slug: nib
 title: "nib"
-date: "September 2026"
+date: "August 2026"
 summary: "A fountain-pen colour system for sustained reading, writing, and code"
 order: 0
 ---
