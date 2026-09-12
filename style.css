@@ -399,6 +399,10 @@ dd {
     margin-top: 1.2rem;
 }
 
+.resume-content .certifications dd {
+    overflow-wrap: anywhere;
+}
+
 .home-work-list {
     padding: 0;
     list-style: none;
