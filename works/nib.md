@@ -2,7 +2,7 @@
 slug: nib
 title: "nib"
 date: "August 2026"
-summary: "A fountain-pen colour system for sustained reading, writing, and code"
+summary: "A Color Scheme in appreciation of the Analog"
 order: 0
 ---
 
