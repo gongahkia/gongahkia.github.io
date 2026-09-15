@@ -1,4 +1,4 @@
-.PHONY: work blog project wiki tech _new_wiki_note build build-wiki clean-wiki help up history sitemap
+.PHONY: work blog project wiki tech _new_wiki_note build test build-wiki clean-wiki help up history sitemap
 
 # OS detection for sed compatibility
 UNAME := $(shell uname)
@@ -12,6 +12,7 @@ endif
 help:
 	@echo "Available commands:"
 	@echo "  make build          - Build the full deployable site into dist/ (preserves Markdown sources)"
+	@echo "  make test           - Run the image pipeline test suite"
 	@echo "  make work           - Create a new work writeup in works/ (interactive)"
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make project        - Create a new tech writeup blog post (interactive)"
@@ -27,6 +28,9 @@ help:
 # Unified build: wiki + blog index + sitemap
 build:
 	@python3 build.py --output dist
+
+test:
+	@python3 -m unittest discover -s tests -v
 
 # Create a new work writeup (markdown with frontmatter)
 work:

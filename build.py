@@ -88,7 +88,7 @@ def copy_static_files(output: Path) -> None:
 
 
 def copy_generated_media(output: Path) -> None:
-    """Publish dither assets produced while rendering Markdown, if any."""
+    """Publish responsive dither/color assets produced while rendering Markdown."""
     source = v9.DITHER_CACHE_DIR
     if source.exists():
         copy_tree(source, output / "asset" / "dither")

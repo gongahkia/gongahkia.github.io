@@ -466,6 +466,13 @@ dd {
     height: auto;
 }
 
+.prose .markdown-image,
+.prose .processed-image {
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
 .prose figure {
     max-width: 100%;
 }
@@ -476,18 +483,29 @@ dd {
 }
 
 .prose .ascii-figure,
-.prose .dither-figure {
+.prose .dither-figure,
+.prose .image-effect-figure {
     overflow-x: auto;
+}
+
+.prose .ascii-figure {
+    container-type: inline-size;
+    overflow-x: hidden;
+}
+
+.prose .image-effect-figure .processed-image {
+    margin-inline: auto;
 }
 
 .prose .ascii-art {
     display: block;
-    width: max-content;
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
     padding: 0.75rem;
     border: 1px solid var(--rule);
     background: var(--surface);
-    font-size: clamp(4px, 0.75vw, 9px);
+    font-size: clamp(3px, 1.45cqw, 9px);
     line-height: 1;
 }
 
