@@ -41,19 +41,6 @@ jobs:
       - name: Build site artifact
         run: make build
 
-      - name: Verify build output
-        run: |
-          test -d dist
-          test -f dist/index.html
-          test -f dist/CNAME
-          test -f dist/robots.txt
-          test -f dist/sitemap.xml
-          test -f dist/blog/index.html
-          test -f dist/personal-wiki/index.html
-          test -f dist/work/hot-cross-buns.html
-          grep -q '<urlset' dist/sitemap.xml
-          ls -la dist | sed -n '1,40p'
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

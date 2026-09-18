@@ -161,6 +161,31 @@ def build_sitemap(output: Path, source_paths: dict[str, Path | list[Path]]) -> N
     (output / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def verify_build_output(output: Path, generated_pages: dict[str, Path | list[Path]]) -> None:
+    """Validate permanent files and every page produced for the current content."""
+    required_files = {
+        "index.html",
+        "CNAME",
+        "robots.txt",
+        "sitemap.xml",
+        *generated_pages,
+    }
+    missing = sorted(
+        relative_path
+        for relative_path in required_files
+        if not (output / relative_path).is_file()
+    )
+    if missing:
+        raise ValueError(
+            "build output validation failed; missing file(s):\n"
+            + "\n".join(f"  {relative_path}" for relative_path in missing)
+        )
+
+    sitemap = (output / "sitemap.xml").read_text(encoding="utf-8")
+    if "<urlset" not in sitemap:
+        raise ValueError("build output validation failed; sitemap.xml has no urlset")
+
+
 def format_file_size(size_bytes: int) -> str:
     size_kb = size_bytes / 1024
     return f"{size_bytes}B" if size_kb < 1 else f"{size_kb:.1f}KB"
@@ -561,6 +586,7 @@ def build_site(output: Path) -> None:
     sitemap_sources.update(build_wiki(output))
     copy_generated_media(output)
     build_sitemap(output, sitemap_sources)
+    verify_build_output(output, sitemap_sources)
     print(
         f"built v10 site: {len(works)} work pages, "
         f"{len(list((SOURCE_ROOT / 'blog' / 'posts').glob('*.md')))} posts, "
