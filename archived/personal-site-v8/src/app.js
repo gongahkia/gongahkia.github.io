@@ -150,11 +150,19 @@ function postItCard(entry, stagger) {
     <span class="post-it-card" style="--post-it-bg:${background};--rot-from:${0.9 - stagger * 0.03}deg;--rot-to:${(stagger % 5) * 0.28 - 0.56}deg;--hover-tilt:${stagger % 2 ? 1.25 : -1.25}deg;--stagger:${stagger}"></span>`;
 }
 
+function responsiveImageMarkup(image, alt = "", attributes = "") {
+  const source = String(image ?? "");
+  const webpSource = source.startsWith("/assets/") && source.endsWith(".png")
+    ? `<source srcset="${escapeHtml(source.slice(0, -4))}.webp" type="image/webp">`
+    : "";
+  return `<picture>${webpSource}<img src="${escapeHtml(source)}" alt="${escapeHtml(alt)}"${attributes}></picture>`;
+}
+
 function paperCoverCard(entry, stagger) {
   const image = entry.cover || entry.image;
   const style = `--rot-from:${0.7 - stagger * 0.02}deg;--rot-to:${(stagger % 4) * 0.24 - 0.36}deg;--hover-tilt:${stagger % 2 ? 1.1 : -1.1}deg;--stagger:${stagger}`;
   const imageMarkup = image
-    ? `<img src="${escapeHtml(image)}" alt="" draggable="false" loading="lazy" decoding="async">`
+    ? responsiveImageMarkup(image, "", ' draggable="false" loading="lazy" decoding="async"')
     : "";
   return `<span class="paper-cover-card ${image ? "has-cover" : ""}" style="${style}">${imageMarkup}</span>`;
 }
@@ -699,7 +707,7 @@ function stackCard(entry, collection, stagger) {
   if (hasVisualThumbnail(entry, collection)) {
     return `
       <span class="polaroid-card" style="--rot-from:${0.9 - stagger * 0.03}deg;--rot-to:${(stagger % 4) * 0.34 - 0.58}deg;--hover-tilt:${stagger % 2 ? 1.4 : -1.4}deg;--stagger:${stagger}">
-        <img src="${escapeHtml(entry.image)}" alt="" draggable="false" loading="lazy" decoding="async">
+        ${responsiveImageMarkup(entry.image, "", ' draggable="false" loading="lazy" decoding="async"')}
       </span>`;
   }
 
@@ -749,7 +757,7 @@ function thumbnail(entry, collection, stagger) {
     return `
       <div class="thumb-slot" aria-hidden="true">
         <span class="polaroid-card" style="--rot-from:${1.2 - stagger * 0.04}deg;--rot-to:${(stagger % 4) * 0.35 - 0.55}deg;--hover-tilt:${stagger % 2 ? 1.4 : -1.4}deg;--stagger:${stagger}">
-          <img src="${escapeHtml(entry.image)}" alt="" draggable="false" loading="lazy" decoding="async">
+          ${responsiveImageMarkup(entry.image, "", ' draggable="false" loading="lazy" decoding="async"')}
         </span>
       </div>`;
   }
@@ -1235,7 +1243,7 @@ function renderDetail(detail) {
     showHeroImage
       ? `
         <figure class="hero-polaroid ${detail.kind === "paper" ? "is-paper-cover" : ""}">
-          <img src="${escapeHtml(detail.image)}" alt="${escapeHtml(detail.title)}">
+          ${responsiveImageMarkup(detail.image, detail.title, ' decoding="async"')}
         </figure>`
       : "";
   const links = detail.links?.length
