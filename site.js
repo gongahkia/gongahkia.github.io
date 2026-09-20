@@ -26,10 +26,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const clickContainer = document.querySelector("#click-container");
     const clickWords = ["click", "clack", "thock", "thonk", "thup", "pop", "whump", "thud", "plip", "clonk", "snap", "tck", "tak", "bonk", "klak", "tik", "tock", "plink", "clunk", "thwack", "bop", "klik", "plonk", "tunk", "pok", "ping", "thwick", "blip", "clop", "klock", "thwump", "tnk"];
     let audioContext;
+    let audioBuffer;
     let lastClickSound = 0;
-    const playClickSound = (interactive) => {
+    const clickSoundBuffer = () => {
+        if (audioBuffer?.sampleRate === audioContext.sampleRate) return audioBuffer;
+
+        const length = Math.floor(audioContext.sampleRate * 0.006);
+        audioBuffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
+        const channel = audioBuffer.getChannelData(0);
+        for (let index = 0; index < length; index += 1) {
+            const progress = index / length;
+            const sine = Math.sin(2 * Math.PI * 3400 * progress);
+            const noise = Math.random() * 2 - 1;
+            channel[index] = (sine * 0.6 + noise * 0.4) * (1 - progress) ** 3;
+        }
+        return audioBuffer;
+    };
+
+    const playClickSound = () => {
         const now = performance.now();
-        if (now - lastClickSound < 55) return;
+        if (now - lastClickSound < 80) return;
         lastClickSound = now;
 
         try {
@@ -38,25 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
             audioContext ||= new AudioConstructor();
             if (audioContext.state === "suspended") audioContext.resume();
 
-            const startedAt = audioContext.currentTime;
-            const oscillator = audioContext.createOscillator();
+            const source = audioContext.createBufferSource();
             const gain = audioContext.createGain();
-            oscillator.type = "triangle";
-            oscillator.frequency.setValueAtTime(interactive ? 960 : 680, startedAt);
-            oscillator.frequency.exponentialRampToValueAtTime(interactive ? 720 : 500, startedAt + 0.035);
-            gain.gain.setValueAtTime(interactive ? 0.055 : 0.035, startedAt);
-            gain.gain.exponentialRampToValueAtTime(0.001, startedAt + 0.04);
-            oscillator.connect(gain);
+            source.buffer = clickSoundBuffer();
+            gain.gain.value = 0.08;
+            source.connect(gain);
             gain.connect(audioContext.destination);
-            oscillator.start(startedAt);
-            oscillator.stop(startedAt + 0.04);
+            source.start();
         } catch (_) {}
     };
 
     document.addEventListener("click", (event) => {
         if (!clickContainer || event.button !== 0 || event.detail === 0) return;
-        const interactive = event.target.closest("a, button, input, select, textarea, summary, label, [role='button']");
-        playClickSound(Boolean(interactive));
+        playClickSound();
         const word = document.createElement("span");
         word.className = "click-animation";
         word.textContent = clickWords[Math.floor(Math.random() * clickWords.length)];

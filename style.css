@@ -728,9 +728,8 @@ dd {
     height: 1.5rem;
     place-items: center;
     padding: 0;
-    border: 1px solid var(--rule);
-    border-radius: 50%;
-    background: var(--surface);
+    border: 0;
+    background: transparent;
     color: var(--ink);
     cursor: pointer;
     transition: transform 0.48s cubic-bezier(0.2, 1.2, 0.35, 1), background-color 0.42s cubic-bezier(0.22, 1, 0.36, 1), color 0.42s cubic-bezier(0.22, 1, 0.36, 1);
@@ -748,12 +747,12 @@ dd {
     width: 1rem;
     height: 1rem;
     overflow: visible;
-    transform: rotate(0deg);
+    transform: translateY(-1px) rotate(0deg);
     transition: transform 0.5s cubic-bezier(0.2, 1.2, 0.28, 1);
 }
 
 [data-theme="dark"] .theme-toggle-icon {
-    transform: rotate(270deg);
+    transform: translateY(-1px) rotate(270deg);
 }
 
 .theme-toggle-body {
