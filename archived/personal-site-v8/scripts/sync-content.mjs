@@ -661,8 +661,17 @@ async function main() {
     },
     routes,
   };
+  const homeManifest = {
+    generatedAt: manifest.generatedAt,
+    home: manifest.home,
+    collections: Object.fromEntries(
+      Object.entries(collections).map(([name, entries]) => [name, entries.slice(0, 6)]),
+    ),
+    counts: manifest.counts,
+  };
 
   await fs.writeFile(path.join(contentRoot, "site.json"), JSON.stringify(manifest), "utf8");
+  await fs.writeFile(path.join(contentRoot, "home.json"), JSON.stringify(homeManifest), "utf8");
   await fs.writeFile(path.join(contentRoot, "routes.json"), JSON.stringify(routes, null, 2), "utf8");
 
   console.log(

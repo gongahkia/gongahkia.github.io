@@ -46,6 +46,7 @@ const signatureIntroShakeDelay = [2500, 5000];
 
 const state = {
   site: null,
+  home: null,
   details: new Map(),
   lastListRoute: "/",
   renderId: 0,
@@ -343,6 +344,15 @@ function siteFooter() {
     </footer>`;
 }
 
+async function loadHome() {
+  if (state.home) return state.home;
+  const response = await fetch("/content/home.json");
+  if (!response.ok) throw new Error("Unable to load generated home content.");
+  state.home = await response.json();
+  primeContributionGraph();
+  return state.home;
+}
+
 async function loadSite() {
   if (state.site) return state.site;
   const response = await fetch("/content/site.json");
@@ -422,7 +432,7 @@ async function loadDetail(item) {
 }
 
 function renderHome() {
-  const { home, collections, counts } = state.site;
+  const { home, collections, counts } = state.home;
   const signatureMeta = signatureMetaMarkup(home.profile);
   const shouldShakeSignature = !state.signatureIntroShakeDone;
   const signatureShakeDelay = shouldShakeSignature
@@ -460,15 +470,15 @@ function renderHome() {
   return layout(`
     ${intro}
     <div class="home-sections">
-      ${previewSection("work", collections.work, { count: previewCount(collections.work), moreLabel: `${counts.work} works` })}
+      ${previewSection("work", collections.work, { count: previewCount(collections.work), moreLabel: `${counts.work} works`, total: counts.work })}
       ${definitionSection("skills", home.skills)}
       ${infoSection("experience", home.experience)}
       ${infoSection("education", home.education)}
-      ${previewSection("awards", collections.awards, { count: previewCount(collections.awards), moreLabel: `${counts.awards} awards` })}
-      ${previewSection("certifications", collections.certifications, { count: previewCount(collections.certifications), moreLabel: `${counts.certifications} certifications` })}
-      ${previewSection("blog", collections.blog, { title: "writing", count: previewCount(collections.blog), moreLabel: `${counts.blog} posts` })}
-      ${previewSection("papers", collections.papers, { count: previewCount(collections.papers), moreLabel: `${counts.papers} papers` })}
-      ${previewSection("wiki", collections.wiki, { title: "wiki", count: previewCount(collections.wiki), moreLabel: `${counts.wiki} notes` })}
+      ${previewSection("awards", collections.awards, { count: previewCount(collections.awards), moreLabel: `${counts.awards} awards`, total: counts.awards })}
+      ${previewSection("certifications", collections.certifications, { count: previewCount(collections.certifications), moreLabel: `${counts.certifications} certifications`, total: counts.certifications })}
+      ${previewSection("blog", collections.blog, { title: "writing", count: previewCount(collections.blog), moreLabel: `${counts.blog} posts`, total: counts.blog })}
+      ${previewSection("papers", collections.papers, { count: previewCount(collections.papers), moreLabel: `${counts.papers} papers`, total: counts.papers })}
+      ${previewSection("wiki", collections.wiki, { title: "wiki", count: previewCount(collections.wiki), moreLabel: `${counts.wiki} notes`, total: counts.wiki })}
     </div>`);
 }
 
@@ -521,7 +531,7 @@ function contributionGridMarkup(contributions) {
 }
 
 function primeContributionGraph() {
-  const contributions = state.site?.home?.contributions;
+  const contributions = state.home?.home?.contributions ?? state.site?.home?.contributions;
   if (contributions?.weeks?.length) contributionGridMarkup(contributions);
 }
 
@@ -560,7 +570,7 @@ function previewSection(collection, entries, options = {}) {
   const rows = visible
     .map((entry, index) => entryRow(entry, collection, index + 1))
     .join("");
-  const needsMore = source.length > visible.length;
+  const needsMore = (options.total ?? source.length) > visible.length;
   const hiddenEntries = stackPreviewEntries(source.slice(visible.length), collection);
   const more = needsMore
     ? moreRow(config.listPath, visible.length + 1, options.moreLabel, collection, hiddenEntries, { expandable: true })
@@ -1486,15 +1496,16 @@ function renderNotFound() {
 async function render(pathname = location.pathname, options = {}) {
   const renderId = ++state.renderId;
   cleanupDynamicIslandTOC();
-  if (!state.site) {
+  if (!state.home && !state.site) {
     root.innerHTML = `<main class="page-shell" aria-busy="true"><div class="page-content"></div></main>`;
   }
 
   try {
-    await loadSite();
+    const route = routeFor(pathname);
+    if (route.view === "home") await loadHome();
+    else await loadSite();
     if (renderId !== state.renderId) return;
 
-    const route = routeFor(pathname);
     let html = "";
     let detail = null;
 
