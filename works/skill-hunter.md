@@ -11,4 +11,4 @@ Skill Hunter was my first substantial project (built for people other than just 
 
 More significantly, building and deploying Skill Hunter showed me that more often than not, the products with the highest adoption metrics are just small tools that solve a specific problem well with minimal installation friction. Not every software problem has to be solved with a full-blown app.
 
-If reading SSO Legislation sometimes feels overwhelming, consider checking out https://github.com/gongahkia/skill-hunter.
+If reading SSO Legislation sometimes feels overwhelming, consider checking it out!

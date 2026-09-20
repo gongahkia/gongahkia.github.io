@@ -11,4 +11,4 @@ I've always been interested in the thinking behind rules-as-code in applied syst
 
 Yuho was the convergence of all these factors intersecting at the perfect time.
 
-It's not much of a product in the traditional sense (if anything its closer to a proof-of-concept), but it's one of my proudest and most thoroughly-researched pet projects by far. You can find it here at https://github.com/gongahkia/yuho.
+It's not much of a product in the traditional sense (if anything its closer to a proof-of-concept), but it's one of my proudest and most thoroughly-researched pet projects by far. 
