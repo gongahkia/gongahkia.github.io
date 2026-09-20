@@ -3,7 +3,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.querySelector("#theme-toggle");
     const themeColor = document.querySelector("#theme-color");
-    const paletteColors = { ink: "#10131a", midnight: "#07151d", warm: "#1b1917" };
     const setTheme = (theme) => {
         const dark = theme === "dark";
         document.documentElement.dataset.theme = theme;
@@ -11,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
             themeToggle.setAttribute("aria-pressed", String(dark));
             themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
         }
-        if (themeColor) themeColor.setAttribute("content", dark ? paletteColors[document.documentElement.dataset.themePalette] || paletteColors.ink : "#ffffff");
+        if (themeColor) themeColor.setAttribute("content", dark ? "#10131a" : "#ffffff");
     };
 
     setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");

@@ -22,11 +22,7 @@
   {% block structured_data %}{% endblock %}
   <script>
     try {
-      const palette = new URLSearchParams(location.search).get("palette");
-      if (palette === "midnight" || palette === "warm") {
-        document.documentElement.dataset.theme = "dark";
-        document.documentElement.dataset.themePalette = palette;
-      } else if (localStorage.getItem("theme") === "dark") {
+      if (localStorage.getItem("theme") === "dark") {
         document.documentElement.dataset.theme = "dark";
       }
     } catch (_) {}

@@ -63,46 +63,6 @@
     --syntax-whitespace: #718096;
 }
 
-:root[data-theme="dark"][data-theme-palette="midnight"] {
-    --background: #07151d;
-    --ink: #e1f7fb;
-    --link: #67d5e5;
-    --muted: #91b5bb;
-    --rule: #22404a;
-    --surface: #0c2029;
-    --code-background: #0b2631;
-    --code-border: #245466;
-    --codehilite: #0a1e27;
-    --subtle-text: #c3e1e6;
-    --contrib-empty: #17313b;
-    --contrib-1: #216174;
-    --contrib-2: #32899d;
-    --contrib-3: #4cb6c8;
-    --toc-hover: #11303b;
-    --shadow: rgb(0 0 0 / 38%);
-    --click-text-color: #e1f7fb;
-}
-
-:root[data-theme="dark"][data-theme-palette="warm"] {
-    --background: #1b1917;
-    --ink: #f3eadc;
-    --link: #e5ae67;
-    --muted: #c3ae96;
-    --rule: #463c31;
-    --surface: #25211d;
-    --code-background: #2a241d;
-    --code-border: #66533b;
-    --codehilite: #211d19;
-    --subtle-text: #ddcfbd;
-    --contrib-empty: #342c24;
-    --contrib-1: #6a5135;
-    --contrib-2: #9d7445;
-    --contrib-3: #c99659;
-    --toc-hover: #302820;
-    --shadow: rgb(0 0 0 / 38%);
-    --click-text-color: #f3eadc;
-}
-
 @font-face {
     font-family: "SuisseIntl";
     font-style: normal;
