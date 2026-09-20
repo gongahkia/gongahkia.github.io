@@ -3,6 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.querySelector("#theme-toggle");
     const themeColor = document.querySelector("#theme-color");
+    const paletteColors = { ink: "#10131a", midnight: "#07151d", warm: "#1b1917" };
     const setTheme = (theme) => {
         const dark = theme === "dark";
         document.documentElement.dataset.theme = theme;
@@ -10,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
             themeToggle.setAttribute("aria-pressed", String(dark));
             themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
         }
-        if (themeColor) themeColor.setAttribute("content", dark ? "#10131a" : "#ffffff");
+        if (themeColor) themeColor.setAttribute("content", dark ? paletteColors[document.documentElement.dataset.themePalette] || paletteColors.ink : "#ffffff");
     };
 
     setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const clickContainer = document.querySelector("#click-container");
-    const clickWords = ["click", "clack", "thock", "pop", "plink", "tock", "tap", "bonk", "tick", "bop"];
+    const clickWords = ["click", "clack", "thock", "thonk", "thup", "pop", "whump", "thud", "plip", "clonk", "snap", "tck", "tak", "bonk", "klak", "tik", "tock", "plink", "clunk", "thwack", "bop", "klik", "plonk", "tunk", "pok", "ping", "thwick", "blip", "clop", "klock", "thwump", "tnk"];
     document.addEventListener("click", (event) => {
         if (!clickContainer || event.button !== 0 || event.detail === 0) return;
         const word = document.createElement("span");
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         word.style.setProperty("--click-drift", `${Math.round((Math.random() - 0.5) * 20)}px`);
         word.style.setProperty("--click-tilt", `${((Math.random() - 0.5) * 10).toFixed(2)}deg`);
         clickContainer.append(word);
-        window.setTimeout(() => word.remove(), 700);
+        window.setTimeout(() => word.remove(), 1000);
     });
 
     const year = document.querySelector("#current-year");

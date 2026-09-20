@@ -22,7 +22,13 @@
   {% block structured_data %}{% endblock %}
   <script>
     try {
-      if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark";
+      const palette = new URLSearchParams(location.search).get("palette");
+      if (palette === "midnight" || palette === "warm") {
+        document.documentElement.dataset.theme = "dark";
+        document.documentElement.dataset.themePalette = palette;
+      } else if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.dataset.theme = "dark";
+      }
     } catch (_) {}
   </script>
   <link rel="stylesheet" href="{{ root_path }}/style.css">
@@ -45,7 +51,23 @@
         <a href="{{ root_path }}/blog/">Writing</a>
         <a href="{{ root_path }}/personal-wiki/">Wiki</a>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Toggle theme">
-          <span aria-hidden="true">◐</span>
+          <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <mask id="theme-toggle-mask">
+              <rect x="0" y="0" width="24" height="24" fill="white"></rect>
+              <circle class="theme-toggle-mask-cutout" cx="33" cy="0" r="9" fill="black"></circle>
+            </mask>
+            <circle class="theme-toggle-body" cx="12" cy="12" r="5" fill="currentColor" stroke="none" mask="url(#theme-toggle-mask)"></circle>
+            <g class="theme-toggle-rays">
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="5.64" y1="5.64" x2="4.22" y2="4.22"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              <line x1="5.64" y1="18.36" x2="4.22" y2="19.78"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            </g>
+          </svg>
         </button>
       </nav>
     </header>

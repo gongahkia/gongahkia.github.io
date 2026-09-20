@@ -15,6 +15,7 @@
     --contrib-3: #76a6ff;
     --toc-hover: #eef5ff;
     --shadow: rgb(0 0 0 / 8%);
+    --click-text-color: #333;
     --syntax-highlight: #fff3bf;
     --syntax-comment: #5f7282;
     --syntax-error: #b42318;
@@ -47,6 +48,7 @@
     --contrib-3: #548dcc;
     --toc-hover: #182b42;
     --shadow: rgb(0 0 0 / 32%);
+    --click-text-color: #e8edf5;
     --syntax-highlight: #3e3518;
     --syntax-comment: #9eb3c8;
     --syntax-error: #ff8f88;
@@ -59,6 +61,54 @@
     --syntax-variable: #ffb77c;
     --syntax-decorator: #f1a7d0;
     --syntax-whitespace: #718096;
+}
+
+:root[data-theme="dark"][data-theme-palette="midnight"] {
+    --background: #07151d;
+    --ink: #e1f7fb;
+    --link: #67d5e5;
+    --muted: #91b5bb;
+    --rule: #22404a;
+    --surface: #0c2029;
+    --code-background: #0b2631;
+    --code-border: #245466;
+    --codehilite: #0a1e27;
+    --subtle-text: #c3e1e6;
+    --contrib-empty: #17313b;
+    --contrib-1: #216174;
+    --contrib-2: #32899d;
+    --contrib-3: #4cb6c8;
+    --toc-hover: #11303b;
+    --shadow: rgb(0 0 0 / 38%);
+    --click-text-color: #e1f7fb;
+}
+
+:root[data-theme="dark"][data-theme-palette="warm"] {
+    --background: #1b1917;
+    --ink: #f3eadc;
+    --link: #e5ae67;
+    --muted: #c3ae96;
+    --rule: #463c31;
+    --surface: #25211d;
+    --code-background: #2a241d;
+    --code-border: #66533b;
+    --codehilite: #211d19;
+    --subtle-text: #ddcfbd;
+    --contrib-empty: #342c24;
+    --contrib-1: #6a5135;
+    --contrib-2: #9d7445;
+    --contrib-3: #c99659;
+    --toc-hover: #302820;
+    --shadow: rgb(0 0 0 / 38%);
+    --click-text-color: #f3eadc;
+}
+
+@font-face {
+    font-family: "SuisseIntl";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("https://res.hajimehoshi.com/fonts/SuisseIntl-Regular-WebXL.woff2") format("woff2");
 }
 
 * {
@@ -673,20 +723,69 @@ dd {
 }
 
 .theme-toggle {
+    display: inline-grid;
     width: 1.5rem;
     height: 1.5rem;
+    place-items: center;
     padding: 0;
     border: 1px solid var(--rule);
     border-radius: 50%;
     background: var(--surface);
     color: var(--ink);
     cursor: pointer;
-    font: 1rem/1 system-ui, sans-serif;
-    transition: transform 160ms ease, background-color 160ms ease, color 160ms ease;
+    transition: transform 0.48s cubic-bezier(0.2, 1.2, 0.35, 1), background-color 0.42s cubic-bezier(0.22, 1, 0.36, 1), color 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .theme-toggle:hover {
-    transform: rotate(18deg) scale(1.05);
+    transform: scale(1.05);
+}
+
+.theme-toggle:active {
+    transform: scale(0.86);
+}
+
+.theme-toggle-icon {
+    width: 1rem;
+    height: 1rem;
+    overflow: visible;
+    transform: rotate(0deg);
+    transition: transform 0.5s cubic-bezier(0.2, 1.2, 0.28, 1);
+}
+
+[data-theme="dark"] .theme-toggle-icon {
+    transform: rotate(270deg);
+}
+
+.theme-toggle-body {
+    r: 5px;
+    transition: r 0.5s cubic-bezier(0.2, 1.2, 0.28, 1);
+}
+
+[data-theme="dark"] .theme-toggle-body {
+    r: 9px;
+}
+
+.theme-toggle-mask-cutout {
+    cx: 33px;
+    cy: 0;
+    transition: cx 0.5s cubic-bezier(0.2, 1.2, 0.28, 1), cy 0.5s cubic-bezier(0.2, 1.2, 0.28, 1);
+}
+
+[data-theme="dark"] .theme-toggle-mask-cutout {
+    cx: 17px;
+    cy: 8px;
+}
+
+.theme-toggle-rays {
+    opacity: 1;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.2, 1.2, 0.28, 1);
+}
+
+[data-theme="dark"] .theme-toggle-rays {
+    opacity: 0;
+    transform: rotate(-30deg) scale(0);
 }
 
 #click-container {
@@ -698,17 +797,21 @@ dd {
 
 .click-animation {
     position: absolute;
-    color: var(--ink);
-    font: 600 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    translate: -50% -50%;
+    color: var(--click-text-color);
+    font-family: "SuisseIntl", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1;
+    user-select: none;
     pointer-events: none;
-    transform: translate(-50%, -50%) rotate(var(--click-tilt));
-    animation: cursor-word 700ms ease-out forwards;
+    animation: click-fade 1s ease-out forwards;
+    will-change: transform, opacity;
 }
 
-@keyframes cursor-word {
-    from { opacity: 0; transform: translate(-50%, -50%) rotate(var(--click-tilt)) scale(0.84); }
-    18% { opacity: 1; }
-    to { opacity: 0; transform: translate(calc(-50% + var(--click-drift)), calc(-50% - 24px)) rotate(var(--click-tilt)) scale(1.08); }
+@keyframes click-fade {
+    0% { opacity: 0; transform: translate3d(0, 6px, 0) rotate(var(--click-tilt, 0deg)) scale(0.96); }
+    15% { opacity: 1; transform: translate3d(calc(var(--click-drift, 0px) * 0.18), -3px, 0) rotate(calc(var(--click-tilt, 0deg) * 0.8)) scale(1); }
+    100% { opacity: 0; transform: translate3d(var(--click-drift, 0px), -26px, 0) rotate(var(--click-tilt, 0deg)) scale(1.02); }
 }
 
 .toc-island-item-bullet {
