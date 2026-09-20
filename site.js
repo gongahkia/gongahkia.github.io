@@ -3,6 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.querySelector("#theme-toggle");
     const themeColor = document.querySelector("#theme-color");
+    const favicon = document.querySelector("#favicon");
     const setTheme = (theme) => {
         const dark = theme === "dark";
         document.documentElement.dataset.theme = theme;
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
         }
         if (themeColor) themeColor.setAttribute("content", dark ? "#10131a" : "#ffffff");
+        if (favicon) favicon.href = dark ? favicon.dataset.darkIcon : favicon.dataset.lightIcon;
     };
 
     setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
