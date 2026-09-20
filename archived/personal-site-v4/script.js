@@ -182,6 +182,7 @@ const grassPatches = [
 const peopleGroups = ["o", "Ö", "ö", "O", "^", "v", "|", "?", "!", "@", "~", "&", "#", "$", "%", "*", "+", "="];
 
 const entities = []
+const MAX_ENTITIES = 160
 
 function createElement(type, x, y) {
   const element = document.createElement("div")
@@ -262,7 +263,7 @@ function moveVillagers() {
         }
       }
 
-      if (Math.random() < 0.05) {
+      if (entities.length < MAX_ENTITIES && Math.random() < 0.05) {
         const dx = (Math.random() - 0.5) * 20
         const dy = (Math.random() - 0.5) * 20
         const newX = entity.x + dx
@@ -291,6 +292,8 @@ function moveVillagers() {
 }
 
 function movePeople() {
+  if (document.hidden) return
+
   entities.forEach((entity) => {
     if (entity.type === "people") {
       if (!entity.targetX || !entity.targetY || Math.random() < 0.05) {
@@ -335,6 +338,8 @@ function isOverlapping(x, y, width, height) {
 }
 
 function spawnEntity(type) {
+  if (document.hidden || entities.length >= MAX_ENTITIES) return
+
   let x, y
   const maxAttempts = 50
   let attempts = 0
@@ -466,7 +471,9 @@ function updateTime() {
   document.getElementById("current-time").textContent = now.toLocaleTimeString("en-US", options)
 }
 
-setInterval(updateTime, 1000)
+setInterval(() => {
+  if (!document.hidden) updateTime()
+}, 1000)
 updateTime()
 
 document.getElementById("current-year").textContent = new Date().getFullYear()

@@ -14,7 +14,10 @@
     <h1>GABRIEL ONG</h1>
     <div class="content-wrapper">
       <div class="image-links-container">
-        <img src="./asset/place/mitake.jpg" alt="Gabriel Ong" id="profile-image">
+        <picture>
+          <source srcset="./asset/place/mitake-800.webp" type="image/webp">
+          <img src="./asset/place/mitake.jpg" alt="Gabriel Ong" id="profile-image" fetchpriority="high">
+        </picture>
         <div id="links">
           <a href="about.html">about</a>
           <a href="https://github.com/gongahkia/personal-wiki" target="_blank">notes</a>
@@ -35,6 +38,5 @@
       <p>© 2023-<span id="current-year"></span> / Gabriel Ong / All rights reserved.</p>
     </footer>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>

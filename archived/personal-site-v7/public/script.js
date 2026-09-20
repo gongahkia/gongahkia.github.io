@@ -62,10 +62,9 @@ window.onload = function() {
         }
 
         if (isActive) {
-            drawBackground(); // Start animation
+            startBackground();
         } else {
-            cancelAnimationFrame(animationFrameId); // Stop animation
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stopBackground();
         }
     });
 
@@ -73,7 +72,11 @@ window.onload = function() {
     // Simple animated background
     const canvas = backgroundCanvas;
     const ctx = canvas.getContext("2d");
-    let animationFrameId;
+    const buffer = document.createElement("canvas");
+    const bufferCtx = buffer.getContext("2d");
+    let animationFrameId = null;
+    let lastRender = 0;
+    let lastFrameTime = 0;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -83,50 +86,62 @@ window.onload = function() {
     const TARGET_FPS = 15;
     const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
-    function drawBackground() {
-        if (crt.classList.contains('no-background')) return;
+    function startBackground() {
+        if (animationFrameId || crt.classList.contains('no-background') || document.hidden) return;
 
-        const canvas = document.querySelector(".background");
-        const ctx = canvas.getContext("2d");
         canvas.width = canvas.height = 512;
+        buffer.width = buffer.height = 512;
+        lastRender = 0;
+        lastFrameTime = performance.now();
+        animationFrameId = requestAnimationFrame(frame);
+    }
 
-        let lastRender = 0;
-        let lastFrameTime = 0;
+    function stopBackground() {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-        function frame(now = performance.now()) {
-            if (crt.classList.contains('no-background')) return;
-
-            animationFrameId = requestAnimationFrame(frame);
-
-            if (now - lastRender >= FRAME_INTERVAL) {
-                const delta = (now - lastFrameTime) / 1000;
-                lastFrameTime = now;
-                lastRender = now;
-
-                const img = new Image();
-                img.src = ctx.canvas.toDataURL("image/jpeg", 0.75 + 0.25 * Math.sin(now / 1000));
-                img.onload = () => {
-                    ctx.drawImage(img, 0, delta * 32);
-
-                    for (let i = 0; i < Math.random() * 64; i++) {
-                        ctx.fillStyle = Math.random() > 0.5 ? '#BE89FF' : '#232136';
-                        ctx.beginPath();
-                        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, 2 * Math.PI);
-                        ctx.fill();
-                    }
-
-                    ctx.fillStyle = 'rgba(35, 33, 54, 0.05)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                };
-            }
+    function frame(now) {
+        if (crt.classList.contains('no-background') || document.hidden) {
+            animationFrameId = null;
+            return;
         }
 
         animationFrameId = requestAnimationFrame(frame);
+        if (now - lastRender < FRAME_INTERVAL) return;
+
+        const delta = (now - lastFrameTime) / 1000;
+        lastFrameTime = now;
+        lastRender = now;
+
+        bufferCtx.clearRect(0, 0, buffer.width, buffer.height);
+        bufferCtx.drawImage(canvas, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(buffer, 0, delta * 32);
+
+        for (let i = 0; i < Math.random() * 64; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#BE89FF' : '#232136';
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = 'rgba(35, 33, 54, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-    drawBackground();
+    startBackground();
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopBackground();
+        } else {
+            startBackground();
+        }
+    });
 
 
     // Set current year in footer

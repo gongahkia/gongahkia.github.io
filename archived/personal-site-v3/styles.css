@@ -99,6 +99,10 @@ h1:hover {
   max-width: 800px;
 }
 
+.image-links-container picture {
+  display: contents;
+}
+
 #profile-image {
   width: 100%;
   max-width: 400px;

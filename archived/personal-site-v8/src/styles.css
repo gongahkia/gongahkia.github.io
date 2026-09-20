@@ -1038,6 +1038,12 @@ button {
   object-fit: cover;
 }
 
+.paper-cover-card picture,
+.polaroid-card picture,
+.hero-polaroid picture {
+  display: block;
+}
+
 .polaroid-card {
   width: 57px;
   height: 32px;
