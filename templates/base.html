@@ -5,7 +5,7 @@
   <meta name="description" content="{{ meta_description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#ffffff" id="theme-color">
   <meta name="author" content="Gabriel Ong">
   <link rel="canonical" href="{{ canonical_url }}">
   <meta property="og:title" content="{{ og_title }}">
@@ -20,6 +20,11 @@
   <meta name="twitter:image" content="{{ default_image_url }}">
   <meta name="twitter:creator" content="@gongahkia">
   {% block structured_data %}{% endblock %}
+  <script>
+    try {
+      if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark";
+    } catch (_) {}
+  </script>
   <link rel="stylesheet" href="{{ root_path }}/style.css">
   {% if has_mermaid %}<script src="{{ root_path }}/mermaid.js" defer></script>{% endif %}
   {% if toc_enabled %}<script src="{{ root_path }}/toc.js" defer></script>{% endif %}
@@ -32,12 +37,16 @@
   <link rel="icon" href="{{ root_path }}/asset/favicon.svg" type="image/svg+xml">
 </head>
 <body{% if toc_enabled %} data-toc-enabled="true"{% endif %}>
+  <div id="click-container" aria-hidden="true"></div>
   <div class="site-shell">
     <header class="site-header">
       <nav aria-label="Primary">
         <a href="{{ root_path }}/">Home</a>
         <a href="{{ root_path }}/blog/">Writing</a>
         <a href="{{ root_path }}/personal-wiki/">Wiki</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Toggle theme">
+          <span aria-hidden="true">◐</span>
+        </button>
       </nav>
     </header>
     <main>

@@ -1,6 +1,42 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const themeToggle = document.querySelector("#theme-toggle");
+    const themeColor = document.querySelector("#theme-color");
+    const setTheme = (theme) => {
+        const dark = theme === "dark";
+        document.documentElement.dataset.theme = theme;
+        if (themeToggle) {
+            themeToggle.setAttribute("aria-pressed", String(dark));
+            themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        }
+        if (themeColor) themeColor.setAttribute("content", dark ? "#10131a" : "#ffffff");
+    };
+
+    setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+    themeToggle?.addEventListener("click", () => {
+        const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        try {
+            localStorage.setItem("theme", theme);
+        } catch (_) {}
+        setTheme(theme);
+    });
+
+    const clickContainer = document.querySelector("#click-container");
+    const clickWords = ["click", "clack", "thock", "pop", "plink", "tock", "tap", "bonk", "tick", "bop"];
+    document.addEventListener("click", (event) => {
+        if (!clickContainer || event.button !== 0 || event.detail === 0) return;
+        const word = document.createElement("span");
+        word.className = "click-animation";
+        word.textContent = clickWords[Math.floor(Math.random() * clickWords.length)];
+        word.style.left = `${event.clientX}px`;
+        word.style.top = `${event.clientY}px`;
+        word.style.setProperty("--click-drift", `${Math.round((Math.random() - 0.5) * 20)}px`);
+        word.style.setProperty("--click-tilt", `${((Math.random() - 0.5) * 10).toFixed(2)}deg`);
+        clickContainer.append(word);
+        window.setTimeout(() => word.remove(), 700);
+    });
+
     const year = document.querySelector("#current-year");
     if (year) year.textContent = new Date().getFullYear();
 

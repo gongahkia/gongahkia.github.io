@@ -1,10 +1,40 @@
 :root {
+    --background: #fff;
     --ink: #111;
     --link: #3388ff;
     --muted: #777;
     --rule: #dedede;
     --surface: #f7f7f7;
+    --code-background: #f2faff;
+    --code-border: #cce4f7;
+    --codehilite: #f7f9fc;
+    --subtle-text: #444;
+    --contrib-empty: #f1f1f1;
+    --contrib-1: #dce8ff;
+    --contrib-2: #aac8ff;
+    --contrib-3: #76a6ff;
+    --toc-hover: #eef5ff;
+    --shadow: rgb(0 0 0 / 8%);
     --max-width: 550px;
+}
+
+:root[data-theme="dark"] {
+    --background: #10131a;
+    --ink: #e8edf5;
+    --link: #86b7ff;
+    --muted: #9da9ba;
+    --rule: #2d3542;
+    --surface: #171c25;
+    --code-background: #152334;
+    --code-border: #29496d;
+    --codehilite: #151b25;
+    --subtle-text: #c3ccd9;
+    --contrib-empty: #202834;
+    --contrib-1: #24466e;
+    --contrib-2: #32669c;
+    --contrib-3: #548dcc;
+    --toc-hover: #182b42;
+    --shadow: rgb(0 0 0 / 32%);
 }
 
 * {
@@ -12,14 +42,14 @@
 }
 
 html {
-    background: #fff;
+    background: var(--background);
     color: var(--ink);
     scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
-    background: #fff;
+    background: var(--background);
     color: var(--ink);
     font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     -webkit-text-size-adjust: 100%;
@@ -141,9 +171,9 @@ pre {
 
 code {
     padding: 0.08em 0.3em;
-    border: 1px solid #cce4f7;
+    border: 1px solid var(--code-border);
     border-radius: 3px;
-    background: #f2faff;
+    background: var(--code-background);
     font-size: 0.85em;
 }
 
@@ -165,7 +195,7 @@ pre code {
 .codehilite {
     overflow-x: auto;
     border: 1px solid var(--rule);
-    background: #f7f9fc;
+    background: var(--codehilite);
 }
 
 .codehilite pre {
@@ -259,11 +289,11 @@ th {
 blockquote {
     padding-left: 1rem;
     border-left: 2px solid var(--rule);
-    color: #444;
+    color: var(--subtle-text);
 }
 
 .lede {
-    color: #444;
+    color: var(--subtle-text);
 }
 
 .muted {
@@ -449,12 +479,12 @@ dd {
 .contrib-day {
     width: 10px;
     height: 10px;
-    background: #f1f1f1;
+    background: var(--contrib-empty);
 }
 
-.intensity-1 { background: #dce8ff; }
-.intensity-2 { background: #aac8ff; }
-.intensity-3 { background: #76a6ff; }
+.intensity-1 { background: var(--contrib-1); }
+.intensity-2 { background: var(--contrib-2); }
+.intensity-3 { background: var(--contrib-3); }
 .intensity-4 { background: var(--link); }
 
 .prose > :last-child {
@@ -535,7 +565,7 @@ dd {
 .toc-island-close,
 .toc-island-item {
     border: 1px solid var(--rule);
-    background: #fff;
+    background: var(--background);
     color: var(--ink);
     font: inherit;
     cursor: pointer;
@@ -547,7 +577,7 @@ dd {
     gap: 0.45rem;
     min-height: 2.25rem;
     padding: 0.4rem 0.55rem;
-    box-shadow: 0 2px 10px rgb(0 0 0 / 8%);
+    box-shadow: 0 2px 10px var(--shadow);
     font-size: 0.82rem;
 }
 
@@ -562,7 +592,7 @@ dd {
 }
 
 .toc-island-progress-track {
-    stroke: #ddd;
+    stroke: var(--rule);
 }
 
 .toc-island-progress-value {
@@ -578,8 +608,8 @@ dd {
     max-height: min(32rem, calc(100vh - 2rem));
     overflow: auto;
     border: 1px solid var(--rule);
-    background: #fff;
-    box-shadow: 0 3px 18px rgb(0 0 0 / 12%);
+    background: var(--background);
+    box-shadow: 0 3px 18px var(--shadow);
 }
 
 .toc-island-menu-header {
@@ -615,7 +645,46 @@ dd {
 
 .toc-island-item:hover,
 .toc-island-item.is-active {
-    background: #eef5ff;
+    background: var(--toc-hover);
+}
+
+.theme-toggle {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    font: 1rem/1 system-ui, sans-serif;
+    transition: transform 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(18deg) scale(1.05);
+}
+
+#click-container {
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    pointer-events: none;
+}
+
+.click-animation {
+    position: absolute;
+    color: var(--ink);
+    font: 600 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    pointer-events: none;
+    transform: translate(-50%, -50%) rotate(var(--click-tilt));
+    animation: cursor-word 700ms ease-out forwards;
+}
+
+@keyframes cursor-word {
+    from { opacity: 0; transform: translate(-50%, -50%) rotate(var(--click-tilt)) scale(0.84); }
+    18% { opacity: 1; }
+    to { opacity: 0; transform: translate(calc(-50% + var(--click-drift)), calc(-50% - 24px)) rotate(var(--click-tilt)) scale(1.08); }
 }
 
 .toc-island-item-bullet {
@@ -668,5 +737,11 @@ dd {
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+
+    .theme-toggle,
+    .click-animation {
+        transition: none;
+        animation: none;
     }
 }
