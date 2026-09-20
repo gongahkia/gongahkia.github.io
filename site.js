@@ -25,8 +25,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clickContainer = document.querySelector("#click-container");
     const clickWords = ["click", "clack", "thock", "thonk", "thup", "pop", "whump", "thud", "plip", "clonk", "snap", "tck", "tak", "bonk", "klak", "tik", "tock", "plink", "clunk", "thwack", "bop", "klik", "plonk", "tunk", "pok", "ping", "thwick", "blip", "clop", "klock", "thwump", "tnk"];
+    let audioContext;
+    let lastClickSound = 0;
+    const playClickSound = (interactive) => {
+        const now = performance.now();
+        if (now - lastClickSound < 55) return;
+        lastClickSound = now;
+
+        try {
+            const AudioConstructor = window.AudioContext || window.webkitAudioContext;
+            if (!AudioConstructor) return;
+            audioContext ||= new AudioConstructor();
+            if (audioContext.state === "suspended") audioContext.resume();
+
+            const startedAt = audioContext.currentTime;
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            oscillator.type = "triangle";
+            oscillator.frequency.setValueAtTime(interactive ? 960 : 680, startedAt);
+            oscillator.frequency.exponentialRampToValueAtTime(interactive ? 720 : 500, startedAt + 0.035);
+            gain.gain.setValueAtTime(interactive ? 0.055 : 0.035, startedAt);
+            gain.gain.exponentialRampToValueAtTime(0.001, startedAt + 0.04);
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            oscillator.start(startedAt);
+            oscillator.stop(startedAt + 0.04);
+        } catch (_) {}
+    };
+
     document.addEventListener("click", (event) => {
         if (!clickContainer || event.button !== 0 || event.detail === 0) return;
+        const interactive = event.target.closest("a, button, input, select, textarea, summary, label, [role='button']");
+        playClickSound(Boolean(interactive));
         const word = document.createElement("span");
         word.className = "click-animation";
         word.textContent = clickWords[Math.floor(Math.random() * clickWords.length)];
