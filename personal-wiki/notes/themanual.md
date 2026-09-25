@@ -34,6 +34,7 @@ Here are a collection of things I would ask my people to read if I were to ever 
 * [*In the Beginning was the Command Line*](http://project.cyberpunk.ru/lib/in_the_beginning_was_the_command_line/) by Neal Stephenson
 * [*What every computer science major should know*](https://matt.might.net/articles/what-cs-majors-should-know/) by Matt Might
 * [*The Missing Semester of Your CS Education*](https://missing.csail.mit.edu/) by MIT
+* [*Details that make interfaces feel better*](https://jakub.kr/writing/details-that-make-interfaces-feel-better) by Jakub Krehel
 * [*Self-taught Computer Science*](./SelfTaughtComputerScience.md) by gongahkia
 
 ## Books
