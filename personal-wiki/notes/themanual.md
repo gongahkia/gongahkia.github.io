@@ -12,6 +12,7 @@ Here are a collection of things I would ask my people to read if I were to ever 
 ## Management
 
 * [*What silicon valley gets right on software engineers*](https://blog.pragmaticengineer.com/what-silicon-valley-gets-right-on-software-engineers/) by Gergely Orosz
+* [*My productivity app is a never-ending .txt file*](https://jeffhuang.com/productivity_text_file/) by Jeff Huang
 
 ## Mindset
 
