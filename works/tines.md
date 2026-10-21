@@ -2,7 +2,7 @@
 slug: tines
 title: "tines"
 date: "2026"
-summary: "A Color Scheme in appreciation of the Analog"
+summary: "A Color Scheme for the Fountain Pen enjoyers"
 href: "https://github.com/gongahkia/tines"
 order: 0
 ---
