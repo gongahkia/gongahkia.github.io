@@ -1,21 +1,21 @@
 ---
-slug: nib
-title: "nib"
+slug: tines
+title: "tines"
 date: "2026"
 summary: "A Color Scheme in appreciation of the Analog"
-href: "https://github.com/gongahkia/nib"
+href: "https://github.com/gongahkia/tines"
 order: 0
 ---
 
-I made Nib after 3 months of being stuck within a perpetual motion machine of alternating [ghostty](https://ghostty.org/) themes.
+I made Tines after 3 months of being stuck within a perpetual motion machine of alternating [ghostty](https://ghostty.org/) themes.
 
 [Jvscholz](https://www.youtube.com/jvscholz) fanboy that I am, I wanted a color scheme that bore the look of deep blue-black fountain pen ink on cool paper *(peppered with with moss, sepia and graphite tones)*.
 
 Stupidly, I assumed this would take me at most an afternoon.
 
-3 months later, I think I can finally confidently say Nib's v1 complete.
+3 months later, I think I can finally confidently say Tines' v1 complete.
 
-Check it out and [let me know your thoughts](https://github.com/gongahkia/nib/issues)!
+Check it out and [let me know your thoughts](https://github.com/gongahkia/tines/issues)!
 
 ## Base colours
 
@@ -44,7 +44,7 @@ Check it out and [let me know your thoughts](https://github.com/gongahkia/nib/is
 
 ## Extended palette
 
-Taking after [Steph Ango](https://stephango.com/)'s [Flexoki](https://github.com/kepano/flexoki), Nib also features an extended color family.
+Taking after [Steph Ango](https://stephango.com/)'s [Flexoki](https://github.com/kepano/flexoki), Tines also features an extended color family.
 
 | Family | 50 | 100 | 150 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 850 | 900 | 950 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
