@@ -139,9 +139,6 @@ The 2 main methods to secure data are [encryption](#encryption) and [hashing](#h
 
 ### Encryption
 
-> [!TIP]  
-> Remember to run `pip install pycryptodome` to run the worked examples below.
-
 #### Symmetric Encryption
 
 * Relies on ONE key for encryption and decryption

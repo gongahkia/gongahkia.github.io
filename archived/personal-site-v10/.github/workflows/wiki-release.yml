@@ -1,0 +1,38 @@
+name: Create Wiki Notes Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "personal-wiki/notes/**.md"
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Zip wiki Markdown notes
+        run: |
+          cd personal-wiki/notes
+          zip ../../notes.zip *.md
+
+      - name: Create or update release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: notes-${{ steps.date.outputs.date }}
+          name: Personal Wiki Notes ${{ steps.date.outputs.date }}
+          body: Automatically generated release containing all Markdown notes as of ${{ steps.date.outputs.date }}
+          artifacts: notes.zip
+          allowUpdates: true
+          makeLatest: true
+          token: ${{ secrets.GITHUB_TOKEN }}

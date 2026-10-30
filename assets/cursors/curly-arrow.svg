@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <defs><path id="arrow" d="M4 27C15 31 24 24 20 17C16 10 7 12 8 19C9 29 29 22 27 4M19 9L27 4L29 13"/></defs>
+  <use href="#arrow" stroke="#fff" stroke-width="4.5"/>
+  <use href="#arrow" stroke="#242a24" stroke-width="2"/>
+</svg>

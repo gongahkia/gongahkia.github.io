@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set eden_page = true %}
 {% block structured_data %}
   <script type="application/ld+json">
   {
@@ -19,23 +20,12 @@
   </script>
 {% endblock %}
 {% block content %}
-<article class="collection-page">
-  <h1>Personal Wiki</h1>
-  <p class="lede">Notes from things I have learnt. Available as a <a href="https://github.com/gongahkia/gongahkia.github.io/releases">ZIP file</a>.</p>
-  <nav class="filter-bar" aria-label="Filter wiki notes">
-    <button class="filter-link" type="button" data-filter="general" aria-pressed="true">General</button>
-    <button class="filter-link" type="button" data-filter="tech" aria-pressed="true">Tech</button>
-  </nav>
-  <ul class="collection-list" data-filter-list>
+<article class="eden-content">
+  <h1><a class="wiki-download" href="https://github.com/gongahkia/gongahkia.github.io/releases" title="Download the personal wiki">Personal Wiki</a></h1>
+  <ul class="eden-list">
     {% for note in notes %}
-    <li data-filter-category="{{ note.category }}">
-      <p><a href="pages/{{ note.filename }}">{{ note.title }}</a></p>
-      <p class="muted">{{ note.size }} · {{ note.loc }} rendered lines</p>
-    </li>
+    <li><a href="pages/{{ note.filename }}"><span class="eden-list-title">{{ note.title }}</span><span class="eden-meta">{{ note.size }}</span></a></li>
     {% endfor %}
   </ul>
-  <p class="filter-empty" data-filter-empty="general" hidden>No general notes yet</p>
-  <p class="filter-empty" data-filter-empty="tech" hidden>No tech notes yet</p>
-  <p class="filter-empty" data-filter-empty="none" hidden>No notes are selected yet</p>
 </article>
 {% endblock %}

@@ -40,6 +40,14 @@ Allow: /
 User-agent: Diffbot
 Allow: /
 
+# search and user-directed AI retrieval
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+
 # default - block unknown bots
 User-agent: *
 Disallow: /

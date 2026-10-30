@@ -13,3 +13,6 @@ __pycache__/
 .obsidian
 CLAUDE.md
 AGENTS.md
+
+# local design reference; the approved v11 is now at the repository root
+/v11/

@@ -1,0 +1,170 @@
+"use strict";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const themeToggle = document.querySelector("#theme-toggle");
+    const themeColor = document.querySelector("#theme-color");
+    const favicon = document.querySelector("#favicon");
+    const setTheme = (theme) => {
+        const dark = theme === "dark";
+        document.documentElement.dataset.theme = theme;
+        if (themeToggle) {
+            themeToggle.setAttribute("aria-pressed", String(dark));
+            themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        }
+        if (themeColor) themeColor.setAttribute("content", dark ? "#10131a" : "#ffffff");
+        if (favicon) favicon.href = dark ? favicon.dataset.darkIcon : favicon.dataset.lightIcon;
+    };
+
+    setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+    themeToggle?.addEventListener("click", () => {
+        const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        try {
+            localStorage.setItem("theme", theme);
+        } catch (_) {}
+        setTheme(theme);
+    });
+
+    const clickContainer = document.querySelector("#click-container");
+    const clickWords = ["click", "clack", "thock", "thonk", "thup", "pop", "whump", "thud", "plip", "clonk", "snap", "tck", "tak", "bonk", "klak", "tik", "tock", "plink", "clunk", "thwack", "bop", "klik", "plonk", "tunk", "pok", "ping", "thwick", "blip", "clop", "klock", "thwump", "tnk"];
+    let audioContext;
+    let audioBuffer;
+    let lastClickSound = 0;
+    const clickSoundBuffer = () => {
+        if (audioBuffer?.sampleRate === audioContext.sampleRate) return audioBuffer;
+
+        const length = Math.floor(audioContext.sampleRate * 0.006);
+        audioBuffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
+        const channel = audioBuffer.getChannelData(0);
+        for (let index = 0; index < length; index += 1) {
+            const progress = index / length;
+            const sine = Math.sin(2 * Math.PI * 3400 * progress);
+            const noise = Math.random() * 2 - 1;
+            channel[index] = (sine * 0.6 + noise * 0.4) * (1 - progress) ** 3;
+        }
+        return audioBuffer;
+    };
+
+    const playClickSound = () => {
+        const now = performance.now();
+        if (now - lastClickSound < 80) return;
+        lastClickSound = now;
+
+        try {
+            const AudioConstructor = window.AudioContext || window.webkitAudioContext;
+            if (!AudioConstructor) return;
+            audioContext ||= new AudioConstructor();
+            if (audioContext.state === "suspended") audioContext.resume();
+
+            const source = audioContext.createBufferSource();
+            const gain = audioContext.createGain();
+            source.buffer = clickSoundBuffer();
+            gain.gain.value = 0.08;
+            source.connect(gain);
+            gain.connect(audioContext.destination);
+            source.start();
+        } catch (_) {}
+    };
+
+    document.addEventListener("click", (event) => {
+        if (!clickContainer || event.button !== 0 || event.detail === 0) return;
+        playClickSound();
+        const word = document.createElement("span");
+        word.className = "click-animation";
+        word.textContent = clickWords[Math.floor(Math.random() * clickWords.length)];
+        word.style.left = `${event.clientX}px`;
+        word.style.top = `${event.clientY}px`;
+        word.style.setProperty("--click-drift", `${Math.round((Math.random() - 0.5) * 20)}px`);
+        word.style.setProperty("--click-tilt", `${((Math.random() - 0.5) * 10).toFixed(2)}deg`);
+        clickContainer.append(word);
+        window.setTimeout(() => word.remove(), 1000);
+    });
+
+    const year = document.querySelector("#current-year");
+    if (year) year.textContent = new Date().getFullYear();
+
+    const time = document.querySelector("#time");
+    if (time) {
+        const formatter = new Intl.DateTimeFormat([], {
+            timeZone: "Asia/Singapore",
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+        const updateTime = () => { time.textContent = formatter.format(new Date()); };
+        updateTime();
+        window.setInterval(updateTime, 1000);
+    }
+
+    const filterLinks = Array.from(document.querySelectorAll(".filter-link[data-filter]"));
+    const entries = Array.from(document.querySelectorAll("[data-filter-list] [data-filter-category]"));
+    const emptyMessages = Array.from(document.querySelectorAll(".filter-empty[data-filter-empty]"));
+    if (filterLinks.length) {
+        const state = Object.fromEntries(filterLinks.map((link) => [link.dataset.filter, true]));
+        const apply = () => {
+            const counts = Object.fromEntries(filterLinks.map((link) => [link.dataset.filter, 0]));
+            let visible = 0;
+            entries.forEach((entry) => {
+                const category = entry.dataset.filterCategory;
+                counts[category] = (counts[category] || 0) + 1;
+                const show = state[category] !== false;
+                entry.hidden = !show;
+                if (show) visible += 1;
+            });
+            filterLinks.forEach((link) => {
+                const selected = state[link.dataset.filter] !== false;
+                link.setAttribute("aria-pressed", String(selected));
+                link.classList.toggle("is-inactive", !selected);
+            });
+            const noneSelected = filterLinks.every((link) => state[link.dataset.filter] === false);
+            emptyMessages.forEach((message) => {
+                const category = message.dataset.filterEmpty;
+                const show = category === "none"
+                    ? noneSelected
+                    : !noneSelected && visible === 0 && state[category] === true && counts[category] === 0;
+                message.hidden = !show;
+            });
+        };
+        filterLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+                const category = link.dataset.filter;
+                state[category] = !state[category];
+                apply();
+            });
+        });
+        apply();
+    }
+
+    const calendar = document.querySelector("#github-contrib-calendar");
+    if (calendar) {
+        fetch("asset/contributions.json")
+            .then((response) => response.ok ? response.json() : null)
+            .then((data) => data && renderContributions(data, calendar))
+            .catch(() => {});
+    }
+});
+
+function renderContributions(data, container) {
+    const weeks = Array.isArray(data.weeks) ? data.weeks : [];
+    const max = Math.max(data.max || 1, 1);
+    let total = 0;
+    const grid = document.createElement("div");
+    grid.className = "contrib-grid";
+
+    weeks.forEach((week) => {
+        const column = document.createElement("div");
+        column.className = "contrib-week";
+        for (let day = 0; day < 7; day += 1) {
+            const value = week.days?.[day];
+            const count = value?.count || 0;
+            total += count;
+            const cell = document.createElement("span");
+            cell.className = "contrib-day intensity-" + (count ? Math.min(4, Math.ceil(count / max * 4)) : 0);
+            cell.title = value ? count + " contributions on " + value.date : "";
+            column.appendChild(cell);
+        }
+        grid.appendChild(column);
+    });
+    container.replaceChildren(grid);
+    const title = document.querySelector("#contrib-title");
+    if (title) title.textContent = total + " contributions in the last year";
+}

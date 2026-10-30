@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-font="editorial" data-palette="paper" data-theme="light" data-intro="writeup" data-corners="soft" data-accent="moss" data-motion="true" data-sticky="false" data-highlights="true" data-emojis="true" data-logos="true" data-navigation="dan">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="{{ meta_description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ meta_description }}">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#ffffff" id="theme-color">
+  <meta name="theme-color" content="#faf9f6">
   <meta name="author" content="Gabriel Ong">
   <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="sitemap" type="application/xml" href="{{ root_site_url }}sitemap.xml">
   <meta property="og:title" content="{{ og_title }}">
   <meta property="og:description" content="{{ meta_description }}">
   <meta property="og:type" content="{{ og_type }}">
@@ -20,59 +21,33 @@
   <meta name="twitter:image" content="{{ default_image_url }}">
   <meta name="twitter:creator" content="@gongahkia">
   {% block structured_data %}{% endblock %}
-  <script>
-    try {
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.dataset.theme = "dark";
-      }
-    } catch (_) {}
-  </script>
+  <title>{{ page_title }}</title>
+  <link rel="icon" href="{{ root_path }}/asset/favicon.svg?v=11-light" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ root_path }}/content.css">
   <link rel="stylesheet" href="{{ root_path }}/style.css">
+  <link rel="stylesheet" href="{{ root_path }}/tiempos.css">
+  <script src="{{ root_path }}/site.js"></script>
   {% if has_mermaid %}<script src="{{ root_path }}/mermaid.js" defer></script>{% endif %}
-  {% if toc_enabled %}<script src="{{ root_path }}/toc.js" defer></script>{% endif %}
   {% if has_math %}
   <script>window.MathJax = {tex: {inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']]}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   {% endif %}
-  <script src="{{ root_path }}/site.js" defer></script>
-  <title>{{ page_title }}</title>
-  <link id="favicon" rel="icon" href="{{ root_path }}/asset/favicon.svg" data-light-icon="{{ root_path }}/asset/favicon.svg" data-dark-icon="{{ root_path }}/asset/favicon-dark.svg" type="image/svg+xml">
 </head>
-<body{% if toc_enabled %} data-toc-enabled="true"{% endif %}>
-  <div id="click-container" aria-hidden="true"></div>
-  <div class="site-shell">
-    <header class="site-header">
-      <nav aria-label="Primary">
-        <a href="{{ root_path }}/">Home</a>
-        <a href="{{ root_path }}/blog/">Writing</a>
-        <a href="{{ root_path }}/personal-wiki/">Wiki</a>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" title="Toggle theme">
-          <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <mask id="theme-toggle-mask">
-              <rect x="0" y="0" width="24" height="24" fill="white"></rect>
-              <circle class="theme-toggle-mask-cutout" cx="33" cy="0" r="9" fill="black"></circle>
-            </mask>
-            <circle class="theme-toggle-body" cx="12" cy="12" r="5" fill="currentColor" stroke="none" mask="url(#theme-toggle-mask)"></circle>
-            <g class="theme-toggle-rays">
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="5.64" y1="5.64" x2="4.22" y2="4.22"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              <line x1="5.64" y1="18.36" x2="4.22" y2="19.78"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            </g>
-          </svg>
-        </button>
-      </nav>
-    </header>
-    <main>
-      {% block content %}{% endblock %}
-    </main>
-    <footer class="site-footer">
-      <p>© 2023–<span id="current-year"></span> Gabriel Ong.</p>
-    </footer>
-  </div>
+<body{% if eden_page %} class="eden-page"{% endif %}{% if toc_enabled %} data-heading-anchors="true"{% endif %} data-root="{{ root_path }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-nav">
+    <div class="nav-shell">
+    <a class="wordmark" href="{{ root_path }}/" aria-label="Gabriel Ong, Engineer — home">Gabriel Ong, Engineer</a>
+    <nav aria-label="Primary">
+      <a href="{{ root_path }}/work/">Work<span class="nav-current" aria-hidden="true">*</span></a>
+      <a href="{{ root_path }}/blog/">Writing<span class="nav-current" aria-hidden="true">*</span></a>
+      <a href="{{ root_path }}/personal-wiki/">Wiki<span class="nav-current" aria-hidden="true">*</span></a>
+    </nav>
+    </div>
+  </header>
+  <main id="main" class="page-shell" tabindex="-1">{% block content %}{% endblock %}</main>
+  <footer class="page-footer">
+    <p>© 2023–<span id="current-year">2026</span> Gabriel Ong.</p>
+  </footer>
 </body>
 </html>

@@ -141,7 +141,6 @@ In 2024, there are many existing LLM implementations to choose from. The more pr
 
 * [Ollama](https://ollama.com/)
 * [huggingface.co](https://huggingface.co/)
-* [MachineLearning.md](./MachineLearning.md)
 * [Open LLMs](https://github.com/eugeneyan/open-llms) Github repository
 * [Awesome-LLM](https://github.com/Hannibal046/Awesome-LLM) Github repository
 * [TGI vs vLLM](https://medium.com/@rohit.k/tgi-vs-vllm-making-informed-choices-for-llm-deployment-37c56d7ff705) by Rohit Kewalramani

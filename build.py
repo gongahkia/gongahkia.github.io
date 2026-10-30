@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build version 10 of the site from the repository's root content sources."""
+"""Build version 11 of the site from the repository's root content sources."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
+from site_validation import verify_seo_output
 
 
 ROOT = Path(__file__).resolve().parent
@@ -42,7 +43,7 @@ env = Environment(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build version 10 of the site from the root content sources."
+        description="Build version 11 of the site from the root content sources."
     )
     parser.add_argument(
         "--output",
@@ -80,12 +81,88 @@ def copy_static_files(output: Path) -> None:
         source = SOURCE_ROOT / section / "asset"
         if source.exists():
             copy_tree(source, output / section / "asset")
-    for filename in ("style.css", "site.js"):
+    for filename in ("style.css", "content.css", "site.js"):
         shutil.copy2(STATIC / filename, output / filename)
-    for filename in ("mermaid.js", "toc.js", "robots.txt", "CNAME"):
+    for filename in ("mermaid.js", "robots.txt", "CNAME"):
         shutil.copy2(SOURCE_ROOT / filename, output / filename)
+    copy_tree(STATIC / "fonts", output / "fonts")
+    copy_tree(STATIC / "assets", output / "assets")
+    write_tiempos_css(output)
+    # social crawlers need the image referenced by every page's metadata.
+    portrait = output / "asset" / "portrait"
+    portrait.mkdir(exist_ok=True)
+    shutil.copy2(SOURCE_ROOT / "asset" / "portrait" / "gong-2-og.png", portrait / "gong-2-og.png")
+    (output / "asset" / "favicon-dark.svg").unlink(missing_ok=True)
     (output / ".nojekyll").write_text("", encoding="utf-8")
 
+
+def load_profile_entries(section_name):
+    """Reuse v10's dated profile entries and inline links."""
+    source = HOME_SOURCE.read_text(encoding="utf-8")
+    section = re.search(rf"<h2>\s*{re.escape(section_name)}\s*</h2>(.*?)</section>", source, re.DOTALL)
+    if not section:
+        raise ValueError(f"Could not locate v10's {section_name} section")
+    rows = re.findall(r"<dl>\s*<dt>(.*?)</dt>\s*<dd>(.*?)</dd>\s*</dl>", section[1], re.DOTALL)
+    if not rows or len(rows) != section[1].count("<dl>"):
+        raise ValueError(f"Could not read every v10 {section_name} entry")
+    entries = []
+    for date, details in rows:
+        # v10 groups certifications sharing a date with a blank line.
+        for item in re.split(r"(?:<br\s*/?>\s*){2,}", details):
+            parts = re.split(r"<br\s*/?>", item)
+            if len(parts) < 2 or not all(part.strip() for part in [date, *parts]):
+                raise ValueError(f"Incomplete v10 {section_name} entry: {date.strip()}")
+            entries.append({
+                "date": " ".join(html.unescape(date).split()),
+                "title": Markup(" ".join(parts[0].split())),
+                "details": [Markup(" ".join(part.split())) for part in parts[1:]],
+            })
+    return entries
+
+
+def write_tiempos_css(output: Path):
+    """Prefer supplied web/desktop fonts, then installed faces, without remote loads."""
+    faces = [
+        ("Complete", "Headline", "Regular", "400", "normal"),
+        ("Headline", "Headline", "Light", "300 400", "normal"),
+        ("Headline", "Headline", "LightItalic", "300 400", "italic"),
+        ("Text", "Text", "Regular", "400", "normal"),
+        ("Text", "Text", "RegularItalic", "400", "italic"),
+        ("Text", "Text", "Semibold", "600", "normal"),
+        ("Text", "Text", "SemiboldItalic", "600", "italic"),
+        ("Text", "Text", "Bold", "700", "normal"),
+        ("Text", "Text", "BoldItalic", "700", "italic"),
+    ]
+    rules = []
+    for alias, family, style, weight, font_style in faces:
+        candidates = [
+            (f"Tiempos{family}Web-{style}.woff2", "woff2"),
+            (f"Tiempos{family}-{style}.otf", "opentype"),
+        ]
+        if alias != "Complete":
+            candidates.append((f"TestTiempos{family}-{style}.otf", "opentype"))
+        sources = []
+        for filename, font_format in candidates:
+            if (STATIC / "fonts" / "tiempos" / filename).is_file():
+                sources.append(f'url("fonts/tiempos/{filename}") format("{font_format}")')
+        sources.extend([
+            f'local("Tiempos {family} {style}")',
+            f'local("Tiempos{family}-{style}")',
+        ])
+        rules.append(
+            f'@font-face {{font-family:"V11 Tiempos {alias}";'
+            f'src:{",".join(sources)};font-weight:{weight};font-style:{font_style};font-display:swap;}}'
+        )
+    (output / "tiempos.css").write_text("\n".join(rules) + "\n", encoding="utf-8")
+
+
+def display_date(value):
+    parsed = sort_date(value)
+    return f"{parsed:%B} {parsed.day}, {parsed.year}" if parsed.year > 1 else str(value)
+
+
+env.filters["display_date"] = display_date
+env.filters["iso_date"] = v9.parse_date_to_iso
 
 def copy_generated_media(output: Path) -> None:
     """Publish responsive dither/color assets produced while rendering Markdown."""
@@ -315,65 +392,37 @@ def load_works() -> list[dict]:
     return works
 
 
-def render_home_works(works: list[dict]) -> str:
-    items = []
-    for work in works:
-        items.append(
-            """
-        <li>
-          <a href="work/{slug}.html">{title}</a>
-          <span>{summary}</span>
-        </li>""".format(
-                slug=work["slug"],
-                title=work["title"],
-                summary=work["summary"],
-            )
-        )
-    return """
-      <section class="works">
-        <h2>Work</h2>
-        <ul class="home-work-list">{items}
-        </ul>
-        <div class="contributions">
-          <p><a href="https://github.com/gongahkia" id="contrib-title">GitHub contributions (past year)</a></p>
-          <div id="github-contrib-calendar" aria-label="GitHub contributions calendar" role="img"></div>
-          <div id="contrib-legend-container"></div>
-        </div>
-      </section>""".format(items="".join(items))
-
-
-def homepage_content(works: list[dict]) -> str:
-    source = HOME_SOURCE.read_text(encoding="utf-8")
-    match = re.search(
-        r'<article class="overallArticleTags">(.*?)</article>',
-        source,
-        flags=re.DOTALL,
-    )
-    if not match:
-        raise ValueError("could not locate the root homepage article")
-    content = match.group(1)
-    marker = "    <!-- build:works -->"
-    if marker not in content:
-        raise ValueError("could not locate the homepage work marker")
-    return content.replace(marker, render_home_works(works), 1)
-
-
-def build_home(output: Path, works: list[dict]) -> dict[str, list[Path]]:
+def build_home(output: Path) -> dict[str, list[Path]]:
+    profile = {key: load_profile_entries(title) for key, title in (
+        ("education", "Education"), ("experience", "Experience"),
+        ("awards", "Awards"), ("certifications", "Licenses & Certifications"),
+    )}
     write_template(
-        output,
-        "index.html",
-        "home.html",
-        home_content=Markup(homepage_content(works)),
+        output, "index.html", "home.html", **profile,
         **page_context(
-            "GABRIEL ONG",
-            ".",
-            route="/",
-            meta_description=HOME_DESCRIPTION,
-            og_title="Gabriel Ong - Product-minded Full Stack Engineer",
-            og_type="website",
+            "GABRIEL ONG", ".", route="/", meta_description=HOME_DESCRIPTION,
+            og_title="Gabriel Ong - Product-minded Full Stack Engineer", og_type="website",
         ),
     )
     return {"index.html": [HOME_SOURCE, TEMPLATES / "home.html", TEMPLATES / "base.html"]}
+
+
+def build_portfolio(output: Path, works: list[dict]) -> dict[str, list[Path]]:
+    portfolio = []
+    for work in works:
+        # full reference material remains on the existing project detail pages.
+        introduction = re.split(r"^#{1,6}\s", work["content"], maxsplit=1, flags=re.MULTILINE)[0]
+        portfolio.append({**work, "prose": Markup(render_markdown(introduction, work["source_path"]))})
+    write_template(
+        output, "work/index.html", "work-index.html", works=portfolio,
+        **page_context(
+            "WORK", "..", route="/work/",
+            meta_description="Projects and the stories behind them, by Gabriel Ong.",
+            og_title="Work | Gabriel Ong", og_type="website",
+        ),
+    )
+    return {"work/index.html": [TEMPLATES / "work-index.html", TEMPLATES / "base.html",
+                               *[work["source_path"] for work in works]]}
 
 
 def build_work(output: Path, works: list[dict]) -> dict[str, list[Path]]:
@@ -580,15 +629,17 @@ def build_site(output: Path) -> None:
     clean_output(output)
     copy_static_files(output)
     works = load_works()
-    sitemap_sources = build_home(output, works)
+    sitemap_sources = build_home(output)
+    sitemap_sources.update(build_portfolio(output, works))
     sitemap_sources.update(build_work(output, works))
     sitemap_sources.update(build_blog(output))
     sitemap_sources.update(build_wiki(output))
     copy_generated_media(output)
     build_sitemap(output, sitemap_sources)
     verify_build_output(output, sitemap_sources)
+    verify_seo_output(output, BASE_URL)
     print(
-        f"built v10 site: {len(works)} work pages, "
+        f"built v11 site: {len(works)} work pages, "
         f"{len(list((SOURCE_ROOT / 'blog' / 'posts').glob('*.md')))} posts, "
         f"{len(list((SOURCE_ROOT / 'personal-wiki' / 'notes').glob('*.md')))} notes"
     )

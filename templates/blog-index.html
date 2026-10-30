@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set eden_page = true %}
 {% block structured_data %}
   <script type="application/ld+json">
   {
@@ -19,23 +20,12 @@
   </script>
 {% endblock %}
 {% block content %}
-<article class="collection-page">
+<article class="eden-content">
   <h1>Writing</h1>
-  <p class="lede">Thoughts, notes, and project writeups.</p>
-  <nav class="filter-bar" aria-label="Filter writing">
-    <button class="filter-link" type="button" data-filter="general" aria-pressed="true">General</button>
-    <button class="filter-link" type="button" data-filter="project" aria-pressed="true">Project</button>
-  </nav>
-  <ul class="collection-list" data-filter-list>
+  <ul class="eden-list">
     {% for post in posts %}
-    <li data-filter-category="{{ post.filter_category }}">
-      <p><a href="posts/{{ post.filename }}">{{ post.title }}</a> <span class="muted">· {{ post.date }}</span></p>
-      {% if post.status %}<p class="muted">{{ post.date_range }} · {{ post.status }}</p>{% endif %}
-    </li>
+    <li><a href="posts/{{ post.filename }}"><span class="eden-list-title">{{ post.title }}</span><time class="eden-meta" datetime="{{ post.date|iso_date }}">{{ post.date|display_date }}</time></a></li>
     {% endfor %}
   </ul>
-  <p class="filter-empty" data-filter-empty="general" hidden>No general posts yet</p>
-  <p class="filter-empty" data-filter-empty="project" hidden>No project posts yet</p>
-  <p class="filter-empty" data-filter-empty="none" hidden>No posts are selected yet</p>
 </article>
 {% endblock %}

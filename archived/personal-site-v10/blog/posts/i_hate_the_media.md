@@ -1,0 +1,85 @@
+---
+title: "I hate the media"
+date: "30 Apr 2021"
+type: "blog"
+---
+
+This is a topic that I’ve been utterly consumed by for a long, long time. It precedes my emergence as an (albeit small) voice in the online space, predating the creation of this blog, heck- even predating my site123 days.
+
+Because of how overarching such a topic seems, I have been (and remain) hesitant to pen down my thoughts on it. Not to be overdramatic, but thinking about the news cycle, and journalism in general, has taken up such a large proportion of my daily consciousness, that I’m worried anything I type won’t give justice to the things I really want to say about the media, and its impact on our current world. Frankly, it does feel like, in the narrative arc of my life, formalising my thoughts on the media is less a key tangent that punctuates a moment of brevity amidst the chaos, and is rather a burden I will be cursed to ponder and meander over for years to come.
+
+Due to all I have mentioned above, I too, am not fully sure when I will be releasing this article. As a mental marker for myself, it is currently 1:03pm on 28th April 2021, a lazy Wednesday in SCS foundational term, with the only conduct being Chemical Defense (a conduct I’m unfortunately exempted from due to my asthma).
+
+Anyway, I feel like I have now provided sufficient context to excuse my lack of clarity or conciseness in this blog post. While I will do my best to organise my points (in post), some of the wording will be chunky and occasionally indecipherable. Please pardon these instances. Thank you.
+
+(Ps. I’m segmenting this blog post into five separate portions. Hopefully this will help guide your understanding of my argument, or at least help you pinpoint which parts you agree and disagree with. Please engage me under the “ask me questions” section of my blog. I would love to have a conversation on this topic. Also, as a caveat, obviously everything stated from here on out is my personal opinion. I shouldn’t have to say this, but to avoid further confrontation in the future, subjectivity is implied whenever someone expresses their opinion on an issue. Here, I am talking about my thoughts on the media, which might not necessarily align with objective truth. (Anyway, objective truth can only be found in the Word (refer to John 14:6 – Jesus said to him, “I am the way, and the truth, and the life; no one comes to the Father except through Me.”)))
+
+WOW triple bracket ^^^! Anyway, without further ado, here is a collection of my thoughts on the media.
+
+### Part 1: The role of the media, and why I hate the media (currently)
+
+“Media” is defined by Merriam-Webster as ‘a means of mass communication (eg. broadcasting, publishing, and the internet)’ that can be ‘regarded collectively’.
+
+For the purposes of this post, “media” is loosely defined as a means to convey information between two parties in the public space; with the size of said space constantly in flux. In other words, many things can constitute “media” in my argument below, the definition being largely flexible.
+
+So what exactly is the role of the media? I’ll try to segment this first part sequentially. Firstly, I’ll try and give a brief overview of the demagogic role I feel media HAS grown to fill in the public consciousness. Next, I will try and explicate upon the role I feel the media SHOULD play, both in the public and private sphere.
+
+To begin, let me give some background to my obsession, and relationship, with the media. I first began seriously considering the “media”, specifically referring to the news cycle (which manifested in multiple physical and online news publications), in late 2018. This coincided with the advent of the “fake news/ alternative facts” nonsense that Donald Trump was spewing, and though the fake news epidemic admittedly catalyzed my interest in the media’s influence on culture and logic, it was by no means the root of my interest.
+
+Rather, I became interested in media through my then Secondary 4 History and International Studies curriculum. While I wasn’t a particularly attentive or outstanding student (sorry Mr Neo and Mr Koh), both these subjects acted as the roots for my subsequent interest in the humanities in my IBDP education. You see, both International Studies (IS) and History contained sections that were the equivalent of ‘source-based questions’. Essentially, these were a section of 4 to 5 questions that asked students to evaluate the intentions, message, strengths and limitations of a source, based on the student’s contextual knowledge, as well as their understanding of more subtle literary and visual techniques that the author or artist used. It was in this space that I was first exposed to the idea that organisations, be it firms or governing bodies of countries, could manipulate media (in its many forms), to control and mould public perception of certain issues, oftentimes for the organisation’s own purposes. Logically, I had to first become aware of this subtext for me to begin to develop opinions on it.
+
+This further extended in my IB education, where my education in HL Literature and History helped build upon my previous understanding that no source was completely objective, and that every source was steeped (to some extent) in subjectivity.
+
+It was around this time, from early 2019 all the way to the current early 2021, that I began to, and continued to develop my opinions of the media. Of course, having access to multiple publications (such as “Standpoint magazine, Vox, Foreign Affairs, Aeon, Rice, The Guardian”) and books (such as “1987: Singapore’s Marxist Conspiracy 30 years on”) both served to expose me to the possibilities of media when it was presented in a manner that informed and educated, whilst reminding me how difficult it was for even the Singaporean government to loosen their chokehold on the news cycle (for admittedly good reason).
+
+Yet, my correspondence with various seniors working in Singapore’s journalism scene, and media production companies in general, left me with a bitter taste in my mouth. It turned out that, surprisingly, Singapore’s stability and relatively strong governance was in large part controlled by the government’s tight grasp on the media. Simply look at the ‘diversity’ in the number of big name publications (“The Straits Times, Today online, Channel News Asia”, and yep that’s it) that have a large enough budget to stake a place in the public’s consciousness, and it becomes evident that compared to the UK and the US, Singapore’s media scene leaves a lot to be desired.
+
+This brings us to the current day. A while back, I was made aware of the presence of tabloids in the UK. While I knew of their existence, it was the controversy surrounding the British Royal Family, namely their mistreatment and lack of support for Mehgahn Markle and Prince Harry, that the bitterness in my mouth grew foul. To explain this a bit, in the UK, the Royal Family relies heavily on their popularity to sustain and continue their rule. Effectively, a positive public sentiment toward them is ideal. Because the UK has tabloids, whose purpose is often to heavily sensationalise events to sell more copies (again, a product of news that seeks to maximise profits as a private firm, rather than to inform and educate), the tabloids brutalised Mehgahn Markle, ultimately resulting in worsened relations between her and the Royal Family, widening their already gashing divide, whilst failing to inform the public of all the details. Even the fact that Mehgahn found it neccesary to share her frequent thoughts of suicide on Oprah Winfrey’s talkshow show that the tabloids failed in their purpose, and worsened an already dire situation.
+
+Conversely, even the US, who I hailed as appearing to have greater diversity in its news outlets, likewise seemed to suffer from the surplus of said publications. You won’t have to look much further than the entirety of Donald Trump’s careen into the political scene, from his noisy campaign in early 2016 all the way to his eventual decline in 2020. The tribalism that has resulted in America being split between those who support certain news outlets that represent views Trump does not agree with (which he conveniently dubs as ‘fake news’) and those outlets that proport his views is undeniably toxic, and most of all, unhelpful. When the news fails to present facts objectively, and those who claim to be ‘reporters’ begin to deny facts that are not convenient or complementary to their argument, it becomes clear that subjective opinion has been conflated with the objectivity that is required in reporting the news.
+
+This cuts to the heart of my gripes with current media. Currently, much media is either heavily controlled, or over-sensationalised. The intention of said media is either to control the public’s access to information, and thus project and push a certain narrative, or it is to maximise profits and revenue, which oftentimes results in articles that likewise propagate misinformation and make light of serious issues.
+
+Instead, I feel that the media should merely seek to inform the public of information. To decrease the barriers to entry to said information, but to refrain from projecting a certain opinion (unless explicitly stated). In other words, political commentaries and other articles that contain the writer’s analysis of a situation are more than welcome, as long as readers are not left with the impression that said article is objective fact. As long as readers do not conflate subjective, flawed, human opinion with objective fact, then the media has more than done its job. Here, this realisation was driven by my growing awareness (in large part due to my IB education in literature) that anyone who wields the pen for the public, holds a large responsibility in ensuring the public is educated on what they need to know to develop their own opinions.
+
+I admit, this ideal is hard to achieve. I am by no means the first to suggest such goals, and there are definitely valid reasons that limit the attainment of said ideal. Yet, even as I admit that my dreams for the media might be overly romantic, I feel that these reasons do not provide sufficient excuse for the current state that the news is in, alongside the chaos and tribalism such media can easily create.
+
+I think I’ve presented in no uncertain terms what about, and why, I disagree with the current treatment of news through the pipeline of the media.
+
+TLDR; I believe the public should be allowed (mostly) unrestricted access to information that is presented as objective fact, when it is that, and subjective opinion and analysis, when that is what it is. The end goal of this should be to cultivate a population that seeks to question what they know, and develop their own informed opinions.
+
+### Part 2: Why this is gonna be tough
+
+As I’ve somewhat covered in Part 1 though, I acknowledge that there are indeed challenges that hinder the attainment of this ideal.
+
+While the most obvious reason would be the privatisation of news publications (moreso applicable in the US and UK where their news outlets are oftentimes pressured to appeal to their main consumer base to maintain high viewership, and thus, profits), I would argue that a more pressing, deep-rooted cause is the tribalism that such sectarian media generates in the first place. As such, it’s more a vicious cycle that stems from news firms aiming to gain more consistent viewers from members of a certain political or cultural affiliation. To do so, they begin publishing the views that resonate strongly with members of said group, inadvertently creating an echochamber, where only those who agree with said view are accepted. This self-generated demand ultimately pressures the magazine to cover more views of similar alignment, until said publication has become the face of their consumer base’s political view. Oftentimes, it is this pressure the news outlet faces to continue publishing these articles from their viewers, alongside the profit-oriented nature of privatised news firms from those at the top, that makes it difficult to simply demand a change in media content.
+
+Another reason (that’s probably more easy to understand) is when news publications are restricted by organisations with higher security clearance (such as a country’s government) from sharing information that compromises the organisation’s agenda. While there are many countries I could name that have historically, and presently experience this censorship of the media (to different degrees, of course), I think it’s of more value to examine how smaller news publications have flourished as a result of said control.
+
+Specifically, I want to look at the rise of independent, raw, unfiltered journalism. This is seen most prominently in the rise of digital publications like Vice, alongside Vox, and locally, Rice. Vice, being the most well-known example, mainly produces videos (both on youtube and other platforms) that feature in-depth documentaries with high production values, often covering topics that are not covered in mainstream media. More than this, many Vice reporters often enter dangerous situations, to interview those suffering or in the midst of said danger and chaos.
+
+This results in journalism and reporting that feels incredibly harsh, but that is above all, real. Whether Vice is covering the whistleblower of the NSA’s massive breach of US citizen’s privacy, the gang-filled violence of Havana, or the turmoil of the conflict in Lebanon, it is done with a respect for the severity of the content matter, alongside the viewer’s ability to construct their own views of said issues. Among these is one youtuber (who used to work at Vox, and currently does journalism) I wish to bring further attention to, named Johnny Harris. While most would know him from the “Borders” series on Vox, his exit from Vox to start his company, ‘Bright trip’, alongside his rapidly growing youtube channel, embodies what I love about the rise of independent journalism. In other words, journalism that is genuine, unfiltered, and detached from the agenda of any organization, or the need to maximize profits. When such content is effectively delivered, the viewer is educated for the better, and forced to confront issues with a rigor the news cycle would not have afforded them.
+
+(TLDR; go subscribe and follow Johnny Harris’ channel and content on youtube. I guarantee you will not regret it!)
+
+### Part 3: Why I want to become a journalist
+
+Because its cool. Lol.
+
+Kidding. Though to be more specific, I want to be a part of an organisation that can effect change in society, be it through changing public perception, or putting pressure on higher powers like the government. At the same time, I want to be put to a job where I can combine my love for language and media (in all its forms) with my love for disciplines like history and economics, to convey complex ideas in easily digestible bytes to the general public.
+
+That’s my drive to become a journalist at its core, summed up. While its admittedly a lofty and currently unattainable goal, I pray that if I do end up pursuing this goal, I do it for the Lord’s glory, only supplicated by His grace.
+
+### Part 4: Conclusion
+
+Wow, its been a hot minute since I started writing this blog post. Timecheck, its 10:48pm on 30 April 2021, exactly 3 days since I started typing this on simplenote.
+
+Glad to have gotten it off my chest, though I hope it wasn’t too disorienting to read. If you finished reading the entire post, thanks for sticking around.
+
+As SCS gets more busy in pro-term, I might get busier, and these blog posts might get less frequent. Until the next update, keep me in prayer brothers and sisters, that we do all to glorify Him.
+
+***Matthew 28:18-20***
+
+*"And Jesus came up and spoke to them, saying, “All authority in heaven and on earth has been given to Me. Go, therefore, and make disciples of all the nations, baptizing them in the name of the Father and the Son and the Holy Spirit, teaching them to follow all that I commanded you; and behold, I am with you always, to the end of the age.”"*
+
+Soli Deo Gloria.

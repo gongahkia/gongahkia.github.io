@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set eden_page = true %}
+{% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": {{ (canonical_url ~ "#collection")|tojson }},
+    "url": {{ canonical_url|tojson }},
+    "name": "Gabriel Ong's Work",
+    "description": {{ meta_description|tojson }},
+    "isPartOf": {"@id": {{ (root_site_url ~ "#website")|tojson }}},
+    "author": {"@type": "Person", "@id": {{ person_id|tojson }}, "name": "Gabriel Ong", "url": {{ root_site_url|tojson }}},
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": {{ works|length }},
+      "itemListElement": [
+        {% for work in works %}
+        {"@type": "ListItem", "position": {{ loop.index }}, "name": {{ work.title|tojson }}, "url": {{ (canonical_url ~ work.slug ~ ".html")|tojson }}}{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+  }
+  </script>
+{% endblock %}
+{% block content %}
+<article class="eden-content portfolio-page">
+  <h1>Work</h1>
+  <p class="portfolio-intro">My projects cover legaltech, developer tooling and any other rabbit holes that have momentarily captured my attention. Here are a few things I’ve built and what I learned along the way.</p>
+  {% for work in works %}
+  <section class="portfolio-project" aria-labelledby="project-{{ work.slug }}">
+    <header>
+      <h2 id="project-{{ work.slug }}"><a href="{{ work.href }}">{{ work.title }}</a></h2>
+      <p class="eden-meta">{{ work.summary }}</p>
+    </header>
+    <div class="portfolio-prose">{{ work.prose }}</div>
+  </section>
+  {% endfor %}
+</article>
+{% endblock %}

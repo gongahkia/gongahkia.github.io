@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% macro company(name, slug, url, extension='svg') -%}
+<a class="company-link company-{{ slug }}" href="{{ url }}" aria-label="{{ name }}"><img class="company-logo" src="assets/logos/{{ slug }}.{{ extension }}" alt="" decoding="async"><span class="company-name">{{ name }}</span></a>
+{%- endmacro %}
 {% block structured_data %}
   <script type="application/ld+json">
   {
@@ -33,7 +36,38 @@
   </script>
 {% endblock %}
 {% block content %}
-<article class="resume-content">
-  {{ home_content }}
-</article>
+<section class="intro" aria-label="Introduction">
+  <div class="intro-copy">
+    <p class="eyebrow location"><span class="status-dot"></span> Singapore <span class="location-separator">/</span> <time id="singapore-time">GMT+8</time></p>
+    <div class="intro-headline">
+    <h1 id="intro-title">Hello, I’m Gabriel<span class="intro-period">.</span><span class="inline-emoji" aria-hidden="true">👋</span><br>I build <span class="word-highlight underline-orange">things</span><br>for <span class="serif-accent word-highlight underline-wave">people.</span></h1>
+    <p class="intro-description">A product-minded full stack engineer working at the intersection of <span>AI, software, and law.</span></p>
+    <p class="intro-aside">This is a little home for what I make, what I learn, and the things that stay with me.</p>
+    <p class="intro-companies">Experience at {{ company('Temasek', 'temasek', 'https://www.temasek.com.sg/') }} and {{ company('Elefant', 'elefant', 'https://elefant.net.ai/') }}.</p>
+    </div>
+    <div class="intro-writeup">
+      <h1 id="writeup-title">Hi! I’m <a data-underline="pen" href="https://www.linkedin.com/in/gabriel-zmong/">Gabriel</a><span class="inline-emoji" aria-hidden="true">👋</span>. I’m a full stack engineer in <span class="writeup-emphasis">Singapore</span>, studying <a data-underline="double" href="https://computing.smu.edu.sg/bsc-computing-law">Computing and Law</a><span class="inline-emoji" aria-hidden="true">⚖️</span>. I like <a data-underline="zigzag" href="https://github.com/gongahkia">building</a> useful <a data-underline="brush" href="work/">things</a> for humans, especially <span class="writeup-emphasis">production AI agents</span><span class="inline-emoji" aria-hidden="true">🤖</span>.</h1>
+      <p>My work has taken me through various startups like {{ company('Elefant', 'elefant', 'https://elefant.net.ai/') }} and {{ company('Foremark Legal', 'foremark', 'https://foremarklegal.com/', 'png') }} and into AI engineering at the {{ company('Ministry of Home Affairs', 'mha', 'https://www.mha.gov.sg/', 'png') }} and {{ company('Temasek', 'temasek', 'https://www.temasek.com.sg/') }}.</p>
+      <p>Outside of code, I enjoy <a data-underline="scallops" href="https://letterboxd.com/gongahkia/">watching</a><span class="inline-emoji" aria-hidden="true">🎬</span>, <a data-underline="dashes" href="https://www.goodreads.com/user/show/198498126-gongahkia">reading</a><span class="inline-emoji" aria-hidden="true">📚</span> and <a data-underline="wave" href="blog/">writing</a> prose<span class="inline-emoji" aria-hidden="true">✏️</span>. Very occasionally, I make notes in my <a data-underline="swoosh" href="personal-wiki/">personal wiki</a><span class="inline-emoji" aria-hidden="true">🌱</span> and <a data-underline="hatch" href="https://x.com/gongahkia">scroll</a> on <img class="x-logo" src="assets/logos/x.svg" alt="X">.</p>
+      <p>Here's my <a data-underline="bracket" href="resume/main.pdf">resume</a> and <a data-underline="loops" href="mailto:gabrielzmong@gmail.com">email</a> also!</p>
+    </div>
+    <p class="signature">Gabriel Ong <span>王哲勉</span></p>
+  </div>
+
+</section>
+
+{% for section_id, title, entries in [('education', 'Education', education), ('experience', 'Experience', experience), ('awards', 'Awards', awards), ('certifications', 'Licenses & Certifications', certifications)] %}
+<section class="experience-section" id="{{ section_id }}" aria-labelledby="{{ section_id }}-title">
+  <h2 id="{{ section_id }}-title">{{ title }}</h2>
+  <ul class="experience-list">
+    {% for entry in entries %}
+    <li>
+      <h3 class="experience-company">{{ entry.title }}</h3>
+      <span class="experience-date">{{ entry.date }}</span>
+      {% for detail in entry.details %}<p class="experience-role">{{ detail }}</p>{% endfor %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
 {% endblock %}

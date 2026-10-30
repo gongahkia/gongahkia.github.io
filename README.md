@@ -1,4 +1,4 @@
-version [10](./archived) of my website
+version [11](./archived) of my website
 
 made with the following
 
@@ -11,3 +11,8 @@ made with the following
 ![YAML](https://img.shields.io/badge/-YAML-000?&logo=yaml)
 ![MathJax](https://img.shields.io/badge/-MathJax-000?&logo=mathjax)
 ![Make](https://img.shields.io/badge/-Make-000?&logo=gnu)
+![Mermaid](https://img.shields.io/badge/-Mermaid-000?&logo=mermaid)
+![SVG](https://img.shields.io/badge/-SVG-000?&logo=svg)
+![JSON-LD](https://img.shields.io/badge/-JSON--LD-000?&logo=json)
+![GitHub Actions](https://img.shields.io/badge/-GitHub%20Actions-000?&logo=githubactions)
+![GitHub Pages](https://img.shields.io/badge/-GitHub%20Pages-000?&logo=githubpages)
