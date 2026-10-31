@@ -4,22 +4,13 @@
 from __future__ import annotations
 
 import argparse
-import colorsys
-import hashlib
 import html
-import io
-import json
-import math
 import re
 import shutil
-import statistics
 import subprocess
 import sys
-import urllib.error
 import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
-from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -27,7 +18,7 @@ try:
     import markdown
     import yaml
     from jinja2 import Environment, FileSystemLoader
-    from PIL import Image, ImageChops, ImageFilter, ImageOps, UnidentifiedImageError
+    from PIL import Image, ImageOps
 except ImportError:
     print("error: missing deps. run: pip install -r requirements.txt")
     sys.exit(1)
@@ -48,47 +39,10 @@ PORTRAIT_VARIANTS = [
     ("gong-2-560.png", 560, "PNG", {"optimize": True}),
     ("gong-2-og.png", 1200, "PNG", {"optimize": True}),
 ]
-IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
-ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-ASCII_ALGORITHM_VERSION = "braille-fs-v11-static-only"
-ASCII_IMAGE_COLUMNS = 104
-MAX_ANIMATION_FRAMES = 48  # cap kept frames; longer sequences are subsampled evenly
-DEFAULT_FRAME_MS = 100  # fallback when a frame omits its duration (matches browser behaviour)
-MAX_IMAGE_BYTES = 12 * 1024 * 1024
-BRAILLE_DOT_BITS = {
-    (0, 0): 0x01,
-    (0, 1): 0x02,
-    (0, 2): 0x04,
-    (0, 3): 0x40,
-    (1, 0): 0x08,
-    (1, 1): 0x10,
-    (1, 2): 0x20,
-    (1, 3): 0x80,
-}
 IMAGE_MARKDOWN_DIRS = [
     ROOT / "works",
     ROOT / "blog" / "posts",
     ROOT / "personal-wiki" / "notes",
-]
-
-DITHER_CACHE_DIR = ROOT / ".cache" / "dither-out"  # shared cache for generated image effects
-DITHER_ALGORITHM_VERSION = "image-effects-v4-salient-backgrounds"
-DITHER_MAX_WIDTH = 1100
-PROCESSED_IMAGE_WIDTHS = (550, 1100)
-DITHER_ALGORITHMS = {"atkinson", "bayer", "fs"}
-DITHER_DEFAULT_ALGO = "atkinson"
-DITHER_URL_PREFIX = "/asset/dither"
-DITHER_INK_RGB = (0x33, 0x33, 0x33)  # matches site --foreground-color (80% #101010 + 20% #fff in oklab)
-COLOR_MODES = {"tint", "palette", "posterize"}
-BAYER_8 = [  # ordered dither matrix, values 0..63
-    0, 32, 8, 40, 2, 34, 10, 42,
-    48, 16, 56, 24, 50, 18, 58, 26,
-    12, 44, 4, 36, 14, 46, 6, 38,
-    60, 28, 52, 20, 62, 30, 54, 22,
-    3, 35, 11, 43, 1, 33, 9, 41,
-    51, 19, 59, 27, 49, 17, 57, 25,
-    15, 47, 7, 39, 13, 45, 5, 37,
-    63, 31, 55, 23, 61, 29, 53, 21,
 ]
 
 ROOT_STATIC_FILES = [
@@ -178,16 +132,6 @@ def copy_root_asset_dir(output_dir: Path) -> None:
             copy_file(entry, target)
 
     generate_responsive_portrait_assets(destination / "portrait")
-    copy_dithered_assets(destination / "dither")
-
-
-def copy_dithered_assets(destination: Path) -> None:
-    """Copy every baked 1-bit dither PNG into dist/asset/dither/. Safe if cache empty."""
-    if not DITHER_CACHE_DIR.exists():
-        return
-    destination.mkdir(parents=True, exist_ok=True)
-    for png in DITHER_CACHE_DIR.glob("*.png"):
-        copy_file(png, destination / png.name)
 
 
 def generate_responsive_portrait_assets(destination: Path) -> None:
@@ -202,10 +146,6 @@ def generate_responsive_portrait_assets(destination: Path) -> None:
 
 
 TITLE_RE = re.compile(r"^#\s+`?([^`\n]+)`?\s*$")
-ASCII_FIGURE_PARAGRAPH_RE = re.compile(
-    r"<p>(\s*<figure class=\"(?:ascii-figure|dither-figure|image-effect-figure)[^\"]*\".*?</figure>\s*)</p>",
-    re.S,
-)
 MERMAID_CODE_BLOCK_RE = re.compile(
     r'<pre class="codehilite"><code class="language-mermaid">(.*?)</code></pre>',
     re.S,
@@ -269,7 +209,7 @@ def html_uses_mermaid(rendered_html: str) -> bool:
     return 'class="mermaid"' in rendered_html
 
 
-class MarkdownImageAsciiParser(HTMLParser):
+class MarkdownImageParser(HTMLParser):
     def __init__(self, source_path: Path) -> None:
         super().__init__(convert_charrefs=False)
         self.source_path = source_path
@@ -345,10 +285,10 @@ def md_to_html(md_content: str, source_path: Path | None = None) -> str:
     if not source_path:
         return rendered
 
-    parser = MarkdownImageAsciiParser(source_path)
+    parser = MarkdownImageParser(source_path)
     parser.feed(rendered)
     parser.close()
-    return ASCII_FIGURE_PARAGRAPH_RE.sub(r"\1", parser.html())
+    return parser.html()
 
 
 def collect_markdown_images(md_content: str) -> list[list[tuple[str, str | None]]]:
@@ -359,17 +299,18 @@ def collect_markdown_images(md_content: str) -> list[list[tuple[str, str | None]
     return parser.images
 
 
-def _render_normal_image(
-    attrs: list[tuple[str, str | None]], src_override: str | None = None
+def render_markdown_image(
+    attrs: list[tuple[str, str | None]], source_path: Path
 ) -> str:
     """Return an ordinary, responsive image without fetching or transcoding it."""
+    if not any(key.lower() == "src" and (value or "").strip() for key, value in attrs):
+        raise ValueError(f"{source_path}: missing image source")
+
     rendered_attrs: list[tuple[str, str | None]] = []
     seen = set()
     for key, value in attrs:
         lowered = key.lower()
         seen.add(lowered)
-        if lowered == "src" and src_override is not None:
-            value = src_override
         if lowered == "class":
             value = f"{value or ''} markdown-image".strip()
         rendered_attrs.append((key, value))
@@ -390,922 +331,6 @@ def _render_normal_image(
     return f"<img {' '.join(pieces)}>"
 
 
-def _render_processed_image(
-    directive: ImageDirective,
-    source_path: Path,
-    image_alt: str,
-    title_attribute: str,
-) -> str:
-    variants = image_src_to_effect_paths(directive, source_path)
-    largest_url, width, height = variants[-1]
-    srcset = ", ".join(f"{url} {variant_width}w" for url, variant_width, _ in variants)
-    effect_classes = "image-effect-figure"
-    if directive.render_mode == "dither":
-        effect_classes += " dither-figure"
-    return (
-        f'<figure class="{effect_classes}" data-image-source="{html.escape(directive.clean_src, quote=True)}" '
-        f'data-render="{directive.render_mode}" data-color="{directive.color_mode or "none"}">'
-        f'<img class="processed-image" src="{html.escape(largest_url, quote=True)}" '
-        f'srcset="{html.escape(srcset, quote=True)}" sizes="(max-width: 602px) 90vw, 550px" '
-        f'width="{width}" height="{height}" '
-        f'alt="{html.escape(image_alt, quote=True)}"{title_attribute} '
-        f'loading="lazy" decoding="async"/>'
-        f'</figure>'
-    )
-
-
-def image_data_is_animated(data: bytes) -> bool:
-    with Image.open(io.BytesIO(data)) as image:
-        return bool(getattr(image, "is_animated", False)) and int(
-            getattr(image, "n_frames", 1) or 1
-        ) > 1
-
-
-def render_markdown_image(attrs: list[tuple[str, str | None]], source_path: Path) -> str:
-    attrs_dict = {key.lower(): value for key, value in attrs if key}
-    src = (attrs_dict.get("src") or "").strip()
-    alt = (attrs_dict.get("alt") or "").strip()
-    title = (attrs_dict.get("title") or "").strip()
-    label = alt or title or "image"
-    image_alt = alt if "alt" in attrs_dict else label
-    title_attribute = f' title="{html.escape(title, quote=True)}"' if title else ""
-
-    if not src:
-        raise ValueError(f"{source_path}: missing image source")
-
-    directive = parse_image_directive(src)
-    if directive.render_mode == "normal" and directive.color_mode is None:
-        return _render_normal_image(attrs)
-
-    if directive.render_mode != "ascii":
-        try:
-            return _render_processed_image(directive, source_path, image_alt, title_attribute)
-        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-            raise RuntimeError(f"{source_path}: {directive.clean_src}: {exc}") from exc
-
-    try:
-        data = read_image_bytes(directive.clean_src, source_path)
-        if image_data_is_animated(data):
-            raise ValueError(
-                "#ascii is only supported for still images; remove #ascii or use "
-                "a raster effect such as #dither, #tint, #palette, or #posterize"
-            )
-        if directive.color_mode:
-            result = image_src_to_colored_frames(directive, source_path)
-        else:
-            result = image_src_to_frames(directive.clean_src, source_path)
-    except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-        raise RuntimeError(f"{source_path}: {directive.clean_src}: {exc}") from exc
-
-    art = result.get("frames_html", result["frames"])[0]
-    if not result.get("frames_html"):
-        art = html.escape(art)
-    return (
-        f'<figure class="ascii-figure" data-image-source="{html.escape(directive.clean_src, quote=True)}" '
-        f'data-color="{directive.color_mode or "none"}">'
-        f'<pre class="ascii-art" role="img" aria-label="{html.escape(label, quote=True)}">'
-        f"{art}</pre></figure>"
-    )
-
-
-# Compatibility for callers of the old public helper.
-render_ascii_image = render_markdown_image
-
-
-def subsample_indices(n_frames: int, max_frames: int) -> list[int]:
-    """Pick up to max_frames evenly spaced frame indices, always spanning first to last."""
-    if n_frames <= max_frames:
-        return list(range(n_frames))
-    return sorted({round(i * (n_frames - 1) / (max_frames - 1)) for i in range(max_frames)})
-
-
-def normalize_frame_ms(value: object) -> int:
-    try:
-        ms = int(value)  # type: ignore[arg-type]
-    except (TypeError, ValueError):
-        ms = 0
-    # GIFs frequently declare 0/10ms ("as fast as possible"); browsers clamp these to ~100ms.
-    return ms if ms > 10 else DEFAULT_FRAME_MS
-
-
-def render_image_frames(data: bytes) -> dict:
-    with Image.open(io.BytesIO(data)) as image:
-        n_frames = int(getattr(image, "n_frames", 1) or 1)
-        animated = bool(getattr(image, "is_animated", False)) and n_frames > 1
-        if animated:
-            raise ValueError("ASCII rendering is only supported for still images")
-        frame = ImageOps.exif_transpose(image)
-        frame = flatten_image(frame)
-        return {"animated": False, "frames": [image_to_braille(frame, ASCII_IMAGE_COLUMNS)]}
-
-
-def image_src_to_frames(src: str, source_path: Path) -> dict:
-    data = read_image_bytes(src, source_path)
-    cache_key = hashlib.sha256(
-        b"\0".join(
-            [
-                ASCII_ALGORITHM_VERSION.encode("utf-8"),
-                str(ASCII_IMAGE_COLUMNS).encode("utf-8"),
-                hashlib.sha256(data).digest(),
-            ]
-        )
-    ).hexdigest()
-    cache_path = ASCII_ART_CACHE_DIR / f"{cache_key}.json"
-    if cache_path.is_file():
-        try:
-            return json.loads(cache_path.read_text(encoding="utf-8"))
-        except (ValueError, OSError):
-            pass
-
-    result = render_image_frames(data)
-    ASCII_ART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps(result), encoding="utf-8")
-    return result
-
-
-def read_image_bytes(src: str, source_path: Path) -> bytes:
-    parsed = urllib.parse.urlsplit(src)
-    if parsed.scheme in ("http", "https"):
-        return read_remote_image(src)
-    if parsed.scheme and parsed.scheme != "file":
-        raise ValueError(f"unsupported image scheme '{parsed.scheme}'")
-
-    path_text = urllib.parse.unquote(parsed.path)
-    if parsed.scheme == "file" or path_text.startswith("/"):
-        image_path = (ROOT / path_text.lstrip("/")).resolve()
-    else:
-        image_path = (source_path.parent / path_text).resolve()
-
-    try:
-        image_path.relative_to(ROOT)
-    except ValueError as exc:
-        raise ValueError("image path escapes repository root") from exc
-    if not image_path.is_file():
-        raise FileNotFoundError(image_path)
-    return image_path.read_bytes()
-
-
-def read_remote_image(src: str) -> bytes:
-    cache_key = hashlib.sha256(src.encode("utf-8")).hexdigest()
-    cache_path = IMAGE_CACHE_DIR / f"{cache_key}.img"
-    if cache_path.is_file():
-        return cache_path.read_bytes()
-
-    IMAGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    request = urllib.request.Request(
-        src,
-        headers={"User-Agent": "Mozilla/5.0 (compatible; gabrielongzm-site-builder/1.0)"},
-    )
-    with urllib.request.urlopen(request, timeout=10) as response:
-        data = response.read(MAX_IMAGE_BYTES + 1)
-    if len(data) > MAX_IMAGE_BYTES:
-        raise ValueError("image exceeds 12MB limit")
-    cache_path.write_bytes(data)
-    return data
-
-
-def flatten_image(image: Image.Image) -> Image.Image:
-    if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
-        rgba = image.convert("RGBA")
-        background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
-        background.alpha_composite(rgba)
-        return background.convert("RGB")
-    return image.convert("RGB")
-
-
-_SRGB_TO_LINEAR_LUT = [int(round(((v / 255.0) ** 2.2) * 255.0)) for v in range(256)]
-_LINEAR_TO_SRGB_LUT = [int(round(((v / 255.0) ** (1 / 2.2)) * 255.0)) for v in range(256)]
-
-
-def _sigmoid_lut(gain: float) -> list[int]:
-    # logistic S-curve centered on 128, normalized so 0→0 and 255→255
-    def raw(v: float) -> float:
-        return 1.0 / (1.0 + math.exp(-gain * (v / 127.5 - 1.0)))
-    lo, hi = raw(0), raw(255)
-    return [int(round((raw(v) - lo) / (hi - lo) * 255)) for v in range(256)]
-
-
-_SIGMOID_LUT = _sigmoid_lut(5.5)
-
-# block-element shade ramp: each cell renders as a solid fill so density reads at any font size
-_SHADE_RAMP = [" ", "░", "▒", "▓", "█"]  # ' ', ░, ▒, ▓, █
-
-
-def image_to_braille(image: Image.Image, cols: int = ASCII_IMAGE_COLUMNS) -> str:
-    gray = ImageOps.grayscale(image)
-    aspect = gray.height / max(gray.width, 1)
-    rows = max(1, round(aspect * cols * 0.55))
-
-    linear = gray.point(_SRGB_TO_LINEAR_LUT)
-    return _photo_to_braille(linear, cols, rows)  # shade-block path is default; _diagram_to_braille kept available for callers that want braille line-art
-
-
-def _photo_to_braille(linear: Image.Image, cols: int, rows: int) -> str:
-    # one pixel per cell so quantization controls visible cell-level fill at small font sizes
-    cell = linear.resize((cols, rows), Image.Resampling.LANCZOS).point(_LINEAR_TO_SRGB_LUT)
-    cell = ImageOps.invert(ImageOps.autocontrast(cell, cutoff=3)).point(_SIGMOID_LUT)
-    pixels = cell.load()
-    signal = [[pixels[x, y] for x in range(cols)] for y in range(rows)]
-
-    levels = len(_SHADE_RAMP)
-    step = 255 / (levels - 1)
-    lines = []
-    for y in range(rows):
-        row_signal = signal[y]
-        next_row = signal[y + 1] if y + 1 < rows else None
-        chars = []
-        for x in range(cols):
-            old = row_signal[x]
-            level = max(0, min(levels - 1, int(round(old / step))))
-            err = old - int(round(level * step))
-            chars.append(_SHADE_RAMP[level])
-            if x + 1 < cols:
-                row_signal[x + 1] = max(0, min(255, row_signal[x + 1] + err * 7 // 16))
-            if next_row is not None:
-                if x > 0:
-                    next_row[x - 1] = max(0, min(255, next_row[x - 1] + err * 3 // 16))
-                next_row[x] = max(0, min(255, next_row[x] + err * 5 // 16))
-                if x + 1 < cols:
-                    next_row[x + 1] = max(0, min(255, next_row[x + 1] + err * 1 // 16))
-        lines.append("".join(chars))
-    return "\n".join(lines)
-
-
-def _ascii_display_colors(
-    mode: str,
-    palette: list[tuple[int, int, int]],
-) -> list[tuple[int, int, int]]:
-    if mode == "tint":
-        anchors = _tint_anchors(palette[0])
-        return [
-            _mix_color(anchors[0], anchors[1], step / 2) if step <= 2
-            else _mix_color(anchors[1], anchors[2], (step - 2) / 2)
-            for step in range(5)
-        ]
-    return sorted(palette, key=_rgb_luma)
-
-
-def _colored_ascii_markup(
-    art: str,
-    color_frame: Image.Image,
-    display_colors: list[tuple[int, int, int]],
-) -> str:
-    """Color selectable ASCII by grouping adjacent cells with the same palette color."""
-    lines = art.split("\n")
-    rows = len(lines)
-    columns = max((len(line) for line in lines), default=1)
-    sample = color_frame.resize((columns, rows), Image.Resampling.BILINEAR).convert("RGB")
-    pixels = sample.load()
-    output = []
-    for y, line in enumerate(lines):
-        runs = []
-        current_color = None
-        current_text = []
-        for x, char in enumerate(line):
-            pixel = pixels[x, y]
-            color = min(display_colors, key=lambda candidate: _color_distance(pixel, candidate))
-            if color != current_color and current_text:
-                hex_color = "#" + "".join(f"{channel:02x}" for channel in current_color)
-                runs.append(f'<span style="color:{hex_color}">{html.escape("".join(current_text))}</span>')
-                current_text = []
-            current_color = color
-            current_text.append(char)
-        if current_text and current_color is not None:
-            hex_color = "#" + "".join(f"{channel:02x}" for channel in current_color)
-            runs.append(f'<span style="color:{hex_color}">{html.escape("".join(current_text))}</span>')
-        output.append("".join(runs))
-    return "\n".join(output)
-
-
-def image_src_to_colored_frames(directive: ImageDirective, source_path: Path) -> dict:
-    data = read_image_bytes(directive.clean_src, source_path)
-    key = hashlib.sha256(
-        b"\0".join(
-            [
-                DITHER_ALGORITHM_VERSION.encode("utf-8"),
-                b"ascii-color",
-                ASCII_ALGORITHM_VERSION.encode("utf-8"),
-                (directive.color_mode or "none").encode("utf-8"),
-                str(ASCII_IMAGE_COLUMNS).encode("utf-8"),
-                hashlib.sha256(data).digest(),
-            ]
-        )
-    ).hexdigest()
-    cache_path = ASCII_ART_CACHE_DIR / f"{key}.json"
-    if cache_path.is_file():
-        try:
-            return json.loads(cache_path.read_text(encoding="utf-8"))
-        except (ValueError, OSError):
-            pass
-
-    decoded = _retained_rgba_frames(data)
-    if decoded["animated"]:
-        raise ValueError("ASCII rendering is only supported for still images")
-    palette = extract_salient_colors(decoded["frames"], 3)
-    display_colors = _ascii_display_colors(directive.color_mode or "tint", palette)
-    frames = []
-    frames_html = []
-    for frame in decoded["frames"]:
-        flattened = flatten_image(frame)
-        art = image_to_braille(flattened, ASCII_IMAGE_COLUMNS)
-        colored = apply_color_effect(frame, directive.color_mode, palette)
-        frames.append(art)
-        frames_html.append(_colored_ascii_markup(art, colored, display_colors))
-
-    rows = max((frame.count("\n") + 1) for frame in frames)
-    result = {
-        "animated": decoded["animated"],
-        "frames": frames,
-        "frames_html": frames_html,
-        "rows": rows,
-        "total_ms": decoded["total_ms"],
-        "loop": decoded["loop"],
-        "source_frame_count": decoded["source_frame_count"],
-    }
-    ASCII_ART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps(result), encoding="utf-8")
-    return result
-
-
-def _diagram_to_braille(sub: Image.Image, cols: int, rows: int) -> str:
-    target_w, target_h = cols * 2, rows * 4
-    gray = sub.point(_SIGMOID_LUT)
-    bg_level, _ = estimate_background(gray)
-    edge = ImageChops.subtract(
-        gray.filter(ImageFilter.GaussianBlur(0.8)),
-        gray.filter(ImageFilter.GaussianBlur(2.0)),
-        scale=1.0,
-        offset=128,
-    )
-    base = ImageOps.invert(gray) if bg_level >= 128 else gray
-    base_pixels = base.load()
-    edge_pixels = edge.load()
-    signal = [
-        [
-            min(255, base_pixels[x, y] + int(abs(edge_pixels[x, y] - 128) * 0.5))
-            for x in range(target_w)
-        ]
-        for y in range(target_h)
-    ]
-
-    bits = [[0] * target_w for _ in range(target_h)]
-    for y in range(target_h):
-        row_signal = signal[y]
-        next_row = signal[y + 1] if y + 1 < target_h else None
-        for x in range(target_w):
-            old = row_signal[x]
-            new = 255 if old >= 128 else 0
-            bits[y][x] = 1 if new else 0
-            err = old - new
-            if x + 1 < target_w:
-                row_signal[x + 1] = max(0, min(255, row_signal[x + 1] + err * 7 // 16))
-            if next_row is not None:
-                if x > 0:
-                    next_row[x - 1] = max(0, min(255, next_row[x - 1] + err * 3 // 16))
-                next_row[x] = max(0, min(255, next_row[x] + err * 5 // 16))
-                if x + 1 < target_w:
-                    next_row[x + 1] = max(0, min(255, next_row[x + 1] + err * 1 // 16))
-
-    lines = []
-    for row in range(rows):
-        chars = []
-        for col in range(cols):
-            mask = 0
-            for y in range(4):
-                for x in range(2):
-                    if bits[row * 4 + y][col * 2 + x]:
-                        mask |= BRAILLE_DOT_BITS[(x, y)]
-            chars.append(chr(0x2800 + mask))
-        lines.append("".join(chars))
-    return "\n".join(lines)
-
-
-@dataclass(frozen=True)
-class ImageDirective:
-    clean_src: str
-    render_mode: str = "normal"
-    color_mode: str | None = None
-    dither_algo: str | None = None
-    fragment: str | None = None
-
-    @property
-    def processed(self) -> bool:
-        return self.render_mode != "normal" or self.color_mode is not None
-
-
-def parse_image_directive(src: str) -> ImageDirective:
-    """Parse order-independent image effects from the URL fragment.
-
-    Unknown fragments remain part of the source URL. Once a recognised effect is
-    present, however, every token must be valid so authoring mistakes fail loudly.
-    """
-    frag_idx = src.rfind("#")
-    if frag_idx < 0:
-        return ImageDirective(src)
-
-    fragment = urllib.parse.unquote(src[frag_idx + 1:]).strip().lower()
-    tokens = [token.strip() for token in fragment.split("+") if token.strip()]
-    recognised = any(
-        token in {"ascii", "dither", *COLOR_MODES} or token.startswith("dither=")
-        for token in tokens
-    )
-    if not recognised:
-        return ImageDirective(src)
-
-    render_mode = "normal"
-    color_mode = None
-    dither_algo = None
-    seen = set()
-    for token in tokens:
-        key = token.split("=", 1)[0]
-        if key in seen:
-            raise ValueError(f"duplicate image effect '{key}' in '#{fragment}'")
-        seen.add(key)
-
-        if token == "ascii":
-            if render_mode != "normal":
-                raise ValueError(f"conflicting render effects in '#{fragment}'")
-            render_mode = "ascii"
-        elif token == "dither" or token.startswith("dither="):
-            if render_mode != "normal":
-                raise ValueError(f"conflicting render effects in '#{fragment}'")
-            render_mode = "dither"
-            dither_algo = DITHER_DEFAULT_ALGO
-            if "=" in token:
-                dither_algo = token.split("=", 1)[1].strip()
-                if dither_algo not in DITHER_ALGORITHMS:
-                    choices = ", ".join(sorted(DITHER_ALGORITHMS))
-                    raise ValueError(f"unknown dither algorithm '{dither_algo}'; use {choices}")
-        elif token in COLOR_MODES:
-            if color_mode is not None:
-                raise ValueError(f"conflicting color effects in '#{fragment}'")
-            color_mode = token
-        else:
-            raise ValueError(f"unknown image effect '{token}' in '#{fragment}'")
-
-    return ImageDirective(
-        clean_src=src[:frag_idx],
-        render_mode=render_mode,
-        color_mode=color_mode,
-        dither_algo=dither_algo,
-        fragment=fragment,
-    )
-
-
-def _retained_rgba_frames(data: bytes) -> dict:
-    """Decode a still or animation into independent RGBA frames and timing metadata."""
-    with Image.open(io.BytesIO(data)) as image:
-        n_frames = int(getattr(image, "n_frames", 1) or 1)
-        animated = bool(getattr(image, "is_animated", False)) and n_frames > 1
-        keep = subsample_indices(n_frames, MAX_ANIMATION_FRAMES) if animated else [0]
-        keep_set = set(keep)
-        loop = int(image.info.get("loop", 0) or 0)
-        durations: list[int] = []
-        retained: dict[int, Image.Image] = {}
-        for index in range(n_frames):
-            image.seek(index)
-            durations.append(normalize_frame_ms(image.info.get("duration")))
-            if index in keep_set:
-                retained[index] = ImageOps.exif_transpose(image.copy()).convert("RGBA")
-
-    effective_ms = []
-    for position, index in enumerate(keep):
-        end = keep[position + 1] if position + 1 < len(keep) else n_frames
-        effective_ms.append(sum(durations[index:end]) or DEFAULT_FRAME_MS)
-    return {
-        "animated": animated,
-        "frames": [retained[index] for index in keep],
-        "durations": effective_ms,
-        "total_ms": sum(effective_ms),
-        "loop": loop,
-        "source_frame_count": n_frames,
-    }
-
-
-def _rgb_luma(color: tuple[int, int, int]) -> float:
-    return (0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]) / 255
-
-
-def _color_distance(left: tuple[int, int, int], right: tuple[int, int, int]) -> float:
-    """A cheap perceptual-ish RGB distance with extra weight on green."""
-    return math.sqrt(
-        2 * (left[0] - right[0]) ** 2
-        + 4 * (left[1] - right[1]) ** 2
-        + 3 * (left[2] - right[2]) ** 2
-    )
-
-
-def _pixels(image: Image.Image):
-    """Use Pillow's forward-compatible flattened pixel iterator."""
-    getter = getattr(image, "get_flattened_data", image.getdata)
-    return getter()
-
-
-def extract_salient_colors(frames: list[Image.Image], count: int = 3) -> list[tuple[int, int, int]]:
-    """Select frequent, saturated, distinct colors while discounting plain backgrounds."""
-    samples: list[tuple[int, int, int]] = []
-    per_frame_limit = max(1024, 48000 // max(1, len(frames)))
-    for frame in frames:
-        sample = frame.copy()
-        sample.thumbnail((128, 128), Image.Resampling.LANCZOS)
-        pixels = [pixel[:3] for pixel in _pixels(sample) if len(pixel) < 4 or pixel[3] >= 32]
-        if len(pixels) > per_frame_limit:
-            step = max(1, len(pixels) // per_frame_limit)
-            pixels = pixels[::step][:per_frame_limit]
-        samples.extend(pixels)
-
-    if not samples:
-        return [DITHER_INK_RGB] * count
-
-    strip = Image.new("RGB", (len(samples), 1))
-    strip.putdata(samples)
-    quantized = strip.quantize(colors=16, method=Image.Quantize.MEDIANCUT)
-    palette_data = quantized.getpalette() or []
-    candidates = []
-    for frequency, palette_index in quantized.getcolors(maxcolors=256) or []:
-        offset = palette_index * 3
-        color = tuple(palette_data[offset:offset + 3])
-        if len(color) != 3:
-            continue
-        hue, saturation, value = colorsys.rgb_to_hsv(*(channel / 255 for channel in color))
-        del hue
-        luma = _rgb_luma(color)
-        tone_weight = 0.35 + 0.65 * (1 - abs(luma - 0.5) * 2)
-        # Large white/black canvas areas should not overwhelm the actual subject.
-        background_weight = 0.015 if saturation < 0.12 and (luma > 0.92 or luma < 0.08) else 1.0
-        salience = (
-            frequency
-            * (0.25 + 0.75 * saturation)
-            * tone_weight
-            * (0.5 + 0.5 * value)
-            * background_weight
-        )
-        candidates.append((salience, color))
-    candidates.sort(reverse=True)
-
-    selected: list[tuple[int, int, int]] = []
-    for _, color in candidates:
-        if not selected or all(_color_distance(color, prior) >= 65 for prior in selected):
-            selected.append(color)
-        if len(selected) == count:
-            break
-
-    dominant = selected[0] if selected else tuple(round(statistics.median(p[i] for p in samples)) for i in range(3))
-    while len(selected) < count:
-        # Monochrome and very limited sources still receive useful dark/mid/light anchors.
-        factor = (0.28, 1.0, 1.65)[len(selected)]
-        selected.append(tuple(max(0, min(255, round(channel * factor))) for channel in dominant))
-    return selected[:count]
-
-
-def _mix_color(left: tuple[int, int, int], right: tuple[int, int, int], amount: float) -> tuple[int, int, int]:
-    return tuple(round(a + (b - a) * amount) for a, b in zip(left, right))
-
-
-def _tint_anchors(dominant: tuple[int, int, int]) -> list[tuple[int, int, int]]:
-    return [
-        _mix_color((0, 0, 0), dominant, 0.38),
-        dominant,
-        _mix_color(dominant, (255, 255, 255), 0.82),
-    ]
-
-
-def _tone_map(frame: Image.Image, anchors: list[tuple[int, int, int]]) -> Image.Image:
-    """Map source luminance continuously through dark, middle, and light anchors."""
-    rgba = frame.convert("RGBA")
-    gray = ImageOps.grayscale(rgba.convert("RGB"))
-    channels = []
-    for channel in range(3):
-        lut = []
-        for value in range(256):
-            if value <= 127:
-                mixed = _mix_color(anchors[0], anchors[1], value / 127)
-            else:
-                mixed = _mix_color(anchors[1], anchors[2], (value - 127) / 128)
-            lut.append(mixed[channel])
-        channels.append(gray.point(lut))
-    return Image.merge("RGBA", (*channels, rgba.getchannel("A")))
-
-
-def apply_color_effect(
-    frame: Image.Image,
-    mode: str | None,
-    palette: list[tuple[int, int, int]],
-) -> Image.Image:
-    if mode is None:
-        return frame.convert("RGBA")
-    if mode == "tint":
-        return _tone_map(frame, _tint_anchors(palette[0]))
-    if mode == "palette":
-        return _tone_map(frame, sorted(palette, key=_rgb_luma))
-    if mode == "posterize":
-        rgba = frame.convert("RGBA")
-        palette_image = Image.new("P", (1, 1))
-        padded = palette + [palette[-1]] * (256 - len(palette))
-        palette_image.putpalette([channel for color in padded for channel in color])
-        quantized = rgba.convert("RGB").quantize(palette=palette_image, dither=Image.Dither.NONE).convert("RGB")
-        return Image.merge("RGBA", (*quantized.split(), rgba.getchannel("A")))
-    raise ValueError(f"unknown color mode '{mode}'")
-
-
-def _resize_frame(frame: Image.Image, width: int) -> Image.Image:
-    if frame.width == width:
-        return frame.copy()
-    height = max(1, round(frame.height * width / frame.width))
-    return frame.resize((width, height), Image.Resampling.LANCZOS)
-
-
-def _colored_dither_frame(
-    original: Image.Image,
-    colored: Image.Image,
-    algo: str,
-    width: int,
-) -> Image.Image:
-    original = _resize_frame(original, width)
-    colored = _resize_frame(colored, width)
-    flattened = Image.new("RGBA", original.size, (255, 255, 255, 255))
-    flattened.alpha_composite(original)
-    mask = _dither_to_L(flattened.convert("RGB"), algo, original.size)
-    visible = mask.point(lambda value: 255 if value < 128 else 0)
-    alpha = ImageChops.multiply(visible, original.getchannel("A"))
-    if colored.getbbox() is None:
-        colored = Image.new("RGBA", original.size, (*DITHER_INK_RGB, 255))
-    colored.putalpha(alpha)
-    return colored
-
-
-def _save_effect_animation(frames: list[Image.Image], metadata: dict, path: Path) -> None:
-    frames[0].save(
-        path,
-        "PNG",
-        save_all=True,
-        append_images=frames[1:],
-        duration=metadata["durations"],
-        loop=metadata["loop"],
-        disposal=1,
-        blend=0,
-        optimize=True,
-    )
-
-
-def image_src_to_effect_paths(
-    directive: ImageDirective,
-    source_path: Path,
-) -> list[tuple[str, int, int]]:
-    """Bake responsive PNG/APNG variants for color and/or dither effects."""
-    data = read_image_bytes(directive.clean_src, source_path)
-    decoded = _retained_rgba_frames(data)
-    originals = decoded["frames"]
-    palette = extract_salient_colors(originals, 3) if directive.color_mode else [DITHER_INK_RGB] * 3
-    native_width = originals[0].width
-    widths = sorted({min(native_width, width) for width in PROCESSED_IMAGE_WIDTHS})
-    variants = []
-    for width in widths:
-        key = hashlib.sha256(
-            b"\0".join(
-                [
-                    DITHER_ALGORITHM_VERSION.encode("utf-8"),
-                    directive.render_mode.encode("utf-8"),
-                    (directive.color_mode or "none").encode("utf-8"),
-                    (directive.dither_algo or "none").encode("utf-8"),
-                    str(width).encode("utf-8"),
-                    hashlib.sha256(data).digest(),
-                ]
-            )
-        ).hexdigest()
-        DITHER_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        cache_path = DITHER_CACHE_DIR / f"{key}.png"
-        if not cache_path.is_file():
-            rendered = []
-            for original in originals:
-                resized_original = _resize_frame(original, width)
-                color_frame = apply_color_effect(resized_original, directive.color_mode, palette)
-                if directive.render_mode == "dither":
-                    rendered.append(
-                        _colored_dither_frame(
-                            resized_original,
-                            color_frame if directive.color_mode else Image.new("RGBA", resized_original.size, (*DITHER_INK_RGB, 255)),
-                            directive.dither_algo or DITHER_DEFAULT_ALGO,
-                            width,
-                        )
-                    )
-                else:
-                    rendered.append(color_frame)
-            if decoded["animated"]:
-                _save_effect_animation(rendered, decoded, cache_path)
-            else:
-                rendered[0].save(cache_path, "PNG", optimize=True)
-        with Image.open(cache_path) as verify:
-            variant_width, variant_height = verify.size
-        variants.append((f"{DITHER_URL_PREFIX}/{key}.png", variant_width, variant_height))
-    return variants
-
-
-def _is_animated_bytes(data: bytes) -> bool:
-    with Image.open(io.BytesIO(data)) as image:
-        n_frames = int(getattr(image, "n_frames", 1) or 1)
-        return bool(getattr(image, "is_animated", False)) and n_frames > 1
-
-
-def _atkinson_dither(gray: Image.Image) -> Image.Image:
-    """Atkinson error diffusion -> L image with 0/255 pixels. Distributes err/8 to 6 neighbours."""
-    width, height = gray.size
-    data = list(_pixels(gray))
-    for y in range(height):
-        row_off = y * width
-        for x in range(width):
-            i = row_off + x
-            old = data[i]
-            new = 255 if old >= 128 else 0
-            data[i] = new
-            err = (old - new) // 8
-            if err == 0:
-                continue
-            for dx, dy in ((1, 0), (2, 0), (-1, 1), (0, 1), (1, 1), (0, 2)):
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < width and 0 <= ny < height:
-                    j = ny * width + nx
-                    data[j] = max(0, min(255, data[j] + err))
-    out = Image.new("L", (width, height))
-    out.putdata(data)
-    return out
-
-
-def _bayer_dither(gray: Image.Image) -> Image.Image:
-    """Ordered Bayer 8x8 dither -> L image with 0/255 pixels."""
-    width, height = gray.size
-    src = list(_pixels(gray))
-    out_data = [0] * (width * height)
-    for y in range(height):
-        row_off = y * width
-        by = (y & 7) * 8
-        for x in range(width):
-            threshold = (BAYER_8[by + (x & 7)] + 0.5) * 4.0  # ~0..256
-            out_data[row_off + x] = 255 if src[row_off + x] >= threshold else 0
-    out = Image.new("L", (width, height))
-    out.putdata(out_data)
-    return out
-
-
-def _fs_dither(gray: Image.Image) -> Image.Image:
-    """Floyd-Steinberg via Pillow's built-in mode-'1' quantizer -> L image."""
-    return gray.convert("1", dither=Image.Dither.FLOYDSTEINBERG).convert("L")
-
-
-def _dither_to_L(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
-    """RGB frame -> L-mode dithered image (0 or 255 per pixel)."""
-    if rgb_frame.size != size:
-        rgb_frame = rgb_frame.resize(size, Image.Resampling.LANCZOS)
-    gray = ImageOps.autocontrast(ImageOps.grayscale(rgb_frame), cutoff=2)
-    if algo == "bayer":
-        return _bayer_dither(gray)
-    if algo == "fs":
-        return _fs_dither(gray)
-    return _atkinson_dither(gray)
-
-
-def _dither_frame(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
-    """RGB frame -> paletted PIL Image: palette=[transparent-bg, ink=#333]. Used for still PNG."""
-    dithered = _dither_to_L(rgb_frame, algo, size)
-    width, height = dithered.size
-    src = dithered.tobytes()
-    idx_data = bytes(0 if b >= 128 else 1 for b in src)  # index 0 = transparent bg, 1 = ink
-    palette_img = Image.new("P", (width, height))
-    palette_img.frombytes(idx_data)
-    ink_r, ink_g, ink_b = DITHER_INK_RGB
-    palette_img.putpalette([255, 255, 255, ink_r, ink_g, ink_b] + [0] * (256 - 2) * 3)
-    palette_img.info["transparency"] = 0
-    return palette_img
-
-
-def _dither_frame_la(rgb_frame: Image.Image, algo: str, size: tuple[int, int]) -> Image.Image:
-    """RGB frame -> LA mode (grayscale + alpha). Used for APNG where P-mode disposal misbehaves."""
-    dithered = _dither_to_L(rgb_frame, algo, size)
-    width, height = dithered.size
-    src = dithered.tobytes()
-    ink_luma = DITHER_INK_RGB[0]  # #333333 -> L=0x33 (grayscale)
-    la = bytearray(width * height * 2)
-    for i, v in enumerate(src):
-        if v < 128:  # ink pixel
-            la[i * 2] = ink_luma
-            la[i * 2 + 1] = 255
-        # else remains (0, 0) = fully transparent
-    return Image.frombytes("LA", (width, height), bytes(la))
-
-
-def render_dithered_png(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> Image.Image:
-    """Read raw image bytes -> paletted PIL Image (single frame)."""
-    with Image.open(io.BytesIO(data)) as image:
-        frame = ImageOps.exif_transpose(image)
-    frame = flatten_image(frame)
-    if frame.width > max_width:
-        new_h = round(frame.height * max_width / frame.width)
-        target = (max_width, new_h)
-    else:
-        target = frame.size
-    return _dither_frame(frame, algo, target)
-
-
-def render_dithered_apng(data: bytes, algo: str, max_width: int = DITHER_MAX_WIDTH) -> dict:
-    """Bake dithered frames from an animated source. Frames share one palette + timing metadata."""
-    with Image.open(io.BytesIO(data)) as image:
-        n_frames = int(getattr(image, "n_frames", 1) or 1)
-        if n_frames <= 1:
-            raise ValueError("source is not animated")
-        loop = int(image.info.get("loop", 0) or 0)
-        keep = subsample_indices(n_frames, MAX_ANIMATION_FRAMES)
-        keep_set = set(keep)
-
-        image.seek(0)
-        first = ImageOps.exif_transpose(image)
-        first = flatten_image(first)
-        if first.width > max_width:
-            new_h = round(first.height * max_width / first.width)
-            target = (max_width, new_h)
-        else:
-            target = first.size
-
-        source_durations: list[int] = []
-        rendered: dict[int, Image.Image] = {}
-        for index in range(n_frames):
-            image.seek(index)  # seek every frame so Pillow accumulates disposal correctly
-            source_durations.append(normalize_frame_ms(image.info.get("duration")))
-            if index not in keep_set:
-                continue
-            frame = flatten_image(ImageOps.exif_transpose(image))
-            rendered[index] = _dither_frame_la(frame, algo, target)
-
-    frames = [rendered[i] for i in keep]
-    effective_ms = []
-    for position, index in enumerate(keep):
-        end = keep[position + 1] if position + 1 < len(keep) else n_frames
-        effective_ms.append(sum(source_durations[index:end]) or DEFAULT_FRAME_MS)
-    return {
-        "frames": frames,
-        "durations": effective_ms,
-        "loop": loop,
-        "size": target,
-        "kept": len(keep),
-        "source_frame_count": n_frames,
-    }
-
-
-def save_dithered_apng(result: dict, path: Path) -> None:
-    """Write APNG with per-frame durations. disposal=1 (bg), blend=0 (source) - each frame independent."""
-    frames = result["frames"]
-    first = frames[0]
-    first.save(
-        path,
-        "PNG",
-        save_all=True,
-        append_images=frames[1:],
-        duration=result["durations"],
-        loop=result["loop"],
-        disposal=1,
-        blend=0,
-        optimize=True,
-    )  # LA mode carries alpha natively; no palette transparency chunk needed
-
-
-def image_src_to_dithered_path(src: str, source_path: Path, algo: str) -> tuple[str, int, int]:
-    """Bake and cache a paletted PNG (or APNG for animated) for src+algo. Return (web_path, w, h)."""
-    data = read_image_bytes(src, source_path)
-    key = hashlib.sha256(
-        b"\0".join([
-            DITHER_ALGORITHM_VERSION.encode("utf-8"),
-            algo.encode("utf-8"),
-            str(DITHER_MAX_WIDTH).encode("utf-8"),
-            hashlib.sha256(data).digest(),
-        ])
-    ).hexdigest()
-    DITHER_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_path = DITHER_CACHE_DIR / f"{key}.png"
-    if not cache_path.is_file():
-        if _is_animated_bytes(data):
-            save_dithered_apng(render_dithered_apng(data, algo), cache_path)
-        else:
-            image = render_dithered_png(data, algo)
-            image.save(cache_path, "PNG", optimize=True, transparency=0)
-    with Image.open(cache_path) as verify:
-        w, h = verify.size
-    return f"{DITHER_URL_PREFIX}/{key}.png", w, h
-
-
-def estimate_background(gray: Image.Image) -> tuple[int, float]:
-    width, height = gray.size
-    pixels = gray.load()
-    samples = []
-    for x in range(width):
-        samples.append(pixels[x, 0])
-        samples.append(pixels[x, height - 1])
-    for y in range(height):
-        samples.append(pixels[0, y])
-        samples.append(pixels[width - 1, y])
-    level = round(statistics.median(samples))
-    noise = statistics.median(abs(value - level) for value in samples)
-    return level, noise
-
-
 def markdown_image_sources() -> list[tuple[Path, list[tuple[str, str | None]]]]:
     images = []
     for directory in IMAGE_MARKDOWN_DIRS:
@@ -1321,6 +346,7 @@ def markdown_image_sources() -> list[tuple[Path, list[tuple[str, str | None]]]]:
 
 
 def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None]]]]) -> list[str]:
+    """Check local image references without fetching or transforming images."""
     errors = []
     for source_path, attrs in images:
         attrs_dict = {key.lower(): value for key, value in attrs if key}
@@ -1328,53 +354,22 @@ def validate_markdown_images(images: list[tuple[Path, list[tuple[str, str | None
         if not src:
             errors.append(f"{source_path}: missing image source")
             continue
+        parsed = urllib.parse.urlsplit(src)
+        if parsed.scheme not in ("", "file") or parsed.netloc:
+            continue
+        path_text = urllib.parse.unquote(parsed.path)
+        image_path = (
+            ROOT / path_text.lstrip("/")
+            if path_text.startswith("/") or parsed.scheme == "file"
+            else source_path.parent / path_text
+        ).resolve()
         try:
-            directive = parse_image_directive(src)
-        except ValueError as exc:
-            errors.append(f"{source_path}: {exc}")
+            image_path.relative_to(ROOT)
+        except ValueError:
+            errors.append(f"{source_path}: image path escapes repository root")
             continue
-
-        if not directive.processed:
-            parsed = urllib.parse.urlsplit(src)
-            if parsed.scheme not in ("http", "https"):
-                try:
-                    read_image_bytes(src, source_path)
-                except (OSError, ValueError) as exc:
-                    errors.append(f"{source_path}: {src}: {exc}")
-            continue
-
-        if directive.render_mode != "ascii":
-            try:
-                variants = image_src_to_effect_paths(directive, source_path)
-            except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-                errors.append(f"{source_path}: {directive.clean_src}: {exc}")
-            else:
-                total_kb = sum(
-                    (DITHER_CACHE_DIR / Path(url).name).stat().st_size
-                    for url, _, _ in variants
-                ) / 1024
-                widths = "/".join(str(width) for _, width, _ in variants)
-                effects = "+".join(filter(None, (directive.render_mode, directive.color_mode)))
-                print(f"  image: {source_path.name}: {effects} ({widths}px, {total_kb:.0f}KB)")
-            continue
-        try:
-            result = (
-                image_src_to_colored_frames(directive, source_path)
-                if directive.color_mode
-                else image_src_to_frames(directive.clean_src, source_path)
-            )
-        except (OSError, ValueError, UnidentifiedImageError, urllib.error.URLError) as exc:
-            errors.append(f"{source_path}: {directive.clean_src}: {exc}")
-            continue
-        if result.get("animated"):
-            frames = result["frames"]
-            total_source = result.get("source_frame_count", len(frames))
-            kb = len("\n".join(frames).encode("utf-8")) / 1024
-            note = "" if len(frames) == total_source else f" (subsampled from {total_source})"
-            print(
-                f"  image: {source_path.name}: animated {len(frames)} frame(s){note}, "
-                f"{result['rows']} rows, {result['total_ms'] / 1000:.1f}s loop, ~{kb:.0f}KB"
-            )
+        if not image_path.is_file():
+            errors.append(f"{source_path}: missing image: {src}")
     return errors
 
 

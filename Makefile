@@ -12,7 +12,7 @@ endif
 help:
 	@echo "Available commands:"
 	@echo "  make build          - Build the full deployable site into dist/ (preserves Markdown sources)"
-	@echo "  make test           - Run the image pipeline test suite"
+	@echo "  make test           - Run the site test suite"
 	@echo "  make work           - Create a new work writeup in works/ (interactive)"
 	@echo "  make blog           - Create a new blog post (interactive)"
 	@echo "  make project        - Create a new tech writeup blog post (interactive)"

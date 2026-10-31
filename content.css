@@ -535,7 +535,6 @@ dd {
     margin-bottom: 0;
 }
 
-.prose img,
 .prose video,
 .prose svg {
     display: block;
@@ -543,11 +542,13 @@ dd {
     height: auto;
 }
 
-.prose .markdown-image,
-.prose .processed-image {
+.prose img,
+.markdown-image {
+    display: block;
     width: auto;
     max-width: 100%;
-    object-fit: contain;
+    height: auto;
+    margin-inline: auto;
 }
 
 .prose figure {
@@ -557,33 +558,6 @@ dd {
 .prose .mermaid {
     overflow-x: auto;
     padding: 1rem 0;
-}
-
-.prose .ascii-figure,
-.prose .dither-figure,
-.prose .image-effect-figure {
-    overflow-x: auto;
-}
-
-.prose .ascii-figure {
-    container-type: inline-size;
-    overflow-x: hidden;
-}
-
-.prose .image-effect-figure .processed-image {
-    margin-inline: auto;
-}
-
-.prose .ascii-art {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-    padding: 0.75rem;
-    border: 1px solid var(--rule);
-    background: var(--surface);
-    font-size: clamp(3px, 1.45cqw, 9px);
-    line-height: 1;
 }
 
 /* The existing content TOC remains available, but is visually quiet. */

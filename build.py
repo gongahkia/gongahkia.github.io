@@ -32,9 +32,6 @@ HOME_DESCRIPTION = (
     "specialising in Production AI Agents."
 )
 
-v9.IMAGE_CACHE_DIR = ROOT / ".cache" / "ascii-images"
-v9.ASCII_ART_CACHE_DIR = ROOT / ".cache" / "ascii-art"
-v9.DITHER_CACHE_DIR = ROOT / ".cache" / "dither-out"
 env = Environment(
     loader=FileSystemLoader(TEMPLATES),
     autoescape=select_autoescape(["html", "xml"]),
@@ -163,13 +160,6 @@ def display_date(value):
 
 env.filters["display_date"] = display_date
 env.filters["iso_date"] = v9.parse_date_to_iso
-
-def copy_generated_media(output: Path) -> None:
-    """Publish responsive dither/color assets produced while rendering Markdown."""
-    source = v9.DITHER_CACHE_DIR
-    if source.exists():
-        copy_tree(source, output / "asset" / "dither")
-
 
 def page_context(
     title: str,
@@ -634,7 +624,6 @@ def build_site(output: Path) -> None:
     sitemap_sources.update(build_work(output, works))
     sitemap_sources.update(build_blog(output))
     sitemap_sources.update(build_wiki(output))
-    copy_generated_media(output)
     build_sitemap(output, sitemap_sources)
     verify_build_output(output, sitemap_sources)
     verify_seo_output(output, BASE_URL)
