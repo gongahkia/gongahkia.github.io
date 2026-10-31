@@ -41,6 +41,8 @@ h3 {letter-spacing:-.025em;font-weight:600}
 .sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .skip-link {position:fixed;top:10px;left:10px;z-index:50;padding:10px 20px;background:var(--panel);transform:translateY(-200%)}
 .skip-link:focus {transform:none}
+#click-container {overflow:hidden}
+.click-animation {color:var(--text);font:400 13px/1 var(--display-font);will-change:auto}
 .site-nav,.page-shell,.page-footer {width:min(1160px,calc(100% - 96px));margin-inline:auto}
 .site-nav {padding:22px 0 16px;background:var(--paper);z-index:20}
 .nav-shell {display:flex;align-items:baseline;flex-wrap:wrap;gap:12px 26px}
@@ -118,6 +120,16 @@ h3 {letter-spacing:-.025em;font-weight:600}
 }
 .inline-emoji {font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;font-size:.85em;letter-spacing:0;white-space:nowrap;margin-inline:.08em .02em}
 :root[data-emojis="true"] .inline-emoji {display:inline}
+.wave-hand {padding:0;background:none;color:inherit;vertical-align:baseline;appearance:none}
+:root[data-emojis="true"] .wave-hand {display:inline-block}
+.wave-hand-glyph {display:inline-block;transform-origin:70% 80%;animation:hand-wave 3.6s ease-in-out infinite}
+@keyframes hand-wave {
+  0%,100% {transform:rotate(0deg)}
+  20% {transform:rotate(14deg)}
+  40% {transform:rotate(-8deg)}
+  60% {transform:rotate(12deg)}
+  80% {transform:rotate(-6deg)}
+}
 .x-logo {display:inline-block;width:.7em;height:.7em;vertical-align:baseline}
 :root[data-palette="dark"] .x-logo {filter:invert(1)}
 .company-link {white-space:normal}
