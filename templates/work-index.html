@@ -16,7 +16,7 @@
       "numberOfItems": {{ works|length }},
       "itemListElement": [
         {% for work in works %}
-        {"@type": "ListItem", "position": {{ loop.index }}, "name": {{ work.title|tojson }}, "url": {{ (canonical_url ~ work.slug ~ ".html")|tojson }}}{% if not loop.last %},{% endif %}
+        {"@type": "ListItem", "position": {{ loop.index }}, "name": {{ work.title|tojson }}, "url": {{ (canonical_url ~ "#project-" ~ work.slug)|tojson }}}{% if not loop.last %},{% endif %}
         {% endfor %}
       ]
     }

@@ -48,6 +48,12 @@ class SiteMetadataTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "fixed light icon"):
             validate_page(source, self.url)
 
+    def test_rejects_individual_work_pages(self):
+        url = "https://gabrielongzm.com/work/fixture.html"
+        source = self.source.replace(self.url, url)
+        with self.assertRaisesRegex(ValueError, "individual work pages"):
+            validate_page(source, url)
+
 
 if __name__ == "__main__":
     unittest.main()

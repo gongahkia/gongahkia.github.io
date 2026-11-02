@@ -400,57 +400,20 @@ def build_home(output: Path) -> dict[str, list[Path]]:
 def build_portfolio(output: Path, works: list[dict]) -> dict[str, list[Path]]:
     portfolio = []
     for work in works:
-        # full reference material remains on the existing project detail pages.
-        introduction = re.split(r"^#{1,6}\s", work["content"], maxsplit=1, flags=re.MULTILINE)[0]
-        portfolio.append({**work, "prose": Markup(render_markdown(introduction, work["source_path"]))})
+        portfolio.append({**work, "prose": Markup(render_markdown(work["content"], work["source_path"]))})
+    portfolio_content = "\n".join(str(work["prose"]) for work in portfolio)
     write_template(
         output, "work/index.html", "work-index.html", works=portfolio,
         **page_context(
             "WORK", "..", route="/work/",
             meta_description="Projects and the stories behind them, by Gabriel Ong.",
             og_title="Work | Gabriel Ong", og_type="website",
+            has_math=v9.html_uses_mathjax(portfolio_content),
+            has_mermaid=v9.html_uses_mermaid(portfolio_content),
         ),
     )
     return {"work/index.html": [TEMPLATES / "work-index.html", TEMPLATES / "base.html",
                                *[work["source_path"] for work in works]]}
-
-
-def build_work(output: Path, works: list[dict]) -> dict[str, list[Path]]:
-    sitemap_sources = {}
-    for work in works:
-        html_content = render_markdown(work["content"], work["source_path"])
-        relative_path = f"work/{work['slug']}.html"
-        write_template(
-            output,
-            relative_path,
-            "work-detail.html",
-            title=work["title"],
-            date=work["date"],
-            summary=work["summary"],
-            repository=work["href"],
-            content=Markup(html_content),
-            **page_context(
-                browser_title(work["title"]),
-                "..",
-                route=f"/{relative_path}",
-                meta_description=(
-                    f"Work: {work['title']} - {work['summary']} - Gabriel Ong"
-                ),
-                og_title=f"{work['title']} | Gabriel Ong",
-                og_type="article",
-                date_published=v9.parse_date_to_iso(work["date"]),
-                date_modified=v9.git_lastmod(work["source_path"]),
-                toc_enabled=True,
-                has_math=v9.html_uses_mathjax(html_content),
-                has_mermaid=v9.html_uses_mermaid(html_content),
-            ),
-        )
-        sitemap_sources[relative_path] = [
-            work["source_path"],
-            TEMPLATES / "work-detail.html",
-            TEMPLATES / "base.html",
-        ]
-    return sitemap_sources
 
 
 def build_blog(output: Path) -> dict[str, list[Path]]:
@@ -621,14 +584,13 @@ def build_site(output: Path) -> None:
     works = load_works()
     sitemap_sources = build_home(output)
     sitemap_sources.update(build_portfolio(output, works))
-    sitemap_sources.update(build_work(output, works))
     sitemap_sources.update(build_blog(output))
     sitemap_sources.update(build_wiki(output))
     build_sitemap(output, sitemap_sources)
     verify_build_output(output, sitemap_sources)
     verify_seo_output(output, BASE_URL)
     print(
-        f"built v11 site: {len(works)} work pages, "
+        f"built v11 site: {len(works)} projects on /work/, "
         f"{len(list((SOURCE_ROOT / 'blog' / 'posts').glob('*.md')))} posts, "
         f"{len(list((SOURCE_ROOT / 'personal-wiki' / 'notes').glob('*.md')))} notes"
     )

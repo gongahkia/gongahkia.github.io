@@ -71,7 +71,9 @@ def validate_page(source: str, canonical: str) -> None:
         raise ValueError("missing structured data")
     nodes = [node for schema in page.schemas for node in schema.get("@graph", [schema])]
     route = urlsplit(canonical).path
-    expected = {"WebSite", "Person"} if route == "/" else {"CollectionPage"} if route.endswith("/") else {"SoftwareSourceCode"} if route.startswith("/work/") else {"Article"} if route.startswith("/personal-wiki/") else {"BlogPosting", "TechArticle"}
+    if route.startswith("/work/") and route != "/work/":
+        raise ValueError("individual work pages must not be generated; use /work/")
+    expected = {"WebSite", "Person"} if route == "/" else {"CollectionPage"} if route.endswith("/") else {"Article"} if route.startswith("/personal-wiki/") else {"BlogPosting", "TechArticle"}
     if not any(node.get("@type") in expected for node in nodes):
         raise ValueError("incorrect structured-data type")
     if route == "/" and not {"WebSite", "Person"} <= {node.get("@type") for node in nodes}:
@@ -79,7 +81,7 @@ def validate_page(source: str, canonical: str) -> None:
     for node in nodes:
         if node.get("url") != canonical:
             raise ValueError("structured-data URL differs from canonical URL")
-        if node.get("@type") in {"Article", "BlogPosting", "TechArticle", "SoftwareSourceCode"}:
+        if node.get("@type") in {"Article", "BlogPosting", "TechArticle"}:
             if not all(node.get(key) for key in ("author", "datePublished", "dateModified")):
                 raise ValueError("missing article author or dates")
 
