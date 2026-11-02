@@ -1,0 +1,9 @@
+{
+  "name": "gabrielongzm-site-build",
+  "private": true,
+  "description": "Build-time equation rendering for the v11 static site",
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "mathjax-full": "3.2.2"
+  }
+}

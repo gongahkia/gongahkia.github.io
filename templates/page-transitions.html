@@ -1,0 +1,21 @@
+<script>
+(() => {
+  // keep the navbar separate from the page fade, including returns from a scrolled page.
+  const headerStateKey = "gabriel-v11-header-hidden";
+  window.addEventListener("pageswap", event => {
+    if (!event.viewTransition) return;
+    const header = document.querySelector(".site-nav");
+    try {
+      sessionStorage.setItem(headerStateKey, String(header.getBoundingClientRect().bottom <= 0));
+    } catch (_) { /* the page transition still works when storage is disabled. */ }
+  });
+  window.addEventListener("pagereveal", event => {
+    try {
+      const hidden = sessionStorage.getItem(headerStateKey) === "true";
+      sessionStorage.removeItem(headerStateKey);
+      if (hidden) event.viewTransition?.types?.add("header-enter");
+    } catch (_) { /* use the normal navbar transition when storage is disabled. */ }
+  });
+
+})();
+</script>

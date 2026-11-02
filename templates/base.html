@@ -23,14 +23,14 @@
   {% block structured_data %}{% endblock %}
   <title>{{ page_title }}</title>
   <link rel="icon" href="{{ root_path }}/asset/favicon.svg?v=11-light" type="image/svg+xml">
+  {% include "page-transitions.html" %}
   <link rel="stylesheet" href="{{ root_path }}/content.css?v=11-images">
-  <link rel="stylesheet" href="{{ root_path }}/style.css?v=11-wave">
-  <link rel="stylesheet" href="{{ root_path }}/tiempos.css?v=11">
-  <script src="{{ root_path }}/site.js?v=11-wave"></script>
+  <link rel="stylesheet" href="{{ root_path }}/style.css?v=11-perf">
+  <link rel="stylesheet" href="{{ root_path }}/tiempos.css?v=11-perf">
+  <script src="{{ root_path }}/site.js?v=11-perf" defer></script>
   {% if has_mermaid %}<script src="{{ root_path }}/mermaid.js" defer></script>{% endif %}
   {% if has_math %}
-  <script>window.MathJax = {tex: {inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']]}};</script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <!-- build:math-css -->
   {% endif %}
 </head>
 <body{% if eden_page %} class="eden-page"{% endif %}{% if toc_enabled %} data-heading-anchors="true"{% endif %} data-root="{{ root_path }}">

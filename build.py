@@ -9,6 +9,7 @@ import re
 import shutil
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 import content_pipeline as v9
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -16,6 +17,7 @@ from markupsafe import Markup
 from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 from site_validation import verify_seo_output
+from math_pipeline import render_static_math
 
 
 ROOT = Path(__file__).resolve().parent
@@ -80,6 +82,15 @@ def copy_static_files(output: Path) -> None:
             copy_tree(source, output / section / "asset")
     for filename in ("style.css", "content.css", "site.js"):
         shutil.copy2(STATIC / filename, output / filename)
+    # Keep the editable SVG sources, but remove network waits on first hover.
+    stylesheet = (output / "style.css").read_text(encoding="utf-8")
+    stylesheet = re.sub(
+        r'url\("(assets/underlines/[a-z-]+\.svg)"\)',
+        lambda match: 'url("data:image/svg+xml,'
+        + quote((STATIC / match[1]).read_text(encoding="utf-8").strip(), safe="") + '")',
+        stylesheet,
+    )
+    (output / "style.css").write_text(stylesheet, encoding="utf-8")
     for filename in ("mermaid.js", "robots.txt", "CNAME"):
         shutil.copy2(SOURCE_ROOT / filename, output / filename)
     copy_tree(STATIC / "fonts", output / "fonts")
@@ -586,6 +597,8 @@ def build_site(output: Path) -> None:
     sitemap_sources.update(build_portfolio(output, works))
     sitemap_sources.update(build_blog(output))
     sitemap_sources.update(build_wiki(output))
+    math_pages, equations = render_static_math(output)
+    print(f"rendered {equations} equations on {math_pages} pages at build time")
     build_sitemap(output, sitemap_sources)
     verify_build_output(output, sitemap_sources)
     verify_seo_output(output, BASE_URL)

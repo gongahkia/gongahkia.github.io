@@ -1,23 +1,6 @@
 "use strict";
 
 (() => {
-  // keep the navbar separate from the page fade, including returns from a scrolled page.
-  const headerStateKey = "gabriel-v11-header-hidden";
-  window.addEventListener("pageswap", event => {
-    if (!event.viewTransition) return;
-    const header = document.querySelector(".site-nav");
-    try {
-      sessionStorage.setItem(headerStateKey, String(header.getBoundingClientRect().bottom <= 0));
-    } catch (_) { /* the page transition still works when storage is disabled. */ }
-  });
-  window.addEventListener("pagereveal", event => {
-    try {
-      const hidden = sessionStorage.getItem(headerStateKey) === "true";
-      sessionStorage.removeItem(headerStateKey);
-      if (hidden) event.viewTransition?.types?.add("header-enter");
-    } catch (_) { /* use the normal navbar transition when storage is disabled. */ }
-  });
-
   document.addEventListener("DOMContentLoaded", () => {
     const clickContainer = document.querySelector("#click-container");
     const clickWords = ["click", "clack", "thock", "thonk", "thup", "pop", "whump", "thud", "plip", "clonk", "snap", "tck", "tak", "bonk", "klak", "tik", "tock", "plink", "clunk", "thwack", "bop", "klik", "plonk", "tunk", "pok", "ping", "thwick", "blip", "clop", "klock", "thwump", "tnk"];

@@ -1,8 +1,8 @@
-@font-face{font-family:Fraunces;src:url("fonts/fraunces-400.ttf") format("truetype");font-weight:400;font-display:swap}
-@font-face{font-family:Fraunces;src:url("fonts/fraunces-300.ttf") format("truetype");font-weight:300;font-display:swap}
-@font-face{font-family:Inter;src:url("fonts/inter-400.ttf") format("truetype");font-weight:400;font-display:swap}
-@font-face{font-family:Inter;src:url("fonts/inter-600.ttf") format("truetype");font-weight:600;font-display:swap}
-@font-face{font-family:"Zalando Sans";src:url("fonts/zalando-sans.ttf") format("truetype");font-weight:200 900;font-stretch:75% 125%;font-display:swap}
+@font-face{font-family:Fraunces;src:url("fonts/fraunces-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Fraunces;src:url("fonts/fraunces-300.woff2") format("woff2");font-weight:300;font-display:swap}
+@font-face{font-family:Inter;src:url("fonts/inter-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url("fonts/inter-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Zalando Sans";src:url("fonts/zalando-sans.woff2") format("woff2");font-weight:200 900;font-stretch:75% 125%;font-display:swap}
 
 :root {
   color-scheme:light;
@@ -148,14 +148,14 @@ h3 {letter-spacing:-.025em;font-weight:600}
 :root[data-logos="true"] .intro-companies .company-link {font-size:12px}
 :root[data-palette="dark"][data-logos="true"] .company-link {background:#e4e8de}
 /* each text link in the writeup has its own pattern; inline backgrounds follow wrapped text. */
-:root[data-highlights="true"] .intro-writeup a[data-underline] {text-decoration:none}
+:root[data-highlights="true"] .intro-writeup a[data-underline] {text-decoration:none;background-image:var(--underline-pattern)}
 .intro-writeup a[data-underline] {
   padding-block-end:.12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;
-  background-repeat:repeat-x;background-position:left bottom;background-size:var(--underline-tile) .22em;
+  background-repeat:repeat-x;background-position:left bottom;background-size:var(--underline-tile) 0;
 }
-:root[data-highlights="true"] .intro-writeup a[data-underline]:focus-visible {background-image:var(--underline-pattern)}
+:root[data-highlights="true"] .intro-writeup a[data-underline]:focus-visible {background-size:var(--underline-tile) .22em}
 @media (hover:hover) {
-  :root[data-highlights="true"] .intro-writeup a[data-underline]:hover {background-image:var(--underline-pattern)}
+  :root[data-highlights="true"] .intro-writeup a[data-underline]:hover {background-size:var(--underline-tile) .22em}
 }
 .intro-writeup [data-underline="pen"] {--underline-pattern:url("assets/underlines/pen.svg");--underline-tile:2.8em}
 .intro-writeup [data-underline="double"] {--underline-pattern:url("assets/underlines/double.svg");--underline-tile:.8em}
