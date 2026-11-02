@@ -18,6 +18,7 @@ from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 from site_validation import verify_seo_output
 from math_pipeline import render_static_math
+from html_optimizations import optimize_site_html
 
 
 ROOT = Path(__file__).resolve().parent
@@ -84,6 +85,9 @@ def copy_static_files(output: Path) -> None:
         shutil.copy2(STATIC / filename, output / filename)
     # Keep the editable SVG sources, but remove network waits on first hover.
     stylesheet = (output / "style.css").read_text(encoding="utf-8")
+    # Later unicode-range faces serve small Latin fonts. The original full faces
+    # remain the fallback for Greek, Cyrillic, and all other supported glyphs.
+    stylesheet += "\n" + (STATIC / "fonts/latin/faces.css").read_text(encoding="utf-8")
     stylesheet = re.sub(
         r'url\("(assets/underlines/[a-z-]+\.svg)"\)',
         lambda match: 'url("data:image/svg+xml,'
@@ -202,6 +206,8 @@ def page_context(
         "toc_enabled": toc_enabled,
         "has_math": has_math,
         "has_mermaid": has_mermaid,
+        "active_section": next((section for section in ("work", "blog", "personal-wiki")
+                                if route.startswith(f"/{section}/")), "home" if route == "/" else ""),
     }
 
 
@@ -599,6 +605,7 @@ def build_site(output: Path) -> None:
     sitemap_sources.update(build_wiki(output))
     math_pages, equations = render_static_math(output)
     print(f"rendered {equations} equations on {math_pages} pages at build time")
+    optimize_site_html(output, BASE_URL)
     build_sitemap(output, sitemap_sources)
     verify_build_output(output, sitemap_sources)
     verify_seo_output(output, BASE_URL)

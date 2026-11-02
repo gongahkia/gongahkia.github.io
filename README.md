@@ -41,4 +41,14 @@ The build preserves screen-reader MathML and matches equation sizing to the surr
 
 `math_pipeline.py` runs `scripts/render_math.cjs` once per site build, after Markdown pages are generated. The stylesheet contains only the rules/glyphs used by the site's equations and has a content-hashed filename. Common TeX extensions are bundled at build time; the renderer does not fetch extensions from a CDN. Keep the pinned renderer and its versioned asset path together when upgrading MathJax.
 
-See [performance findings and next steps](docs/performance.md) for measurements and remaining opportunities.
+## Rendering optimizations
+
+The build removes unstyled Pygments name spans, generates stable heading IDs and external-link cursor markers, and sets the current navigation section. Code text, syntax colors, existing fragment URLs, and the page layout are preserved. Heading links and active navigation also work without JavaScript.
+
+Inter and Zalando Sans use smaller Latin WOFF2 faces, with the original fonts retained for other supported characters. Their CSS declares actual character coverage so unsupported scripts use system fallback fonts without downloading an unusable font. Regenerate these checked-in files with:
+
+```sh
+uv run --with 'fonttools[woff]' python scripts/subset_fonts.py
+```
+
+The DSA page now has 11,436 elements instead of 13,860. Homepage font downloads fall from 320,340 to 165,540 bytes compared with the previous WOFF2 build. Offscreen code rendering was tested but excluded because estimating hidden code-block heights introduced mobile scroll shifts; articles retain normal browser rendering.
