@@ -18,7 +18,7 @@ Code snippets in Go and Python.
 
 ## Big O Notation
 
-1. CONSTANT time
+### CONSTANT time
   * $O(1)$
   * number of steps for algorithm to complete execution is CONSTANT regardless of size of dataset
 
@@ -41,7 +41,7 @@ def add_up(n:int) -> int:
     return sum
 ```
 
-1. LOGARITHMIC time
+### LOGARITHMIC time
   * $O(\log n)$
   * number of steps for algorithm to complete execution is MARGINALLY LOWER as size of dataset increases
 
@@ -82,7 +82,7 @@ def binary_search(arr: [int], target:int) -> int: # note that the binary search 
     return -1
 ```
 
-1. LINEAR time
+### LINEAR time
   * $O(n)$
   * number of steps for algorithm to complete execution INCREASES PROPORTIONALLY to size of dataset
 
@@ -109,7 +109,7 @@ def add_up(n:int) -> int:
     return sum
 ```
 
-1. QUASILINEAR time
+### QUASILINEAR time
   * $O(n \log n)$
   * similar to LINEAR time, but slows down further when working with larger datasets
 
@@ -174,7 +174,7 @@ def merge(left:[int], right:[int]) -> [int]: # helper function called once
     return result
 ```
 
-1. QUADRATIC time
+### QUADRATIC time
   * $O(n^2)$
   * QUADRATIC increase in number of steps for algorithm to complete execution for a given increase in size of dataset
 
@@ -203,7 +203,7 @@ def bubble_sort(arr:[int]):
                 arr[q], arr[q+1] = arr[q+1], arr[q] # just swap the values
 ```
 
-1. FACTORIAL time
+### FACTORIAL time
   * $O(n!)$
   * extremely slow and rarely used
 
@@ -283,7 +283,7 @@ class Stack:
         return self.items.pop()
 ```
 
-1. Queue
+### Queue
   * First-in First-out *(FIFO)* data structure
   * `add()`: enqueues an element to the END of the queue
   * `remove()`: dequeues an element from the FRONT of the queue
@@ -332,7 +332,7 @@ class Queue:
         return self.items.pop(0)
 ```
 
-1. Priority Queue
+### Priority Queue
   * First-in First-out *(FIFO)* data structure
   * SORTS elements by PRIORITY, then dequeues elements of HIGHEST PRIORITY before elements of LOWER PRIORITY
   * `add()`: enqueues an element to the END of the queue with a specified value and priority
@@ -403,7 +403,7 @@ class PriorityQueue:
         return item.value
 ```
 
-1. Linked List
+### Linked List
   * Collection of nodes that are stored in non-consecutive memory locations *(each node comprising a VALUE + pointer(s) to OTHER NODE'S memory address(es))*
   * **SINGLY LINKED LIST**
     * nodes comprise...
@@ -590,7 +590,7 @@ class LinkedList:
         print("None")  # end the display with 'None'
 ```
 
-1. Hash Table
+### Hash Table
   * Collection of unique entries that enables fast insertion, lookup and deletion of entries by leveraging on hashing and buckets
   * Entry: a key-value pair
   * Hashing: computing an integer based on a key *(formulas vary depending on the key's datatype)* to determine an entry's index
@@ -753,7 +753,7 @@ class HashTable:
             print()
 ```
 
-1. <p>Graph</p>
+### Graph
   * Non-linear aggregation of nodes and edges
     * node: vertex that stores data
     * edge: connection between two nodes
@@ -771,7 +771,8 @@ class HashTable:
     * recommendation engines
     * GPS mapping applications
     * knowledge graphs
-2. <p>Adjacency Matrix </p>
+    
+### Adjacency Matrix
   * 2d nested array of 0s and 1s which acts as a conceptual representation of adjacency between any two nodes in the graph
   * Used because
     * **CONSTANT time complexity** of $O(1)$
@@ -832,7 +833,7 @@ class Graph:
             print(row)
 ```
 
-1. Adjacency List
+### Adjacency List
   * Array of LINKED LISTs, where each LINKED LIST head represents a unique node and its adjacent neighbour nodes
   * Used because
     * **LINEAR time complexity** of $O(n)$
@@ -918,7 +919,7 @@ class Graph:
             print()
 ```
 
-1. <p>Tree</p>
+### Tree
   * Non-linear collection of nodes *(which store data)* organised in a hierachy, where nodes are connected by edges
   * Root node: top-most node with no incoming edges
   * Leaf node: bottom-most nodes with no outgoing edges
@@ -936,7 +937,8 @@ class Graph:
     * domain name servers
     * HTML DOM structure
     * expression parsing in interpreters and transpilers
-2. <p>Binary Search Tree</p>
+
+### Binary Search Tree
   * Ordered tree where each parent node has only two child nodes *(binary)* and each parent node's value is greater than the left child node and smaller than the right child node, including the root node
   * Used because
     * easier to locate a node when they are ordered within a binary search tree
@@ -1077,7 +1079,7 @@ class BST:
 
 ## Algorithms
 
-1. Linear Search
+### Linear Search
   * **LINEAR time complexity** of $O(n)$
   * iterates through a collection one element at a time
   * pros
@@ -1110,7 +1112,7 @@ def linear_search(arr, target):
     return -1
 ```
 
-1. Binary Search
+### Binary Search
   * **LOGARITHMIC time complexity** of $O(log n)$
   * eliminates half of the collection at each step to find the target element
   * pros
@@ -1155,7 +1157,7 @@ def binary_search(arr, target):
     return -1
 ```
 
-1. Interpolation Search
+### Interpolation Search
   * **average time complexity** of $O(log(log n))$
   * **worst case LINEAR time complexity** of $O(n)$
   * guesses where a value might be based on estimated probe results, with incorrect probes narrowing the search area and recalculating a new probe
@@ -1215,7 +1217,7 @@ def interpolation_search(arr, target):
     return -1
 ```
 
-1. Depth First Search
+### Depth First Search
   * search algorithm to traverse a tree or graph one BRANCH at a time
     1. pick a route
     2. keep on going until a dead end or previously visited node is reached
@@ -1278,7 +1280,7 @@ class Graph:
                 self.dfs_util(i)
 ```
 
-1. Breadth First Search
+### Breadth First Search
   * search algorithm to traverse a tree or graph one LEVEL at a time
     1. traverse one node at a time in every direction
     2. once all directions have been expanded one node, repeat step 1
@@ -1343,7 +1345,7 @@ class Graph:
                     queue.append(node)
 ```
 
-1. Bubble Sort
+### Bubble Sort
   * **QUADRATIC time complexity** of $O(n^2)$
   * **CONSTANT space complexity** of $O(1)$
   * compares pairs of adjacent elements and swaps them if they are not in order
@@ -1379,7 +1381,7 @@ def bubble_sort(arr):
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 ```
 
-1. Selection Sort
+### Selection Sort
   * **QUADRATIC time complexity** of $O(n^2)$
   * **CONSTANT space complexity** of $O(1)$
   * iterates across each element in a collection and compares against and stores the minimum value, swapping variables after each iteration
@@ -1419,7 +1421,7 @@ def selection_sort(arr):
         arr[i], arr[min_index] = arr[min_index], arr[i]
 ```
 
-1. Insertion Sort
+### Insertion Sort
   * **QUADRATIC time complexity** of $O(n^2)$
   * **CONSTANT space complexity** of $O(1)$
   * compares all elements to the left of a given element, then shift elements to the right to make room to insert a value
@@ -1462,7 +1464,7 @@ def insertion_sort(arr):
         arr[j + 1] = key
 ```
 
-1. Merge Sort
+### Merge Sort
   * **QUASILINEAR time complexity** of $O(n log n)$
   * **LINEAR space complexity** of $O(n)$
   * recursively split collection in half, sort each half, then recombine the two halves
@@ -1532,7 +1534,7 @@ def merge(left, right):
     return result
 ```
 
-1. Quick Sort
+### Quick Sort
   * **QUASILINEAR time complexity** of $O(n log n)$ in best case and average case
   * **QUADRATIC time complexity** of $O(n^2)$ in worst case
   * **LOGARITHMIC space complexity** of $O(log n)$
@@ -1653,7 +1655,7 @@ def find_max_sum(arr, k):
     return max_sum
 ```
 
-1. Two Pointer
+### Two Pointer
   * Two pointers traverse an array simultaneously *(from different ends or with a stipulated distance between them)*
   * Just a glorified way of saying two values are being stored for a given solution
   * Used in problems involving
@@ -1712,7 +1714,7 @@ def find_pair_sum(arr, target):
     return None
 ```
 
-1. Three Pointer
+### Three Pointer
   * Extension of two pointer algorithm
   * Three pointers traverse an array simultaneously *(from different ends or with a stipulated distance between them)*
   * Just a glorified way of saying three values are being stored for a given solution
