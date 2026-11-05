@@ -24,6 +24,8 @@ To hop right into the contents of this post, “Chainsaw Man” is batshit crazy
 
 I mean… look at this manga panel and tell me what’s going on.
 
+![](https://i.redd.it/tpim709higec1.jpg)
+
 Everything about it screams ‘Shōnen romp’, and certainly, it holds true to that mindless, reader self-insert teenage violence that Shōnen readers will be sure to latch onto. Yet, it feels to me like Chainsaw Man’s mangaka, Fujimoto Tatsuki, wanted to do something more with it than simply adding to the ever growing list of “teenage boys with magical powers punch things very hard.” Upon rereading it a second time, a few of the possible ways Fujimoto has achieved this came to light, and I’ve conveniently listed them below in the format of a list for easy reference. Please enjoy~ (or don’t lol you can stop reading now that’s fine too.)
 
 ### 1. You don’t feel good reading Chainsaw Man.
