@@ -145,7 +145,7 @@ h3 {letter-spacing:-.025em;font-weight:600}
 :root[data-logos="true"] .intro-companies {display:block;font-size:15px;color:var(--secondary);line-height:2;margin-top:18px}
 :root[data-logos="true"] .intro-companies .company-link {font-size:12px}
 :root[data-palette="dark"][data-logos="true"] .company-link {background:#e4e8de}
-/* each text link in the writeup has its own pattern; inline backgrounds follow wrapped text. */
+/* Selected underline patterns; inline backgrounds follow wrapped text. */
 :root[data-highlights="true"] .intro-writeup a[data-underline] {text-decoration:none;background-image:var(--underline-pattern)}
 .intro-writeup a[data-underline] {
   padding-block-end:.12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;
@@ -155,16 +155,14 @@ h3 {letter-spacing:-.025em;font-weight:600}
 @media (hover:hover) {
   :root[data-highlights="true"] .intro-writeup a[data-underline]:hover {background-size:var(--underline-tile) .22em}
 }
-.intro-writeup [data-underline="pen"] {--underline-pattern:url("assets/underlines/pen.svg");--underline-tile:2.8em}
+.intro-writeup [data-underline="pencil"] {--underline-pattern:url("assets/underlines/pencil.svg");--underline-tile:100%}
+.intro-writeup [data-underline="taper"] {--underline-pattern:url("assets/underlines/taper.svg");--underline-tile:100%}
 .intro-writeup [data-underline="double"] {--underline-pattern:url("assets/underlines/double.svg");--underline-tile:.8em}
 .intro-writeup [data-underline="zigzag"] {--underline-pattern:url("assets/underlines/zigzag.svg");--underline-tile:.7em}
 .intro-writeup [data-underline="brush"] {--underline-pattern:url("assets/underlines/brush.svg");--underline-tile:1.8em}
-.intro-writeup [data-underline="scallops"] {--underline-pattern:url("assets/underlines/scallops.svg");--underline-tile:1em}
-.intro-writeup [data-underline="dashes"] {--underline-pattern:url("assets/underlines/dashes.svg");--underline-tile:.7em}
 .intro-writeup [data-underline="wave"] {--underline-pattern:url("assets/underlines/wave.svg");--underline-tile:.9em}
 .intro-writeup [data-underline="swoosh"] {--underline-pattern:url("assets/underlines/swoosh.svg");--underline-tile:100%}
 .intro-writeup [data-underline="hatch"] {--underline-pattern:url("assets/underlines/hatch.svg");--underline-tile:.6em}
-.intro-writeup [data-underline="bracket"] {--underline-pattern:url("assets/underlines/bracket.svg");--underline-tile:100%}
 .intro-writeup [data-underline="loops"] {--underline-pattern:url("assets/underlines/loops.svg");--underline-tile:1em}
 @media (max-width:760px) {
   .intro .intro-writeup h1,.intro .intro-writeup p {font-size:30px;line-height:1.35}
