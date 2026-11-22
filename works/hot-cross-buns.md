@@ -1,5 +1,5 @@
 ---
-slug: Hot Cross Buns
+slug: hot-cross-buns
 title: "Hot Cross Buns"
 date: "May 2026"
 summary: "One General-purpose, Local AI Agent for Everything"
