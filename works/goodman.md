@@ -7,4 +7,8 @@ href: "https://github.com/gongahkia/goodman"
 order: 2
 ---
 
-The idea for Goodman arose from my frustration at the number of websites that intentionally obscured their terms and conditions pages behind pre-selected checkboxes and nested subpages.
+The idea for `Goodman` arose from my frustration at the number of websites that intentionally obscured their terms and conditions pages behind pre-selected checkboxes and nested subpages.
+
+It's inception also perfectly coincided with my discovery of vibe coding tools in late 2025, which helped me throw a scrappy prototype of `Goodman` together in record time.
+
+*"Perfection is the enemy of the perfectly adequate."*
