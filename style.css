@@ -164,6 +164,8 @@ h3 {letter-spacing:-.025em;font-weight:600}
 .intro-writeup [data-underline="swoosh"] {--underline-pattern:url("assets/underlines/swoosh.svg");--underline-tile:100%}
 .intro-writeup [data-underline="hatch"] {--underline-pattern:url("assets/underlines/hatch.svg");--underline-tile:.6em}
 .intro-writeup [data-underline="loops"] {--underline-pattern:url("assets/underlines/loops.svg");--underline-tile:1em}
+.intro-writeup [data-underline="footholds"] {--underline-pattern:url("assets/underlines/footholds.svg");--underline-tile:.95em}
+.intro-writeup [data-underline="footsteps"] {--underline-pattern:url("assets/underlines/footsteps.svg");--underline-tile:.8em}
 @media (max-width:760px) {
   .intro .intro-writeup h1,.intro .intro-writeup p {font-size:30px;line-height:1.35}
   .intro .intro-writeup p {margin-top:1.15em}
